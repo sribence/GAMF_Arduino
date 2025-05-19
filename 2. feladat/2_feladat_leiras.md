@@ -60,7 +60,7 @@ Ebben a projektben egy **8x8 LED mátrixot** vezérlünk Arduino segítségével
 
 ### 📋 LED mátrix inicializálása (Adafruit HT16K33)
 
-```
+```cpp
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_LEDBackpack.h>
@@ -87,7 +87,7 @@ void loop() {
 
 ### 🔢 Saját karakter vagy szám kijelzése
 
-  ```
+  ```cpp
   static const uint8_t smiley[] = {
   B00111100,
   B01000010,
@@ -115,7 +115,7 @@ void loop() {
 
 ### <strong>🐍 Snake játék alap</strong>
 
-```
+```cpp
 #include <Adafruit_LEDBackpack.h>
 #include <Wire.h>
 
@@ -170,7 +170,7 @@ void drawSnake() {
 
 ### 🎮 Gombok bekötése és irányítás
 
-```
+```cpp
 int btnRight = 2;
 int btnDown  = 3;
 int btnLeft  = 4;
