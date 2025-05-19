@@ -32,8 +32,8 @@ Ebben a projektben egy **8x8 LED mátrixot** vezérlünk Arduino segítségével
 
 📷 *(Helyezd ide az ábrát)*  
 images/8x8matrix_wiring.png
-
-
+https://github.com/sribence/GAMF_Arduino/blob/main/2.%20feladat/2-1.png
+https://github.com/sribence/GAMF_Arduino/blob/main/2.%20feladat/2-2-1.png
 > _Figure 1: 8x8 mátrix és gombok bekötése_
 
 ---
@@ -60,7 +60,7 @@ images/8x8matrix_wiring.png
 <details>
 <summary><strong>📋 LED mátrix inicializálása (Adafruit HT16K33)</strong></summary>
 
-```cpp
+```
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_LEDBackpack.h>
@@ -110,9 +110,7 @@ void loop() {
 
 </details>
 <details> <summary><strong>🐍 Snake játék alap</strong></summary>
-cpp
-Másolás
-Szerkesztés
+```
 #include <Adafruit_LEDBackpack.h>
 #include <Wire.h>
 
@@ -186,22 +184,14 @@ void readDirection() {
   if (!digitalRead(btnLeft))  dir = 2;
   if (!digitalRead(btnUp))    dir = 3;
 }
+```
+
 💡 Infó: INPUT_PULLUP bekötésnél a gomb nyomáskor LOW értéket ad. Ezért vizsgáljuk a !digitalRead() feltételt.
 
 </details>
-📷 Képek
-text
-Másolás
-Szerkesztés
-images/8x8matrix_wiring.png       ← kapcsolási rajz
-images/snake_game_running.jpg     ← játék közben
-images/obstacle_mode.jpg          ← akadályos mód
-Markdown hivatkozás:
 
-markdown
-Másolás
-Szerkesztés
-![Snake játék futás közben](images/snake_game_running.jpg)
+
+
 🔁 Extra ötletek
  🧱 Pálya akadályokkal: rajzold ki fix blokkokat, ahol a kígyó nem haladhat át
 
