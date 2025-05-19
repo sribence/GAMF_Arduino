@@ -30,10 +30,11 @@ Ebben a projektben egy **8x8 LED mátrixot** vezérlünk Arduino segítségével
 
 ## 🧠 Kapcsolás
 
-📷 *(Helyezd ide az ábrát)*  
-images/8x8matrix_wiring.png
-2-1.png
-https://github.com/sribence/GAMF_Arduino/blob/main/2.%20feladat/2-2-1.png
+📷 ÁBRÁK
+/2.%20feladat/2-1.png
+> _Figure 1: 8x8 mátrix bekötése
+
+/2.%20feladat/2-2-1.png
 > _Figure 1: 8x8 mátrix és gombok bekötése_
 
 ---
@@ -57,7 +58,7 @@ https://github.com/sribence/GAMF_Arduino/blob/main/2.%20feladat/2-2-1.png
 
 ## 💻 Kódok és magyarázatok
 
-#<strong>📋 LED mátrix inicializálása (Adafruit HT16K33)</strong>
+### 📋 LED mátrix inicializálása (Adafruit HT16K33)
 
 ```
 #include <Wire.h>
@@ -83,8 +84,8 @@ void loop() {
 > [!NOTE]
 > Az Adafruit_LEDBackpack könyvtár egyszerű vezérlést tesz lehetővé HT16K33 mátrixhoz. A drawPixel(x,y,LED_ON) függvényekkel kirajzolhatunk pontokat.
 
-</details>
-<details> <summary><strong>🔢 Saját karakter vagy szám kijelzése</strong></summary>
+
+### 🔢 Saját karakter vagy szám kijelzése
 
   ```
   static const uint8_t smiley[] = {
@@ -107,11 +108,12 @@ void loop() {
   delay(1000);
 }
 ```
+
 > [!NOTE]
 > A displaybuffer tömböt közvetlenül is módosíthatjuk saját bitmintával. Itt egy smiley arc jelenik meg.
 
 
-#<strong>🐍 Snake játék alap</strong>
+### <strong>🐍 Snake játék alap</strong>
 
 ```
 #include <Adafruit_LEDBackpack.h>
@@ -188,11 +190,9 @@ void readDirection() {
   if (!digitalRead(btnUp))    dir = 3;
 }
 ```
+
 > [!NOTE]
 > INPUT_PULLUP bekötésnél a gomb nyomáskor LOW értéket ad. Ezért vizsgáljuk a !digitalRead() feltételt.
-
-</details>
-
 
 
 🔁 Extra ötletek
