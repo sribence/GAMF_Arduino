@@ -164,13 +164,13 @@ void drawSnake() {
   }
   matrix.writeDisplay();
 }
-💡 Infó: Ez az alap Snake algoritmus megvalósítja a kígyó növekedését és mozgását, egyszerű határfigyeléssel. Irányváltás még nincs benne, de azt gombokkal bővítjük.
+```
+> [!NOTE]
+> Ez az alap Snake algoritmus megvalósítja a kígyó növekedését és mozgását, egyszerű határfigyeléssel. Irányváltás még nincs benne, de azt gombokkal bővítjük.
 
-</details>
-<details> <summary><strong>🎮 Gombok bekötése és irányítás</strong></summary>
-cpp
-Másolás
-Szerkesztés
+### 🎮 Gombok bekötése és irányítás
+
+```
 int btnRight = 2;
 int btnDown  = 3;
 int btnLeft  = 4;
