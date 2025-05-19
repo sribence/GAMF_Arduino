@@ -103,8 +103,8 @@ void loop() {
   delay(200);
 }
 ```
-
-ℹ️ **Infó**: A `tone()` függvény generál hangot. A `noTone()` leállítja. Próbálj ki különböző frekvenciákat és ütemeket!
+> [!IMPORTANT]
+> A `tone()` függvény generál hangot. A `noTone()` leállítja. Próbálj ki különböző frekvenciákat és ütemeket!
 
 ---
 
@@ -141,8 +141,8 @@ void loop() {
   delay(1000);
 }
 ```
-
-ℹ️ **Infó**: Az `analogWrite()` segítségével PWM kimenettel állíthatjuk a fényerőt 0–255 között.
+> [!IMPORTANT]
+> Az `analogWrite()` segítségével PWM kimenettel állíthatjuk a fényerőt 0–255 között.
 
 ---
 
@@ -164,8 +164,8 @@ void loop() {
   delay(10);
 }
 ```
-
-ℹ️ **Infó**: A `map()` függvénnyel az analóg bemenetet (0–1023) konvertáljuk 0–255 tartományra az RGB LED-hez.
+> [!IMPORTANT]
+> A `map()` függvénnyel az analóg bemenetet (0–1023) konvertáljuk 0–255 tartományra az RGB LED-hez.
 
 ---
 
