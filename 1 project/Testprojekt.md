@@ -34,14 +34,9 @@ Ez a projekt egy **közlekedési lámpa szimulációt** valósít meg, ahol a pi
 
 ## 🧠 Kapcsolási rajz
 
-📷 *(Helyezd ide az ábrát)*  
-```
-
-images/traffic\_lamp\_wiring.png
-
-````
-
-> _Figure 1: A LED-ek, buzzer és RGB bekötése_
+📷 *(Első ábránk)*  
+![Kezdeti bekötés](/1%20project/1-1.png)
+> _Figure 1: Kezdeti bekötés
 
 ---
 
@@ -93,6 +88,10 @@ void loop() {
 
 ### 2. Csipogó hozzáadása (pl. vészjelzés)
 
+📷 *(Csipogó hozzáadása)*  
+![Második bekötés](/1%20project/1-2.png)
+> _Figure 1: Csipogóval kiegészített áramökr
+
 ```cpp
 int buzzer = 5;
 
@@ -110,6 +109,10 @@ void loop() {
 
 ### 3. RGB LED alapvezérlés (piros-zöld-kék egymás után)
 
+📷 *(RGB ledünk bekötése)*  
+![RGB led hozzáadása](/1%20project/1-3.png)
+> _Figure 1: RGB ledet hozzáadtuk a bekötési rajzhoz
+> 
 ```cpp
 int red = 6;
 int green = 9;
@@ -147,7 +150,10 @@ void loop() {
 ---
 
 ### 4. Potméteres színkeverés
-
+📷 *(Utolsó bekötés)*  
+![Kezdeti bekötés](/1%20project/1-4.png)
+> _Figure 1: Előzők plusz potméter 3szor is!
+> 
 ```cpp
 int potR = A0;
 int potG = A1;
