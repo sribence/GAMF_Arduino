@@ -1,0 +1,136 @@
+# 📏 IR vs Ultrahangos Távolságmérés – Arduino Projekt
+
+Ebben a projektben két népszerű távolságmérő szenzort hasonlítunk össze: egy **IR távolságmérőt** (pl. Sharp GP2Y0A) és az **ultrahangos HC-SR04-et**. A cél a távolságmérés megvalósítása, pontosság növelése, valamint LED-fényerő szabályozása a mért érték alapján.
+
+---
+
+## 🧰 Alkatrészek
+
+| Eszköz             | Megjegyzés                     |
+|--------------------|--------------------------------|
+| Arduino UNO        |                                |
+| HC-SR04 szenzor    | Ultrahangos                    |
+| IR távolságmérő    | Pl. Sharp GP2Y0A21YK0F         |
+| LCD kijelző (opció) | Vagy soros port               |
+| LED + ellenállás   | Fényerőszabályozáshoz          |
+| Breadboard + kábelek|                               |
+
+---
+
+## 🔌 Bekötési ábra
+
+![8x8 matrix connecting diagram](/2.%20feladat/2-2-1.png)
+
+> [!NOTE]
+> A képet cseréld le a megfelelő bekötési rajzra: HC-SR04 – Trig (kimenet), Echo (bemenet); IR – 3-pines táp + analóg kimenet.
+
+---
+
+## 🔬 Projekt lépések
+
+### 1. HC-SR04 szenzor használata
+
+```cpp
+int trig = 9;
+int echo = 10;
+long ido;
+float tavolsag;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+}
+
+void loop() {
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+
+  ido = pulseIn(echo, HIGH);
+  tavolsag = ido * 0.034 / 2;
+
+  Serial.print("Tavolsag: ");
+  Serial.print(tavolsag);
+  Serial.println(" cm");
+
+  delay(200);
+}
+```
+
+> [!NOTE]
+> Az ido * 0.034 / 2 képlet a hang terjedési sebességéből adódik. A mért impulzushossz a visszaverődött jel alapján számítódik.
+
+2. IR szenzor használata (analóg)
+
+```cpp
+int irPin = A0;
+int ertek;
+float tavolsag;
+
+void loop() {
+  ertek = analogRead(irPin);
+  tavolsag = 12343.85 * pow(ertek, -1.15);  // közelítő képlet
+  Serial.print("IR tavolsag: ");
+  Serial.print(tavolsag);
+  Serial.println(" cm");
+  delay(200);
+}
+```
+>[!NOTE]
+>Az IR szenzor nem lineáris, de a fenti képlet egyes típusokhoz (pl. Sharp GP2Y0A21YK0F) jó közelítést ad 10–80 cm között.
+
+3. Pontosítás: Átlagolás több mérésből
+```cpp
+float atlagoltTavolsag() {
+  float osszeg = 0;
+  for (int i = 0; i < 5; i++) {
+    osszeg += mertesHC_SR04();
+    delay(50);
+  }
+  return osszeg / 5;
+}
+```
+
+> [!NOTE]
+> Egyszerű átlagolással kiszűrhetők véletlenszerű hibák, de mozgóátlaggal még stabilabb értéket kaphatunk.
+
+4. Mozgóátlag implementálása
+```cpp
+#define MERET 5
+float ertekek[MERET];
+int index = 0;
+
+float mozgoAtlag(float uj) {
+  ertekek[index] = uj;
+  index = (index + 1) % MERET;
+
+  float osszeg = 0;
+  for (int i = 0; i < MERET; i++) {
+    osszeg += ertekek[i];
+  }
+  return osszeg / MERET;
+}
+```
+> [!NOTE]
+> A mozgóátlag "csúszóablakként" működik, amely folyamatosan frissül és kiegyenlíti a hirtelen kiugrásokat.
+
+5. Extra: LED fényerő távolságtól függően
+
+```cpp
+int ledPin = 5;
+
+void loop() {
+  float tav = atlagoltTavolsag(); // vagy mozgoAtlag()
+  int fenyeroseg = map(tav, 5, 30, 255, 0);
+  fenyeroseg = constrain(fenyeroseg, 0, 255);
+
+  analogWrite(ledPin, fenyeroseg);
+
+  delay(100);
+}
+```
+> [!NOTE]
+> A map() átalakítja a távolságot 0–255 közé. A constrain() biztosítja, hogy az érték ne lépje túl a LED PWM határait.
