@@ -14,6 +14,15 @@ void loop() {
 }
 ```
 
+/projektek/
+├── projekt1/
+│   ├── README.md ← Ez a projekt leírása
+│   ├── code.ino
+│   └── images/
+├── projekt2/
+│   └── README.md
+
+
 ## ToDo
 
 - [x] LED villogtatás elkészítve
