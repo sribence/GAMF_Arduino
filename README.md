@@ -13,3 +13,16 @@ void loop() {
   delay(1000);
 }
 ```
+
+## ToDo
+
+- [x] LED villogtatás elkészítve
+- [ ] RGB LED színkeverés
+- [ ] Potméteres vezérlés integrálása
+
+# Arduino Projektek
+
+## Projektek listája
+
+- [LED Villogtató](projektek/projekt1/README.md)
+- [Hőmérséklet kijelző](projektek/projekt2/README.md)
