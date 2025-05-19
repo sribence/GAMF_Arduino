@@ -1,6 +1,11 @@
 # 🟩 8x8 LED Mátrix – Snake Játék Arduino Projekttel
 
-Ebben a projektben egy **8x8 LED mátrixot** vezérlünk Arduino segítségével. Megtanuljuk a mátrix kezelését, karakterek megjelenítését, majd egy egyszerű **Snake játékot** készítünk négy nyomógombos irányítással. Az extra kihívás: **akadályokkal nehezített játékmód**.
+Ez a projekt egy **kis kijelzős videojátékot** valósít meg egy 8x8 LED mátrix kijelzőn – egy olyan táblán, ahol 64 kis pont világít vagy nem világít. Ezeket úgy irányítjuk, hogy **rajzolni vagy mozgatni tudjunk** dolgokat rajta, például karaktereket, képeket vagy akár egy **kígyót, ami a játékban mozog**.
+
+A játék, amit megépítünk, a klasszikus Snake: a képernyőn egy vonalként mozgó kígyó növekszik, ha **"ételt"** vesz fel, és a cél, hogy ne ütközzön neki semminek – se a falnak, se saját magának.
+
+A projekt **lépésenként halad**, és minden új lépés egy kicsivel érdekesebbé és ügyesebbé teszi az egész játékot!
+
 
 ---
 
@@ -20,7 +25,7 @@ Ebben a projektben egy **8x8 LED mátrixot** vezérlünk Arduino segítségével
 | Eszköz              | Darabszám |
 |---------------------|-----------|
 | Arduino UNO         | 1         |
-| 8x8 LED mátrix (HT16K33 vagy MAX7219) | 1         |
+| 8x8 LED mátrix  | 1         |
 | Nyomógomb           | 4         |
 | Ellenállás (10kΩ)   | 4         |
 | Breadboard + Jumperek | -       |
@@ -34,8 +39,6 @@ Ebben a projektben egy **8x8 LED mátrixot** vezérlünk Arduino segítségével
 ![8x8 matrix connecting diagram](/2.%20feladat/2-1.png)
 > _Figure 1: 8x8 mátrix bekötése
 
-![8x8 matrix connecting diagram](/2.%20feladat/2-2-1.png)
-> _Figure 2: 8x8 mátrix és gombok bekötése_
 
 ---
 
@@ -58,7 +61,9 @@ Ebben a projektben egy **8x8 LED mátrixot** vezérlünk Arduino segítségével
 
 ## 💻 Kódok és magyarázatok
 
-### 📋 LED mátrix inicializálása (Adafruit HT16K33)
+### ✅ 1. LED mátrix inicializálása (Adafruit HT16K33)
+A LED mátrix eleinte csak egy-egy pontot vagy egyszerű ábrát mutat. Ez segít abban, hogy megértsük, hogyan lehet egy képernyőt programból vezérelni. Ilyen lehet például egy mosolygós arc vagy számok.
+
 
 ```cpp
 #include <Wire.h>
@@ -83,7 +88,7 @@ void loop() {
 ```
 > [!NOTE]
 > Az Adafruit_LEDBackpack könyvtár egyszerű vezérlést tesz lehetővé HT16K33 mátrixhoz. A drawPixel(x,y,LED_ON) függvényekkel kirajzolhatunk pontokat.
-
+---
 
 ### 🔢 Saját karakter vagy szám kijelzése
 
@@ -112,8 +117,12 @@ void loop() {
 > [!NOTE]
 > A displaybuffer tömböt közvetlenül is módosíthatjuk saját bitmintával. Itt egy smiley arc jelenik meg.
 
+---
+###  2. 🐍 Snake játék alap
+Elkészítünk egy működő kígyó játékot, ami egy adott irányba mozog, és minden lépés után új pozíciót vesz fel a kijelzőn. A kígyó egyre hosszabb lesz, ha sikerül "ennie" (ezt később adjuk hozzá). Ha falba ütközik, újrakezdődik.
 
-### <strong>🐍 Snake játék alap</strong>
+Ez már egy valódi, mini videojáték, amit mi programozunk meg és irányítunk!
+
 
 ```cpp
 #include <Adafruit_LEDBackpack.h>
@@ -167,8 +176,13 @@ void drawSnake() {
 ```
 > [!NOTE]
 > Ez az alap Snake algoritmus megvalósítja a kígyó növekedését és mozgását, egyszerű határfigyeléssel. Irányváltás még nincs benne, de azt gombokkal bővítjük.
+---
 
-### 🎮 Gombok bekötése és irányítás
+###  3. 🎮 Gombok bekötése és irányítás
+Ezután 4 nyomógomb segítségével lehet balra, jobbra, felfelé vagy lefelé mozgatni a kígyót. Ezzel azt tanuljuk meg, hogyan lehet felhasználói bemenetekre reagálni: ha a játékos nyom egy gombot, a program máshogy viselkedik.
+![8x8 matrix connecting diagram](/2.%20feladat/2-2-1.png)
+> _Figure 2: 8x8 mátrix és gombok bekötése_
+
 
 ```cpp
 int btnRight = 2;
@@ -193,7 +207,17 @@ void readDirection() {
 
 > [!NOTE]
 > INPUT_PULLUP bekötésnél a gomb nyomáskor LOW értéket ad. Ezért vizsgáljuk a !digitalRead() feltételt.
-
+---
+🎓 Mit tanulunk ebből?
+- Hogyan működik egy LED mátrix kijelző: pontokat hogyan világítunk fel.
+- Mit jelent az, hogy egy karaktert vagy képet bitmintával tárolunk.
+- Hogyan rajzoljunk mozgó dolgokat a kijelzőre (kígyó mozgás).
+- Hogyan lehet irányt váltani gombnyomásra – ez az egyik alapja az interaktív programozásnak.
+- Hogyan működik az ütközésvizsgálat, és miként kezeljük a játék végét.
+- Mit jelent egy egyszerű játéklogika – ha A történik, akkor B következik.
+- Hogyan lehet a játékot fokozatosan bővíteni új ötletekkel (akadály, csipogó, étel, saját testbe ütközés).
+- Hogyan lehet egy egyszerű eszközből valódi játékélményt kihozni saját kézzel.
+---
 
 🔁 Extra ötletek
  🧱 Pálya akadályokkal: rajzold ki fix blokkokat, ahol a kígyó nem haladhat át
@@ -203,6 +227,4 @@ void readDirection() {
  💥 Ütközés saját testtel (haladó szint)
 
  🎵 Hangjelzés gombnyomásra vagy játék végén (csipogóval)
-
-📄 Licenc
-MIT License
+---
