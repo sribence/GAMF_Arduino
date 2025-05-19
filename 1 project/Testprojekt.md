@@ -53,6 +53,8 @@ Ez a projekt egy **közlekedési lámpa szimulációt** valósít meg, ahol a pi
 ## 💻 Kód és magyarázat
 
 ### 1. Alap LED szimuláció – közlekedési lámpa
+Három LED (piros, sárga, zöld) egymás után felvillan, pont úgy, mint az igazi lámpánál. Így látod, hogyan vezérelhetünk időzítve LED-eket.
+
 
 ```cpp
 // LED lábak
@@ -87,6 +89,8 @@ void loop() {
 ---
 
 ### 2. Csipogó hozzáadása (pl. vészjelzés)
+A lámpa működését hanggal is kiegészítjük, például egy csipogás indulhat, amikor vált a lámpa. Ezzel azt tanuljuk meg, hogyan lehet egyszerre hangot és fényt is vezérelni.
+
 
 📷 *(Csipogó hozzáadása)*  
 ![Második bekötés](/1%20project/1-2.png)
@@ -108,6 +112,8 @@ void loop() {
 ---
 
 ### 3. RGB LED alapvezérlés (piros-zöld-kék egymás után)
+Megnézzük, hogyan tudunk egyetlen LED-del többféle színt mutatni: piros, zöld és kék. Ez a LED három szín fényerejét keveri, mint egy színeslámpa.
+
 
 📷 *(RGB ledünk bekötése)*  
 ![RGB led hozzáadása](/1%20project/1-3.png)
@@ -150,6 +156,10 @@ void loop() {
 ---
 
 ### 4. Potméteres színkeverés
+Itt már te kevered ki a színt, három tekerőgombbal (potméterrel). Ezzel megtanulod, hogyan olvassunk analóg jeleket, és azt hogyan fordítsuk át színekre.
+
+
+
 📷 *(Utolsó bekötés)*  
 ![Kezdeti bekötés](/1%20project/1-4.png)
 > _Figure 1: Előzők plusz potméter 3szor is!
@@ -176,6 +186,8 @@ void loop() {
 ---
 
 ### 5. 🔊 Hangos lámpa mód
+Végül a lámpa véletlenszerű színeket mutat, és minden színhez tartozik egy hang is. Olyan lesz, mintha egy bulis lámpa vagy jelzőberendezés lenne!
+
 
 ```cpp
 void loop() {
@@ -196,23 +208,22 @@ void loop() {
 
 ---
 
-## 📷 Képek
+## 🎓 Mit tanulunk ebből?
+- Hogyan kell LED-et, RGB LED-et vezérelni.
 
-Helyezd el a következő fájlokat a `images/` mappába:
+- Hogyan működik egy csipogó (buzzer).
 
-* `traffic_lamp_wiring.png`
-* `rgb_control_diagram.png`
-* `full_project_build.jpg`
+- Mit jelent a digitális és az analóg jel.
 
-Markdownban így hivatkozol rá:
+- Hogyan olvassunk be értékeket potméterrel.
 
-```markdown
-![Kapcsolási rajz](images/traffic_lamp_wiring.png)
-```
+- Hogyan keverjük a színeket és a hangokat programból.
+
+
 
 ---
 
-## 📌 Fejlesztési ötletek
+## 📎 Fejlesztési ötletek
 
 * [ ] OLED kijelző integrálása (pl. színértékek megjelenítése)
 * [ ] Nyomógombos váltás "kézi vezérlés" móddal
@@ -221,20 +232,5 @@ Markdownban így hivatkozol rá:
 
 ---
 
-## 📎 Licenc
 
-MIT License
 
----
-
-## 📩 Kapcsolat
-
-Ha kérdésed van vagy hibát találsz, nyiss egy `Issue`-t vagy küldj `Pull Request`-et. 😊
-
-```
-
----
-
-Ez a `README.md` így nézne ki egy GitHub projektben, teljes mértékben nyomtatható és könnyen PDF-be exportálható.  
-Ha szeretnéd, átkonvertálom neked `.pdf` vagy `.html` formátumba is – csak szólj!
-```
