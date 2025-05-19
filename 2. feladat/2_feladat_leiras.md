@@ -31,11 +31,11 @@ Ebben a projektben egy **8x8 LED mátrixot** vezérlünk Arduino segítségével
 ## 🧠 Kapcsolás
 
 📷 ÁBRÁK
-/2.%20feladat/2-1.png
+![8x8 matrix connecting diagram](/2.%20feladat/2-1.png)
 > _Figure 1: 8x8 mátrix bekötése
 
-/2.%20feladat/2-2-1.png
-> _Figure 1: 8x8 mátrix és gombok bekötése_
+![8x8 matrix connecting diagram](/2.%20feladat/2-2-1.png)
+> _Figure 2: 8x8 mátrix és gombok bekötése_
 
 ---
 
