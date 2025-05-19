@@ -57,8 +57,7 @@ https://github.com/sribence/GAMF_Arduino/blob/main/2.%20feladat/2-2-1.png
 
 ## 💻 Kódok és magyarázatok
 
-<details>
-<summary><strong>📋 LED mátrix inicializálása (Adafruit HT16K33)</strong></summary>
+#<strong>📋 LED mátrix inicializálása (Adafruit HT16K33)</strong>
 
 ```
 #include <Wire.h>
@@ -108,8 +107,8 @@ void loop() {
 
 💡 Infó: A displaybuffer tömböt közvetlenül is módosíthatjuk saját bitmintával. Itt egy smiley arc jelenik meg.
 
-</details>
-<details> <summary><strong>🐍 Snake játék alap</strong></summary>
+
+#<strong>🐍 Snake játék alap</strong>
 ```
 #include <Adafruit_LEDBackpack.h>
 #include <Wire.h>
