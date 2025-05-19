@@ -1,8 +1,4 @@
-Nagyszerű projektötlet, és pont ideális egy szép GitHub `README.md` alapú dokumentációhoz! Az alábbi példa egy teljes GitHub-dokumentációs oldalra készült, **Markdown formázással**, **kódrészletekkel**, **magyar kommentekkel**, **infó blokkokkal**, **checkboxos ToDo listával**, **képek helyével**, stb.
 
----
-
-```markdown
 # 🚦 LED-ek, Csipogó és RGB vezérlés – Arduino Projekt
 
 Ez a projekt egy **közlekedési lámpa szimulációt** valósít meg, ahol a piros-sárga-zöld LED-ek váltogatása mellett **csipogó** és **RGB LED** is részt vesz a folyamatban. A végén 3 potméterrel keverhető RGB színt jelenítünk meg, és opcionálisan kombinálhatjuk a hanggal is – "hangos lámpa" mód.
