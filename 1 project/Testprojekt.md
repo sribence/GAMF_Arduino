@@ -86,8 +86,8 @@ void loop() {
   digitalWrite(sarga, LOW);
 }
 ````
-
-ℹ️ **Infó**: A `delay()` funkcióval időzíthetjük az egyes színek váltását. A sárga LED jelzi az átmenetet.
+> [!NOTE]
+> A `delay()` funkcióval időzíthetjük az egyes színek váltását. A sárga LED jelzi az átmenetet.
 
 ---
 
