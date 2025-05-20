@@ -51,11 +51,11 @@ Tartalmaz LED-eket, kijelzőket, szenzorokat, motorokat és egyéb hasznos modul
 > A példaprojektek többsége közvetlenül kapcsolódik a készletben található alkatrészekhez – az egyes feladatoknál jelezzük, hogy mely modulokra lesz szükség.
 
 ---
-## 🖼️ Példaképek
+## 🖼️ Feladatok képei
 > [!NOTE]
 > További képek minden feladat saját mappájában találhatók.
 
-# 👤 Szerző
+# 👤 SzerzőK
 - Sári Bence – sari.bence@neonpc.hu
 - Halász Izabella Mária
 - Fülöp Andor Zoltán 
