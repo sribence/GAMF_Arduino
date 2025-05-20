@@ -40,6 +40,11 @@ A projekt **lépésenként halad**, és minden új lépés egy kicsivel érdekes
 > _Figure 1: 8x8 mátrix bekötése
 
 
+### De hogy működik a 8x8 LED mátrix? 
+![image](https://github.com/user-attachments/assets/8b52e76f-8c48-42cd-801e-8d9089ad0fbf)
+
+Egy 8x8-as LED mátrix belsőleg sorokba (R1–R8) és oszlopokba (C1–C8) rendezett LED-ekből áll, ahol minden LED egy sor- és egy oszlopvezeték találkozásánál helyezkedik el. A LED-ek vezérléséhez multiplexelést használnak: egyszerre csak egy sort aktiválnak, és az adott sor oszlopaiban vezérlik a világítandó LED-eket, majd gyorsan váltanak a sorok között, így a kijelző folyamatosan világítónak tűnik.
+
 ---
 
 ## 🧭 Funkciók lépésenként
