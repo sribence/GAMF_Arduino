@@ -56,6 +56,6 @@ Tartalmaz LED-eket, kijelzőket, szenzorokat, motorokat és egyéb hasznos modul
 > További képek minden feladat saját mappájában találhatók.
 
 # 👤 SzerzőK
-- Sári Bence – sari.bence@neonpc.hu
+- Sári Bence – sari.bence@nje.hu
 - Halász Izabella Mária
 - Fülöp Andor Zoltán 
