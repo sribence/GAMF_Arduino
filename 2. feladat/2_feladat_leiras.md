@@ -72,23 +72,25 @@ A LED mátrix eleinte csak egy-egy pontot vagy egyszerű ábrát mutat. Ez segí
 
 ```cpp
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_LEDBackpack.h>
+#include <Adafruit_GFX.h>         // Telepíteni kell
+#include <Adafruit_LEDBackpack.h> // Telepíteni kell
 
 Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
 
-void setup() {
-  matrix.begin(0x70); // I2C cím
-  matrix.setRotation(0);
-  matrix.clear();
-  matrix.writeDisplay();
+void setup() 
+{
+    matrix.begin(0x70);     // I2C cím
+    matrix.setRotation(0);  // Orientáció, el lehet forgatni a "képet" a mátrixon
+    matrix.clear();
+    matrix.writeDisplay();
 }
 
-void loop() {
-  matrix.clear();
-  matrix.drawPixel(3, 3, LED_ON);
-  matrix.writeDisplay();
-  delay(500);
+void loop() 
+{
+    matrix.clear();
+    matrix.drawPixel(3, 3, LED_ON); // 0-tól kezdjük a számozást
+    matrix.writeDisplay();
+    delay(500);
 }
 ```
 > [!NOTE]
