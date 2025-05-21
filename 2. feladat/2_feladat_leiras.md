@@ -212,28 +212,184 @@ void drawSnake() {
 
 ###  3. 🎮 Gombok bekötése és irányítás
 Ezután 4 nyomógomb segítségével lehet balra, jobbra, felfelé vagy lefelé mozgatni a kígyót. Ezzel azt tanuljuk meg, hogyan lehet felhasználói bemenetekre reagálni: ha a játékos nyom egy gombot, a program máshogy viselkedik.
-![8x8 matrix connecting diagram](/2.%20feladat/2-2-1.png)
+![8x8 matrix connecting diagram](/2.%20feladat/2-2-2.png)
 > _Figure 2: 8x8 mátrix és gombok bekötése_
 
 
 ```cpp
-int btnRight = 2;
-int btnDown  = 3;
-int btnLeft  = 4;
-int btnUp    = 5;
+#include <Wire.h>
+#include <Adafruit_LEDBackpack.h> // Telepíteni kell
 
-void setup() {
-  pinMode(btnRight, INPUT_PULLUP);
-  pinMode(btnDown, INPUT_PULLUP);
-  pinMode(btnLeft, INPUT_PULLUP);
-  pinMode(btnUp, INPUT_PULLUP);
+Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
+
+int snakeX[64];
+int snakeY[64];
+int length = 3; // Kígyó hossza
+int dir = 0;    // 0: jobbra, 1: le, 2: balra, 3: fel
+
+const int JOYSTICK_X = A0;
+const int JOYSTICK_Y = A1;
+
+const int JOYSTICK_DEADZONE_RADIUS = 150;
+int LimitT = 512 + JOYSTICK_DEADZONE_RADIUS;
+int LimitB = 512 - JOYSTICK_DEADZONE_RADIUS;
+int x, y;
+bool IsJoyStickMoved = false;
+
+unsigned int Ido;
+
+void setup() 
+{
+    matrix.begin(0x70);
+    snakeX[0] = 3; snakeY[0] = 3;
+    snakeX[1] = 2; snakeY[1] = 3;
+    snakeX[2] = 1; snakeY[2] = 3;
+
+    Ido = millis();
 }
 
-void readDirection() {
-  if (!digitalRead(btnRight)) dir = 0;
-  if (!digitalRead(btnDown))  dir = 1;
-  if (!digitalRead(btnLeft))  dir = 2;
-  if (!digitalRead(btnUp))    dir = 3;
+void loop() 
+{
+    JoystickBemenet();
+    JoystickIrany();
+    if (millis() - Ido >= 300)
+    {
+        moveSnake();
+        drawSnake();
+        Ido = millis();
+    }
+}
+
+void moveSnake() 
+{
+    for (int i = length - 1; i > 0; i--) 
+    {
+        snakeX[i] = snakeX[i - 1];
+        snakeY[i] = snakeY[i - 1];
+    }
+
+    if (dir == 0) snakeX[0]++;
+    if (dir == 1) snakeY[0]++;
+    if (dir == 2) snakeX[0]--;
+    if (dir == 3) snakeY[0]--;
+
+    // egyszerű ütközés
+    if (snakeX[0] < 0 || snakeX[0] > 7 || snakeY[0] < 0 || snakeY[0] > 7) 
+    {
+        length = 3;
+        snakeX[0] = 3; snakeY[0] = 3;
+        snakeX[1] = 2; snakeY[1] = 3;
+        snakeX[2] = 1; snakeY[2] = 3;
+    }
+}
+
+void drawSnake() {
+    matrix.clear();
+    for (int i = 0; i < length; i++) 
+    {
+        matrix.drawPixel(snakeX[i], snakeY[i], LED_ON);
+    }
+    matrix.writeDisplay();
+}
+
+void JoystickBemenet()
+{
+    x = analogRead(JOYSTICK_X);
+    y = analogRead(JOYSTICK_Y);
+}
+
+void JoystickIrany()
+{
+    // Save the move
+    String JoyStickMove = "";
+
+    // If joystick moved up and isn't checked before then register the movement
+    if (IsJoyUp() && !IsJoyStickMoved)
+    {
+        JoyStickMove = "up";
+        IsJoyStickMoved = true;
+        dir = 3; // Menjünk felfelé
+    }
+
+    // If joystick moved down and isn't checked before then register the movement
+    else if (IsJoyDown() && !IsJoyStickMoved)
+    {
+        JoyStickMove = "down";
+        IsJoyStickMoved = true;
+        dir = 1; // Menjünk lefelé
+    }
+
+    // If joystick moved left and isn't checked before then register the movement
+    else if (IsJoyLeft() && !IsJoyStickMoved)
+    {
+        JoyStickMove = "left";
+        IsJoyStickMoved = true;
+        dir = 2; // Menjünk balra
+    }
+
+    // If joystick moved right and isn't checked before then register the movement
+    else if (IsJoyRight() && !IsJoyStickMoved)
+    {
+        JoyStickMove = "right";
+        IsJoyStickMoved = true;
+        dir = 0; // Menjünk jobbra
+    }
+
+    // If joystick is in the deadzone then let registering possible again
+    else if (IsJoyInDeadzone() && IsJoyStickMoved)
+    {
+        IsJoyStickMoved = false;
+    }
+}
+
+// Checks if the joystick is moved up
+bool IsJoyUp()
+{
+    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
+    bool ConditionY = y > LimitT;                   // Is over the top limit of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Checks if the joystick is moved down
+bool IsJoyDown()
+{
+    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
+    bool ConditionY = y < LimitB;                   // Is under the bottom limit of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Checks if the joystick is moved left
+bool IsJoyLeft()
+{
+    bool ConditionX = x < LimitB;                   // Is under the bottom limit of x
+    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Checks if the joystick is moved right
+bool IsJoyRight()
+{
+    bool ConditionX = x > LimitT;                   // Is over the top limit of x
+    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Checks if the joystick is in the deadzone
+bool IsJoyInDeadzone()
+{
+    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
+    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
 }
 ```
 
