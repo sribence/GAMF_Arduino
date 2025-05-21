@@ -100,24 +100,41 @@ void loop()
 ### 🔢 Saját karakter vagy szám kijelzése
 
   ```cpp
-  static const uint8_t smiley[] = {
-  B00111100,
-  B01000010,
-  B10100101,
-  B10000001,
-  B10100101,
-  B10011001,
-  B01000010,
-  B00111100
+#include <Wire.h>
+#include <Adafruit_GFX.h>         // Telepíteni kell
+#include <Adafruit_LEDBackpack.h> // Telepíteni kell
+
+Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
+
+// Az első oszlop-ot a legelső helyre kell írni majd a második oszloptól hadava normál sorrendben kell haladni
+static const uint8_t smiley[] = {
+    B00011110,
+    B00100001,
+    B11010010,
+    B11000000,
+    B11010010,
+    B11001100,
+    B00100001,
+    B00011110
 };
 
-void loop() {
-  matrix.clear();
-  for (int i = 0; i < 8; i++) {
-    matrix.displaybuffer[i] = smiley[i];
-  }
-  matrix.writeDisplay();
-  delay(1000);
+void setup() 
+{
+    matrix.begin(0x70);     // I2C cím
+    matrix.setRotation(0);  // Orientáció, el lehet forgatni a "képet" a mátrixon
+    matrix.clear();
+    matrix.writeDisplay();
+}
+
+void loop() 
+{
+    matrix.clear();
+    for (int i = 0; i < 8; i++) 
+    {
+        matrix.displaybuffer[i] = smiley[i];  // Végigmegyünk a sorokon és elmentjük a kirajzolandók listájába
+    }
+    matrix.writeDisplay();
+    delay(1000);
 }
 ```
 
