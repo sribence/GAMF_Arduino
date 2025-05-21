@@ -392,9 +392,6 @@ bool IsJoyInDeadzone()
     return false;
 }
 ```
-
-> [!NOTE]
-> INPUT_PULLUP bekötésnél a gomb nyomáskor LOW értéket ad. Ezért vizsgáljuk a !digitalRead() feltételt.
 ---
 🎓 Mit tanulunk ebből?
 - Hogyan működik egy LED mátrix kijelző: pontokat hogyan világítunk fel.
