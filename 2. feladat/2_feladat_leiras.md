@@ -149,53 +149,61 @@ Ez már egy valódi, mini videojáték, amit mi programozunk meg és irányítun
 
 
 ```cpp
-#include <Adafruit_LEDBackpack.h>
 #include <Wire.h>
+#include <Adafruit_LEDBackpack.h> // Telepíteni kell
 
 Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
 
 int snakeX[64];
 int snakeY[64];
-int length = 3;
-int dir = 0; // 0: jobbra, 1: le, 2: balra, 3: fel
+int length = 3; // Kígyó hossza
+int dir = 0;    // 0: jobbra, 1: le, 2: balra, 3: fel
 
-void setup() {
-  matrix.begin(0x70);
-  snakeX[0] = 3; snakeY[0] = 3;
-  snakeX[1] = 2; snakeY[1] = 3;
-  snakeX[2] = 1; snakeY[2] = 3;
-}
-
-void loop() {
-  delay(300);
-  moveSnake();
-  drawSnake();
-}
-
-void moveSnake() {
-  for (int i = length - 1; i > 0; i--) {
-    snakeX[i] = snakeX[i - 1];
-    snakeY[i] = snakeY[i - 1];
-  }
-
-  if (dir == 0) snakeX[0]++;
-  if (dir == 1) snakeY[0]++;
-  if (dir == 2) snakeX[0]--;
-  if (dir == 3) snakeY[0]--;
-
-  // egyszerű ütközés
-  if (snakeX[0] < 0 || snakeX[0] > 7 || snakeY[0] < 0 || snakeY[0] > 7) {
-    length = 3;
+void setup() 
+{
+    matrix.begin(0x70);
     snakeX[0] = 3; snakeY[0] = 3;
-  }
+    snakeX[1] = 2; snakeY[1] = 3;
+    snakeX[2] = 1; snakeY[2] = 3;
+}
+
+void loop() 
+{
+    delay(300);
+    moveSnake();
+    drawSnake();
+}
+
+void moveSnake() 
+{
+    for (int i = length - 1; i > 0; i--) 
+    {
+        snakeX[i] = snakeX[i - 1];
+        snakeY[i] = snakeY[i - 1];
+    }
+
+    if (dir == 0) snakeX[0]++;
+    if (dir == 1) snakeY[0]++;
+    if (dir == 2) snakeX[0]--;
+    if (dir == 3) snakeY[0]--;
+
+    // egyszerű ütközés
+    if (snakeX[0] < 0 || snakeX[0] > 7 || snakeY[0] < 0 || snakeY[0] > 7) 
+    {
+        length = 3;
+        snakeX[0] = 3; snakeY[0] = 3;
+        snakeX[1] = 2; snakeY[1] = 3;
+        snakeX[2] = 1; snakeY[2] = 3;
+    }
 }
 
 void drawSnake() {
-  matrix.clear();
-  for (int i = 0; i < length; i++) {
-    matrix.drawPixel(snakeX[i], snakeY[i], LED_ON);
-  }
-  matrix.writeDisplay();
+    matrix.clear();
+    for (int i = 0; i < length; i++) 
+    {
+        matrix.drawPixel(snakeX[i], snakeY[i], LED_ON);
+    }
+    matrix.writeDisplay();
 }
 ```
 > [!NOTE]
