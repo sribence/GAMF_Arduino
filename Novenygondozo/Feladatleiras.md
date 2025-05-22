@@ -1,0 +1,1 @@
+# Növénygondozó feladatleírása
