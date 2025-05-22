@@ -124,40 +124,38 @@ void loop()
     szamKiir(matrix7, 7);
     delay(500);
 }
-
 void szamKiir(Adafruit_8x8matrix matrix, int num)
 {
-  matrix.clear();
-  for (int i = 0; i < 8; i++) 
+  const uint8_t* pattern;
+
+  // Select the correct digit pattern
+  switch (num)
   {
-      switch (num)
-      {
-        case 0:
-          matrix.displaybuffer[i] = reverseBits(num0[i]);
-          break;
-        case 1:
-          matrix.displaybuffer[i] = reverseBits(num1[i]);
-          break;
-        case 2:
-          matrix.displaybuffer[i] = reverseBits(num2[i]);
-          break;
-        case 3:
-          matrix.displaybuffer[i] = reverseBits(num3[i]);
-          break;
-        case 4:
-          matrix.displaybuffer[i] = reverseBits(num4[i]);
-          break;
-        case 5:
-          matrix.displaybuffer[i] = reverseBits(num5[i]);
-          break;
-        case 6:
-          matrix.displaybuffer[i] = reverseBits(num6[i]);
-          break;
-        case 7:
-          matrix.displaybuffer[i] = reverseBits(num7[i]);
-          break;
-      }
+    case 0: pattern = num0; break;
+    case 1: pattern = num1; break;
+    case 2: pattern = num2; break;
+    case 3: pattern = num3; break;
+    case 4: pattern = num4; break;
+    case 5: pattern = num5; break;
+    case 6: pattern = num6; break;
+    case 7: pattern = num7; break;
+    default: return; // Ignore invalid numbers
   }
+
+  matrix.clear();
+
+  for (uint8_t y = 0; y < 8; y++)
+  {
+    uint8_t row = pattern[y];
+    for (uint8_t x = 0; x < 8; x++)
+    {
+      if (row & (1 << x))
+      {
+        matrix.drawPixel(7 - x, y, LED_ON);  // 7 - x to reverse bits
+      }
+    }
+  }
+
   matrix.writeDisplay();
 }
 
