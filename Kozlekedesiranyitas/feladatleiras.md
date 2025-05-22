@@ -11,24 +11,21 @@
 ---
 
 **Tartalomjegyzék:**
-    •   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
-    •   [0. Feladat](#0-feladat)
-    •   [1. Feladat](#1-feladat)
-    •   [2. Feladat](#2-feladat) 
-    •   [3. Feladat](#3-feladat)
-    •   [4. Feladat](#4-feladat)
-    •   [Teljes rendszer](#a-teljes-rendszer-működtetése)
-    •   [Extra Feladat](#extra-feladat)
+-   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
+-   [0. Feladat](#0-feladat)
+-   [1. Feladat](#1-feladat)
+-   [2. Feladat](#2-feladat) 
+-   [3. Feladat](#3-feladat)
+-   [4. Feladat](#4-feladat)
+-   [Teljes rendszer](#a-teljes-rendszer-működtetése)
+-   [Extra Feladat](#extra-feladat)
 
 ---
 
 # 🛠️ Eszközök, amikre szükséged lesz:
-    •	Lámpák 🏮 ( ebből lehet 1-2 db attól függően, mennyire összetett )
-    •	Gomb 🔘
-    •	Micro servo 9g motor 🔧
-
-![közlekedési lámpa](traffic_lamp.png)
-![servo motror](servo.png)
+-	Lámpák 🏮 ( ebből lehet 1-2 db attól függően, mennyire összetett )
+-	Gomb 🔘
+-	Micro servo 9g motor 🔧
 
 ---
 
@@ -57,7 +54,7 @@
 
 ⏳delay() függvény használatával állítjuk be az egyes lámpák időzítését.  
 
-![1. feladat]()
+![1. feladat](egy_lampapar.png)
 
 ---
 
@@ -84,7 +81,7 @@
 
 ⏳ millis() függvény használatával biztosítjuk a megfelelő időzítést, így pontosabb és hatékonyabb!  
 
-![2. feladat]()
+![2. feladat](ket_lampapar.png)
 
 ---
 
@@ -106,7 +103,7 @@
 -	Felnyitás gombbal 🔺 – Ha a gomb_fel megnyomódik, a sorompó visszaáll 160°-ra.  
 -	A program folyamatosan figyeli a gombokat és reagál! 🔄  
 
-![3. feladat]()
+![3. feladat](sorompo.png)
 
 ---
 
@@ -126,7 +123,7 @@
 -	Lámpák váltakozása 🚥 – Az egyik lámpa piros, a másik zöld, majd 4 másodpercenként cserélnek.  
 -	Automatikus időzítés ⏳ – A váltás millis() segítségével történik, így nincs delay() blokkolás.  
 
-![4. feladat]()
+![4. feladat](teljes.png)
 
 ---
 
