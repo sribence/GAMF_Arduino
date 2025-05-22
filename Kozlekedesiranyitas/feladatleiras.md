@@ -31,7 +31,7 @@
 
 # 0. Feladat: 
 ⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](k_bekotes.png)
+![kapcsolási rajz](bekotes.png)
 
 ---
 
