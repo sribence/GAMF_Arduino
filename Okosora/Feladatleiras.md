@@ -1,0 +1,1 @@
+# Okosóra feladatleírása
