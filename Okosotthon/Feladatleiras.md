@@ -1,0 +1,1 @@
+# Okosotthon feladatleírása
