@@ -1,13 +1,131 @@
-# Okosotthon feladatleírása
+# 🏠 Okosotthon
 
-Smarthome
-A cél egy olyan biztonsági rendszer megvalósítása, amely képes reagálni mozgásra, tűzre és nyitásra, valamint vezérli a világítást és a riasztót a beállított módnak megfelelően. A rendszer egy szervómotoros ajtózárral is bővül, amely csak helyes jelszó megadása után engedi az ajtó nyitását. A jelszót a felhasználó egy joystick segítségével adja meg az LCD kijelzőn megjelenő felületen. Helyes jelszó esetén a rendszer hangjelzéssel visszajelez, és kinyitja a zárat; ellenkező esetben zárva marad, és bármilyen mozgás esetén riasztást aktivál (villogás, hangjelzés).
+**🎯Feladat:** Készíts egy biztonsági rendszert amely érzékeli a mozgást 🏃‍♂️, tüzet 🔥 és ajtónyitást 🚪, valamint vezérli a világítást 💡 és riasztást 🔊.
 
-- Arduino UNO
-- PIR mozgásérzékelő
-- Flame sensor
-- RGB LED
-- Buzzer
-- 0802 LCD kijelző
-- Joystick modul (jelszóbevitelhez)
-- Szervómotor (ajtózár vezérléséhez)
+**🛠️ Fontos:** 📝 mindent a rajz alapján csináljatok, mert így biztosított a tökéletes működés. A progranban az elnevezések relatívak, nem muszáj azt használni. Ha mást használtok, akkor figyeljetek arra, hogy könnyen lehessen azonosítani az egyes vátozó neveket. 🔍
+
+🤓 Aki foglalkozott már hasonlóval és szertne egy kicsit bonyolultabb feladaton gondolkodni annak van egy **exta feladat** a füzet végén. 📖💡
+
+🔗 Minden feladatrész ugyanahoz a feladathoz tartozik. A feladatok között nem kell semmit átállítani, vagy megváltoztani. Ha egy feladatban egy elemet nem használsz és be van kötve attól nem lesz rossz, nem kell kivenni az alapból. 🔄✅
+
+---
+**Tartalomjegyzék:**
+-   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
+-   [0. Feladat](#0-feladat)
+-   [1. Feladat](#1-feladat)
+-   [2. Feladat](#2-feladat) 
+-   [3. Feladat](#3-feladat)
+-   [4. Feladat](#4-feladat)
+-   [Teljes rendszer](#a-teljes-rendszer-működtetése)
+-   [Extra Feladat](#extra-feladat)
+
+---
+
+# 🛠️ Eszközök, amikre szükséged lesz:
+- Arduino UNO 🖥️⚡
+- PIR mozgásérzékelő 🏃‍♂️🔍
+- Flame sensor 🔥🛑
+- RGB LED 🌈💡
+- Buzzer 🔊⚠️
+- 0802 LCD kijelző 📟🖥️
+- Joystick modul 🎮🔢
+- Szervómotor 🔐🚪
+
+---
+
+# 0. Feladat:
+⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
+![kapcsolási rajz](bekotes.png)
+
+---
+
+# 1. Feladat:
+
+
+![1. Feladat](1.png)
+
+---
+
+# 2. Feladat:
+
+
+![2. Feladat](2.png)
+
+---
+
+# 3. Feladat:
+
+
+![3. Feladat](3.png)
+
+---
+
+# 4. Feladat:
+
+
+![4. Feladat](4.png)
+
+---
+
+# Teljes rendszer
+**A teljes okosotthon vezérlése** 🏠
+
+🎯 Feladat: 
+
+🛠️ Rendszer elemei:
+- Arduino UNO 🖥️⚡
+- PIR mozgásérzékelő 🏃‍♂️🔍
+- Flame sensor 🔥🛑
+- RGB LED 🌈💡
+- Buzzer 🔊⚠️
+- 0802 LCD kijelző 📟🖥️
+- Joystick modul ( jelszóbevitelhez ) 🎮🔢
+- Szervómotor ( ajtózár vezérléséhez ) 🔐🚪
+
+⚙️ Rendszer működés:
+🟢 UNARMED (Hatástalanított)
+- 🚪 Az ajtó kinyílik.
+- 👀 Mozgás esetén a LED fehér színűre vált.
+- 📟 A felhasználó joystick segítségével megadhatja a 4 karakteres jelszót (csak nagybetűk és számok).
+- ✅ Ha helyes jelszót ad meg → rendszer ARMED állapotba vált.
+
+🟡 ARMED (Élesített)
+- 🚪 Az ajtó bezárul.
+- 🔶 A LED narancssárgára vált.
+- 🔐 Újra be lehet írni a jelszót a hatástalanításhoz.
+- 🚨 Ha mozgást érzékel → rendszer ALARMED állapotba lép.
+
+🔴 ALARMED (Riasztás)
+- 🚪 Az ajtó zárva marad.
+- 🔴 A LED piros színűre vált.
+- 🔊 A buzzer sípol.
+- 🔥 Ha lángot érzékel → azonnal ebbe az állapotba lép.
+- 🔓 Helyes jelszó esetén visszavált UNARMED állapotba.
+
+🎮 Joystick vezérlés
+- 🔼 Fel: Jelenlegi karakter növelése
+- 🔽 Le: Jelenlegi karakter csökkentése
+- ◀️ Balra: Előző karakter pozíció
+- ▶️ Jobbra: Következő karakter pozíció
+- 🆗 Gomb nyomva: Jelszó megerősítése
+
+📺 OLED kijelző
+- Folyamatosan mutatja az aktuálisan beírt jelszót.
+- Segítséget nyújt a karakterválasztáshoz.
+
+
+### **🏆 Extra feladat:**  
+**🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
+
+**Hibás jelszó számláló**
+🔁 Vezess be egy számlálót, amely figyeli a hibás jelszópróbálkozásokat.
+🔐 3 hibás próbálkozás után a rendszer 10 másodpercre zárolja a joystick bevitelét.
+
+**Állapot kijelzése OLED-en**
+📺 Jelenítsd meg az OLED kijelzőn mindig az aktuális rendszerállapotot:
+„Status: UNARMED / ARMED / ALARMED”
+
+**Jelszó karakter megvilágítás LED-del**
+🔠 A kiválasztott karakter pozíciójától függően változtasd az RGB LED színét (pl. első karakternél kék, másodiknál zöld stb.)
+
+✅ Sok sikert! 😊

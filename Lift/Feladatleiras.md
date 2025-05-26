@@ -1,18 +1,4 @@
 # 🛗 Lift működtetés 🚀
----
-## BENCE ÁLTAL: 
-A projekt célja egy háromszintes lift működésének modellezése egy léptetőmotorral hajtott kabin segítségével. A felhasználó három nyomógombbal választhatja ki a kívánt emeletet (földszint, 1. emelet, 2. emelet), amelyhez a rendszer pozíció-vezérléssel mozgatja a liftkocsit a lineáris sínen. Minden szint elérését fény- és hangjelzés kíséri, valamint egy 8x8 LED mátrixon az aktuális emeletszám és nyíl jelzi a mozgás irányát. A motorvezérlés finomításához opcionálisan gyorsítás/lassítás is beépíthető. A projekt során a diákok megismerkednek a léptetőmotor működésével, végálláskapcsolók használatával és az alap könyvtárak kezelésével.
-
-- Arduino UNO
-- Léptetőmotor (pl. NEMA 17)
-- Motorvezérlő modul (pl. A4988 vagy ULN2003)
-- Lineáris sín és kabinmodell
-- 3 db nyomógomb (emeletválasztáshoz)
-- 8x8 LED mátrix (emeletszám kijelzéshez)
-- Végálláskapcsolók (referenciapont érzékeléshez)
-- Buzzer és LED (jelzésekhez)
-
----
 
 **🛗 Feladat:** Készíts egy liftmodellt, amely három emelet között mozgat egy kabint léptetőmotor segítségével. 🚀⚙️ Készíts egy vezérlőprogramot, amely kezeli a gombok jelzéseit, a motor működését és az emeletszám kijelzését. 💻🔢 Implementáld a pozícióvezérelt kabinmozgást a léptetőmotor és lineáris sín segítségével. 🚡📏 Biztosíts vizuális és hangjelzéseket minden emelet elérésekor. 🔊💡
 
@@ -107,7 +93,7 @@ A projekt célja egy háromszintes lift működésének modellezése egy léptet
 ---
 
 ### **🏆 Extra feladat:**  
-**🛠 Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
+**🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
 **📌 Időzített ajtónyitás és automatikus visszazárás:** A lift ajtaja ne csak manuálisan nyíljon és záródjon, hanem időzített módon működjön, és figyelje, hogy egy bizonyos idő elteltével automatikusan bezáródjon.
 
