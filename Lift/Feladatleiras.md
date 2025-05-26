@@ -1,22 +1,9 @@
 # 🛗 Lift működtetés 🚀
 ---
-## BENCE ÁLTAL: 
-A projekt célja egy háromszintes lift működésének modellezése egy léptetőmotorral hajtott kabin segítségével. A felhasználó három nyomógombbal választhatja ki a kívánt emeletet (földszint, 1. emelet, 2. emelet), amelyhez a rendszer pozíció-vezérléssel mozgatja a liftkocsit a lineáris sínen. Minden szint elérését fény- és hangjelzés kíséri, valamint egy 8x8 LED mátrixon az aktuális emeletszám és nyíl jelzi a mozgás irányát. A motorvezérlés finomításához opcionálisan gyorsítás/lassítás is beépíthető. A projekt során a diákok megismerkednek a léptetőmotor működésével, végálláskapcsolók használatával és az alap könyvtárak kezelésével.
 
-- Arduino UNO
-- Léptetőmotor (pl. NEMA 17)
-- Motorvezérlő modul (pl. A4988 vagy ULN2003)
-- Lineáris sín és kabinmodell
-- 3 db nyomógomb (emeletválasztáshoz)
-- 8x8 LED mátrix (emeletszám kijelzéshez)
-- Végálláskapcsolók (referenciapont érzékeléshez)
-- Buzzer és LED (jelzésekhez)
+**🛗 Feladat:** Építs egy háromszintes liftet, amely egy léptetőmotor segítségével mozgatja a kabint az emeletek között! 🏢🚡 A vezérlés három nyomógombbal történik, amelyekkel kiválasztható a cél-állomás. A kabin pontos mozgatását a pozíció alapján kell vezérelni – a rendszer lineáris sín mentén dolgozik. 🔁⚙️ Minden emelet elérésekor fény- és hangjelzést kell adnia, valamint a 8x8-as LED mátrixon jelenjen meg az aktuális emeletszám és a mozgás iránya is. 💡🔊 A motor működését finomítani is lehet – például gyorsítás/lassítás hozzáadásával, hogy még valósághűbb legyen. 🐢🚀
 
----
-
-**🛗 Feladat: ** Építs egy háromszintes liftet, amely egy léptetőmotor segítségével mozgatja a kabint az emeletek között! 🏢🚡 A vezérlés három nyomógombbal történik, amelyekkel kiválasztható a cél-állomás. A kabin pontos mozgatását a pozíció alapján kell vezérelni – a rendszer lineáris sín mentén dolgozik. 🔁⚙️ Minden emelet elérésekor fény- és hangjelzést kell adnia, valamint a 8x8-as LED mátrixon jelenjen meg az aktuális emeletszám és a mozgás iránya is. 💡🔊 A motor működését finomítani is lehet – például gyorsítás/lassítás hozzáadásával, hogy még valósághűbb legyen. 🐢🚀
-
-**🛠️ Fontos: **🧭 Minden alkatrészt pontosan a kapcsolási rajz alapján köss be! Ha máshogy nevezel el egy változót, az rendben van, de figyelj arra, hogy átlátható és jól érthető legyen a kódod. 📋✅
+**🛠️ Fontos:** 🧭 Minden alkatrészt pontosan a kapcsolási rajz alapján köss be! Ha máshogy nevezel el egy változót, az rendben van, de figyelj arra, hogy átlátható és jól érthető legyen a kódod. 📋✅
 
 📌 A teljes projekt több lépésből áll, de egyetlen rendszert építünk, nem kell semmit törölni vagy átállítani, ha új funkciót adsz hozzá. 🔗 Ha valamelyik modul még nincs használva, de már be van kötve, az nem gond – hagyd nyugodtan bent! 🧠
 
@@ -61,8 +48,8 @@ A projekt célja egy háromszintes lift működésének modellezése egy léptet
 
 ---
 
-# 2. Feladat:
-## 🧠 2. Feladat – Kijelző kezelése: emeletszám és mozgásirány megjelenítése
+# 🧠 2. Feladat:
+## Kijelző kezelése: emeletszám és mozgásirány megjelenítése
 
 ### 🎯 Cél:
 Használni egy 8x8-as LED mátrixot arra, hogy:
@@ -265,9 +252,9 @@ void loop() {
 
 ---
 
-# 3. Feladat:
+# 🧠 3. Feladat:
 
-## 🧠 3. Feladat – Ajtó működésének vezérlése gombbal
+## Ajtó működésének vezérlése gombbal
 
 ### 🎯 Cél:
 Kezelni egy szervómotorral működő liftajtót úgy, hogy:
