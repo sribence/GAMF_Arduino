@@ -1,6 +1,6 @@
 # 🛗 Lift működtetés 🚀
 
-**🛗 Feladat:** Készíts egy rendszert, amely motorokkal, LED-mátrix kijelzővel és egy szervóval működik, hogy szimulálja egy lift működését.  
+**🛗 Feladat:** Készíts egy liftmodellt, amely három emelet között mozgat egy kabint léptetőmotor segítségével. 🚀⚙️ Készíts egy vezérlőprogramot, amely kezeli a gombok jelzéseit, a motor működését és az emeletszám kijelzését. 💻🔢 Implementáld a pozícióvezérelt kabinmozgást a léptetőmotor és lineáris sín segítségével. 🚡📏 Biztosíts vizuális és hangjelzéseket minden emelet elérésekor. 🔊💡
 
 **🛠️ Fontos:** 📝 mindent a rajz alapján csináljatok, mert így biztosított a tökéletes működés. A progranban az elnevezések relatívak, nem muszáj azt használni. Ha mást használtok, akkor figyeljetek arra, hogy könnyen lehessen azonosítani az egyes vátozó neveket. 🔍
 
@@ -23,11 +23,14 @@
 ---
 
 # 🛠️ Eszközök, amikre szükséged lesz:
--	⚙️ Léptetőmotor és motorvezérlő 
--	🚪 Szervómotor 
--	📟 LED-kijelző (Adafruit 8x8 matrix) 
--   🔘 Nyomógombok 
--   🔊 Buzzer
+- Arduino UNO 🖥️⚡
+- Léptetőmotor ⚙️🔄
+- Motorvezérlő modul 🎛️🔌
+- Lineáris sín és kabinmodell 🚠📏
+- 3 db nyomógomb 🔘🔢
+- 8x8 LED mátrix 🔲💡
+- Végálláskapcsolók 🚫📍
+- Buzzer és LED 🔊💡
 
 ---
 
@@ -39,47 +42,53 @@
 
 # 1. Feladat:
 
-![1. Feladat]()
+
+![1. Feladat](l-1.png)
 
 ---
 
 # 2. Feladat:
 
-![2. Feladat]()
+
+![2. Feladat](l-2.png)
 
 ---
 
 # 3. Feladat:
 
-![3. Feladat]()
+
+![3. Feladat](l-3.png)
 
 ---
 
 # 4. Feladat:
 
-![4. Feladat]()
+
+![4. Feladat](l-4.png)
 
 ---
 
 # Teljes rendszer
 **A teljes liftvezérlő rendszer vezérlése**🚀
 
-📌 Feladatleírás: Egy lift műkösését modellezzük, ami egy intelligens és automatizált vezérlési rendszer, amely kényelmes, megbízható működést biztosít a lift számára. 🚀
+📌 Feladatleírás: A projekt célja egy liftmodell létrehozása, amely három emelet között mozgat egy kabint léptetőmotor segítségével. 🚀
 
 🛗 Rendszer elemei:
-- Léptetőmotor és motorvezérlő ⚙️ – Biztosítja a lift függőleges mozgását.
-- Szervómotor 🚪 – Nyitja és zárja a lift ajtaját.
-- LED-kijelző (Adafruit 8x8 matrix) 📟 – Megjeleníti az emeletet és mozgási irányt.
-- Nyomógombok 🔘 – Lehetővé teszik a lift hívását különböző emeletekről.
-- Buzzer 🔊 – Hangjelzést ad az érkezések és ajtónyitás/zárás jelzésére.
+- Léptetőmotor ( NEMA 17 ) ⚙️🔄
+- Motorvezérlő modul ( A4988 vagy ULN2003 ) 🎛️🔌
+- Lineáris sín és kabinmodell 🚠📏
+- 3 db nyomógomb (  emeletválasztáshoz) 🔘🔢
+- 8x8 LED mátrix ( emeletszám kijelzéshez ) 🔲💡
+- Végálláskapcsolók ( referenciapont érzékeléshez ) 🚫📍
+- Buzzer és LED ( jelzésekhez ) 🔊💡
 
 🚀 Program működése:
-- Kezeli a gombokat 🔘 – érzékeli a hívásokat, meghatározza a cél emeletet.
-- Irányítja a motort ⬆️⬇️ – kiválasztja a megfelelő mozgásirányt és lépteti a liftet.
-- Vezérli az ajtót 🚪 – automatikusan nyit és zár, hogy az utasok ki- és beszállhassanak.
-- Kijelzi az állapotot 📟 – LED-mátrixon mutatja az aktuális emeletet és mozgást.
-- Hangjelzést ad 🔊 – érkezéskor jelez a buzzer, hogy figyelmeztessen az utasokat.
-- Finoman gyorsít és lassít 🏎️ – kényelmes mozgást biztosít az induláskor és érkezéskor.
+- Emeletválasztás: A felhasználó három nyomógombbal választhatja ki a kívánt emeletet 🏠🔘🏠 
+- Pozícióvezérlés: A rendszer léptetőmotor segítségével mozgatja a kabint a lineáris sínen ⚙️📏 
+- LED Mátrix kijelzés: Az aktuális emeletszám és mozgásirány a 8x8 LED mátrixon jelenik meg 📟💡 
+- Ajtó működése: A kabin ajtaja egy szervomotorral nyílik és záródik 🚪🔄 
+- Hang- és fényjelzés: Minden emelet elérésekor buzzer és LED figyelmezteti a felhasználót 🔊✨ 
+- Motorvezérlés finomhangolása: A gyorsítás/lassítás fokozatosan történik 🚀🐢
 
 ---
 
