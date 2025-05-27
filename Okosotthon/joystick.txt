@@ -5,31 +5,27 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h> // könyvtárból ezt le kell tölteni! 
 
-// State machine enum
-enum StateMachine {
-    UNARMED,
-    ARMED,
-    ALARMED,
-};
-
+// joystick változói
 const int JOYSTICK_X = A0;
 const int JOYSTICK_Y = A1;
 const int JOYSTICK_BTN = 4;
 const int JOYSTICK_DEADZONE_RADIUS = 150;
-const String CORRECT_PASSWORD = "ABC9";      // Password only can be 4 characters and only contains the uppercase English alphabet and numbers
-Adafruit_SSD1306 display(128, 32, &Wire, -1);
-
 
 int x, y;
 bool IsJoyStickPressed = false;
 bool PrevIsJoyStickPressed = false;
 bool IsJoyStickMoved = false;
+
+// passport változói
+const String CORRECT_PASSWORD = "ABC9";      // Password only can be 4 characters and only contains the uppercase English alphabet and numbers
+Adafruit_SSD1306 display(128, 32, &Wire, -1);
+
 int PasswordPointer = 0;
 int Password[4] = { 0, 0, 0, 0 };
 const String PasswordChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 int LimitT = 512 + JOYSTICK_DEADZONE_RADIUS;
 int LimitB = 512 - JOYSTICK_DEADZONE_RADIUS;
-StateMachine CurrentState = UNARMED;
+
 
 
 // This function runs once after the Arduino is turned on
@@ -69,19 +65,32 @@ void loop()
     // Update display
     PrintPass();
 
-    // State machine
-    switch (CurrentState)
+// Ha megnyomták a joystick gombját, és előzőleg nem volt lenyomva
+    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
     {
-        case UNARMED:
-            Unarmed();
-            break;
-        case ARMED:
-            Armed();
-            break;
-        case ALARMED:
-            Alarmed();
-            break;
+        PrevIsJoyStickPressed = true;
+
+        // Összerakjuk a beállított jelszót stringként
+        String enteredPassword = "";
+        for (int i = 0; i < 4; i++)
+        {
+            enteredPassword += PasswordChars[Password[i]];
+        }
+
+        // Ellenőrizzük a jelszót
+        if (enteredPassword == CORRECT_PASSWORD)
+        {
+            PrintText("Correct");
+        }
+        else
+        {
+            PrintText("Wrong");
+        }
+
+        delay(2000); // Rövid szünet a visszajelzéshez
+        for (int i = 0; i < 4; i++) Password[i] = 0; // Jelszó nullázása
     }
+
 
     // If the joystick button is released then reset the `PrevIsJoyStickPressed` variable
     if (!IsJoyStickPressed)
@@ -91,72 +100,6 @@ void loop()
 
 }
 
-// This function will be called in the `UNARMED` state
-void Unarmed()
-{
-
-    // If the joystick button pressed (and it wasn't before) then check password
-    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
-    {
-        // Convert password into a string from an array of indexes
-        String pass = "";
-        for (int i = 0; i < 4; i++) pass += PasswordChars[Password[i]];
-
-        // Check whether the password is correct, if yes then change the state to `ARMED`
-        if (pass == CORRECT_PASSWORD)
-        {
-            CurrentState = ARMED;
-            
-        }
-
-        // Reset password
-        for (int i = 0; i < 4; i++) Password[i] = 0;
-    }
-}
-
-// This function will be called in the `ARMED` state
-void Armed()
-{
-    // If the joystick button pressed (and it wasn't before) then check password
-    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
-    {
-        // Convert password into a string from an array of indexes
-        String pass = "";
-        for (int i = 0; i < 4; i++) pass += PasswordChars[Password[i]];
-        
-        // Check whether the password is correct, if yes then change the state to `UNARMED`
-        if (pass == CORRECT_PASSWORD)
-        {
-            CurrentState = UNARMED;
-            
-        }
-        
-        // Reset password
-        for (int i = 0; i < 4; i++) Password[i] = 0;
-    }
-}
-
-// This function will be called in the `ALARMED` state
-void Alarmed()
-{
-    // If the joystick button pressed (and it wasn't before) then check password
-    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
-    {
-        // Convert password into a string from an array of indexes
-        String pass = "";
-        for (int i = 0; i < 4; i++) pass += PasswordChars[Password[i]];
-        
-        // Check whether the password is correct, if yes then change the state to `UNARMED`
-        if (pass == CORRECT_PASSWORD)
-        {
-            CurrentState = UNARMED;
-            
-        }
-        
-        // Reset password
-        for (int i = 0; i < 4; i++) Password[i] = 0;
-    }
-}
 
 // This function updates the coordinates and the button
 // Usage: UpdateJoystick();

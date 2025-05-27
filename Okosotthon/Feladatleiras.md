@@ -16,9 +16,9 @@
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
 -   [4. Feladat](#4-feladat)
--   [Joystick használata](#joystick-használata-)
+-   [Joystick használata](#joystick-os-jelszavas-zár-)
 -   [Teljes rendszer](#teljes-rendszer)
--   [Extra Feladat](#extra-feladat)
+-   [Extra Feladat](#-extra-feladat)
 
 ---
 
@@ -146,7 +146,74 @@ A program:
 
 ---
 
-# Joystick használata 🎮
+# Joystick-os jelszavas zár 🎮🔐
+
+Ez a program egy jelszóval védett rendszer, amit egy joystick és egy OLED kijelző segítségével lehet vezérelni.
+
+**🕹️ Joystick működése**
+- ⬆️ Fel / ⬇️ Le → Az aktuális karakter váltása (pl. A → B vagy vissza).
+- ⬅️ Bal / ➡️ Jobb → Karakter pozíció váltása (pl. 1. betű → 2. betű).
+- 🔘 Gombnyomás → Beadja a jelszót és ellenőrzi.
+
+**🔧 Változók deklarásása:** Eddigiekhez hasonlóan most is ezzel kezdük a program felépítését.
+
+![Változók](5-1.png)
+
+**setup() és loop() megírása:** Az előzőektől csak kicsit eltérő változtatásokat kell eszközölni. 
+- A setup felépítése ugyanaz, mint a **4. Feladatban** láthattuk, csak egy pinMode()-ot kell hozzáadni:
+
+```cpp
+    pinMode(JOYSTICK_BTN, INPUT);       // Set `JOYSTICK_BTN` pin to `INPUT`
+```
+
+- A loop() vátoztatása: 
+A     `// Detect inputs` kiegészítése:
+``` cpp
+    UpdateJoystick();
+```
+
+🕹️ Gombnyomás figyelése: A rendszer csak akkor reagáljon, ha a joystick gombot frissen nyomták le (ne ismétlődően). Ehhez figyeld a korábbi állapotot: PrevIsJoyStickPressed.
+
+🔡 Jelszó összeállítása és ellenőrzése:
+- Az aktuálisan beállított karaktereket (Password tömb) alakítsd át egy szöveggé (enteredPassword) a PasswordChars alapján.
+- Hasonlítsd össze az előre beállított jelszóval: CORRECT_PASSWORD.
+
+🖥️ OLED kijelző visszajelzés:
+- ✅ Helyes jelszó esetén: jelenjen meg a „Correct” szöveg.
+- ❌ Hibás jelszó esetén: jelenjen meg a „Wrong” szöveg.
+- ⏳ 2 másodpercig tartsd meg az üzenetet, majd nullázd a jelszót.
+
+``` cpp
+// Ha megnyomták a joystick gombját, és előzőleg nem volt lenyomva
+    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
+    {
+        PrevIsJoyStickPressed = true;
+
+        // Összerakjuk a beállított jelszót stringként
+        String enteredPassword = "";
+        for (int i = 0; i < 4; i++)
+        {
+            enteredPassword += PasswordChars[Password[i]];
+        }
+
+        // Ellenőrizzük a jelszót
+        if (enteredPassword == CORRECT_PASSWORD)
+        {
+            PrintText("Correct");
+        }
+        else
+        {
+            PrintText("Wrong");
+        }
+
+        delay(2000); // Rövid szünet a visszajelzéshez
+        for (int i = 0; i < 4; i++) Password[i] = 0; // Jelszó nullázása
+    }
+```
+
+
+
+
 
 
 
