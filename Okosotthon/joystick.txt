@@ -1,0 +1,306 @@
+// joystick és kijelző
+
+#include <SPI.h>
+#include <Wire.h> 
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h> // könyvtárból ezt le kell tölteni! 
+
+// State machine enum
+enum StateMachine {
+    UNARMED,
+    ARMED,
+    ALARMED,
+};
+
+const int JOYSTICK_X = A0;
+const int JOYSTICK_Y = A1;
+const int JOYSTICK_BTN = 4;
+const int JOYSTICK_DEADZONE_RADIUS = 150;
+const String CORRECT_PASSWORD = "ABC9";      // Password only can be 4 characters and only contains the uppercase English alphabet and numbers
+Adafruit_SSD1306 display(128, 32, &Wire, -1);
+
+
+int x, y;
+bool IsJoyStickPressed = false;
+bool PrevIsJoyStickPressed = false;
+bool IsJoyStickMoved = false;
+int PasswordPointer = 0;
+int Password[4] = { 0, 0, 0, 0 };
+const String PasswordChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+int LimitT = 512 + JOYSTICK_DEADZONE_RADIUS;
+int LimitB = 512 - JOYSTICK_DEADZONE_RADIUS;
+StateMachine CurrentState = UNARMED;
+
+
+// This function runs once after the Arduino is turned on
+void setup()
+{
+    // Start serial connection at 9600 baud rate
+    Serial.begin(9600);
+
+    // Initialize display, if failed then stop the code
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) 
+    {
+        Serial.println(F("SSD1306 allocation failed"));
+        while (true); // Don't proceed, loop forever
+    }
+
+    // Test display & wait a bit
+    display.display();
+    delay(2000);
+
+    // Set default values (turn off the LED and clear the display)
+    display.clearDisplay();
+
+    pinMode(JOYSTICK_BTN, INPUT);       // Set `JOYSTICK_BTN` pin to `INPUT`
+
+
+}
+
+
+// This function repeats itself after the `setup()` has finished running
+void loop()
+{
+    
+    // Detect inputs
+    UpdateJoystick();
+    ReadPass();
+
+    // Update display
+    PrintPass();
+
+    // State machine
+    switch (CurrentState)
+    {
+        case UNARMED:
+            Unarmed();
+            break;
+        case ARMED:
+            Armed();
+            break;
+        case ALARMED:
+            Alarmed();
+            break;
+    }
+
+    // If the joystick button is released then reset the `PrevIsJoyStickPressed` variable
+    if (!IsJoyStickPressed)
+    {
+        PrevIsJoyStickPressed = false;
+    }
+
+}
+
+// This function will be called in the `UNARMED` state
+void Unarmed()
+{
+
+    // If the joystick button pressed (and it wasn't before) then check password
+    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
+    {
+        // Convert password into a string from an array of indexes
+        String pass = "";
+        for (int i = 0; i < 4; i++) pass += PasswordChars[Password[i]];
+
+        // Check whether the password is correct, if yes then change the state to `ARMED`
+        if (pass == CORRECT_PASSWORD)
+        {
+            CurrentState = ARMED;
+            
+        }
+
+        // Reset password
+        for (int i = 0; i < 4; i++) Password[i] = 0;
+    }
+}
+
+// This function will be called in the `ARMED` state
+void Armed()
+{
+    // If the joystick button pressed (and it wasn't before) then check password
+    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
+    {
+        // Convert password into a string from an array of indexes
+        String pass = "";
+        for (int i = 0; i < 4; i++) pass += PasswordChars[Password[i]];
+        
+        // Check whether the password is correct, if yes then change the state to `UNARMED`
+        if (pass == CORRECT_PASSWORD)
+        {
+            CurrentState = UNARMED;
+            
+        }
+        
+        // Reset password
+        for (int i = 0; i < 4; i++) Password[i] = 0;
+    }
+}
+
+// This function will be called in the `ALARMED` state
+void Alarmed()
+{
+    // If the joystick button pressed (and it wasn't before) then check password
+    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
+    {
+        // Convert password into a string from an array of indexes
+        String pass = "";
+        for (int i = 0; i < 4; i++) pass += PasswordChars[Password[i]];
+        
+        // Check whether the password is correct, if yes then change the state to `UNARMED`
+        if (pass == CORRECT_PASSWORD)
+        {
+            CurrentState = UNARMED;
+            
+        }
+        
+        // Reset password
+        for (int i = 0; i < 4; i++) Password[i] = 0;
+    }
+}
+
+// This function updates the coordinates and the button
+// Usage: UpdateJoystick();
+void UpdateJoystick()
+{
+    x = analogRead(JOYSTICK_X);
+    y = analogRead(JOYSTICK_Y);
+    IsJoyStickPressed = digitalRead(JOYSTICK_BTN) == HIGH;
+}
+
+
+// This function prints text to the OLED display
+// Useage: PrintText("Hello world!");
+void PrintText(String msg)
+{
+    display.clearDisplay();                 // Clear the display
+
+    display.setTextSize(2);                 // Normal 1:1 pixel scale
+    display.setTextColor(SSD1306_WHITE);    // Draw white text
+    display.setCursor(0,0);                 // Start at top-left corner
+    display.println(msg);                   // Add the message to the buffer
+
+    display.display();                      // Write the buffer to the display
+}
+
+// This function prints the password to the OLED display
+// Usage: PrintPass();
+void PrintPass()
+{
+    String passwd = "";
+
+    for (int i = 0; i < 4; i++)
+    {
+        passwd += PasswordChars[Password[i]];
+    }
+    PrintText("Password:\n" + passwd);
+}
+
+// This function will read the password through joystick input
+// Usage: ReadPass();
+void ReadPass()
+{
+    // Save the move
+    String JoyStickMove = "";
+
+    // If joystick moved up and isn't checked before then register the movement
+    if (IsJoyUp() && !IsJoyStickMoved)
+    {
+        JoyStickMove = "up";
+        IsJoyStickMoved = true;
+        ChangeCurrentPassChar(1);       // Change the selecter char in the password
+    }
+
+    // If joystick moved down and isn't checked before then register the movement
+    else if (IsJoyDown() && !IsJoyStickMoved)
+    {
+        JoyStickMove = "down";
+        IsJoyStickMoved = true;
+        ChangeCurrentPassChar(-1);      // Change the selecter char in the password
+    }
+
+    // If joystick moved left and isn't checked before then register the movement
+    else if (IsJoyLeft() && !IsJoyStickMoved)
+    {
+        JoyStickMove = "left";
+        IsJoyStickMoved = true;
+        MovePassPointer(-1);            // Change the selected char in the password
+    }
+
+    // If joystick moved right and isn't checked before then register the movement
+    else if (IsJoyRight() && !IsJoyStickMoved)
+    {
+        JoyStickMove = "right";
+        IsJoyStickMoved = true;
+        MovePassPointer(1);             // Change the selected char in the password
+    }
+
+    // If joystick is in the deadzone then let registering possible again
+    else if (IsJoyInDeadzone() && IsJoyStickMoved)
+    {
+        IsJoyStickMoved = false;
+    }
+}
+
+// Checks if the joystick is moved up
+bool IsJoyUp()
+{
+    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
+    bool ConditionY = y > LimitT;                   // Is over the top limit of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Checks if the joystick is moved down
+bool IsJoyDown()
+{
+    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
+    bool ConditionY = y < LimitB;                   // Is under the bottom limit of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Checks if the joystick is moved left
+bool IsJoyLeft()
+{
+    bool ConditionX = x < LimitB;                   // Is under the bottom limit of x
+    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Checks if the joystick is moved right
+bool IsJoyRight()
+{
+    bool ConditionX = x > LimitT;                   // Is over the top limit of x
+    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Checks if the joystick is in the deadzone
+bool IsJoyInDeadzone()
+{
+    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
+    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
+
+    if (ConditionX && ConditionY) return true;
+    return false;
+}
+
+// Change the selected password character
+void MovePassPointer(int value)
+{
+    PasswordPointer += value;
+    if (PasswordPointer >= 4) PasswordPointer = 0;
+    else if (PasswordPointer < 0) PasswordPointer = 3;
+}
+
+// Change the selecter password character's value
+void ChangeCurrentPassChar(int value)
+{
+    Password[PasswordPointer] = (Password[PasswordPointer] + value + PasswordChars.length()) % PasswordChars.length();
+}

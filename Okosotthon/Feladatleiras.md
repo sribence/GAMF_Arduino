@@ -16,8 +16,8 @@
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
 -   [4. Feladat](#4-feladat)
--   [Joystick használata](#joystick-használata)
--   [Teljes rendszer](#a-teljes-rendszer-működtetése)
+-   [Joystick használata](#joystick-használata-)
+-   [Teljes rendszer](#teljes-rendszer)
 -   [Extra Feladat](#extra-feladat)
 
 ---
