@@ -17,7 +17,6 @@
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
--   [4. Feladat](#4-feladat)
 -   [Teljes rendszer](#a-teljes-rendszer-működtetése)
 -   [Extra Feladat](#-extra-feladat)
 
@@ -239,8 +238,6 @@ void loop() {
 }
 ```
 
-![1. Feladat](1.png)
-
 ---
 
 # 🧠 2. Feladat:
@@ -423,8 +420,6 @@ void loop() {
 }
 
 ```
-
-![2. Feladat](2.png)
 
 ---
 
@@ -678,8 +673,6 @@ void loop() {
 ```
 ![carbon](https://github.com/user-attachments/assets/8d913ef6-a73a-4ab3-8f36-8c6b66ad8296)
 
-![3. Feladat](3.png)
-
 ---
 
 # Teljes rendszer
@@ -710,7 +703,6 @@ void loop() {
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
 **📌 Időzített ajtónyitás és automatikus visszazárás:** A lift ajtaja ne csak manuálisan nyíljon és záródjon, hanem időzített módon működjön, és figyelje, hogy egy bizonyos idő elteltével automatikusan bezáródjon.
-
 
 **🏆 Extra kihívás:** 👀 Jelenítsd meg a visszaszámlálást a LED kijelzőn – a hátralévő másodperceket mutassa! 
 
