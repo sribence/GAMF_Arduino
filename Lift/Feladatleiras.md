@@ -13,11 +13,11 @@
 
 **Tartalomjegyzék**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [0. Feladat](#0-feladat)
--   [1. Feladat](#1-feladat)
--   [2. Feladat](#2-feladat) 
--   [3. Feladat](#3-feladat)
--   [Teljes rendszer](#a-teljes-rendszer-működtetése)
+-   [0. Feladat](#-0-feladat)
+-   [1. Feladat](#-1-feladat)
+-   [2. Feladat](#-2-feladat) 
+-   [3. Feladat](#-3-feladat)
+-   [Teljes rendszer](#-a-teljes-rendszer-működtetése)
 -   [Extra Feladat](#-extra-feladat)
 
 ---
@@ -699,7 +699,7 @@ void loop() {
 
 ---
 
-### **🏆 Extra feladat:**  
+# **🏆 Extra feladat:**  
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
 **📌 Időzített ajtónyitás és automatikus visszazárás:** A lift ajtaja ne csak manuálisan nyíljon és záródjon, hanem időzített módon működjön, és figyelje, hogy egy bizonyos idő elteltével automatikusan bezáródjon.
