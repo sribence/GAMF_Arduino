@@ -86,7 +86,38 @@
 ---
 
 # 3. Feladat:
+🚨 Mozgásérzékelős LED-es biztonsági rendszer💡
 
+**🛠️ Feladat leírása:** Készíts egy alap biztonsági rendszert, amely egy mozgásérzékelőt (PIR szenzort) és egy RGB LED-et használ az állapotok vizuális jelzésére. A rendszer három állapotot különböztet meg:
+- 🟢 UNARMED – Nincs védelem, a LED világít, ha mozgást érzékel.
+- 🟠 ARMED – A rendszer aktív, figyeli a mozgást.
+- 🔴 ALARMED – Mozgás érzékelve, riasztás! A LED pirosra vált.
+
+**📜 A program működése**
+✅ setup(): 
+- Inicializálja a lábakat és alapértékeket állít be.
+
+🔁 loop():
+- Folyamatosan olvassa a mozgásérzékelőt (DetectMovement()).
+- A rendszer állapota alapján meghívja a megfelelő függvényt: Unarmed(), Armed(), Alarmed().
+
+🧠 Állapotok:
+**UNARMED**
+- Ha mozgást érzékel ➡️ LED fehér (255, 255, 255)
+- Ha nincs mozgás ➡️ LED kikapcsol
+
+**ARMED**
+- LED narancssárga (255, 255, 0)
+- Ha mozgást érzékel ➡️ ALARMED állapotba vált
+
+**ALARMED**
+- LED pirosra vált (255, 0, 0)
+
+**🎯 Cél**
+Építs egy rendszert, ami:
+- 👁️‍🗨️ képes mozgást érzékelni,
+- 🚦 vizuálisan jelzi az állapotát,
+- 🔁 logikusan vált a három állapot között.
 
 ![3. Feladat](3.png)
 

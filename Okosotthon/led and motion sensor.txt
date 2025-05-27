@@ -1,0 +1,134 @@
+// led and motion sensor
+
+#include <Adafruit_GFX.h>
+
+const int MOTION_SENSOR = 8;
+const int LED_R = 9;
+const int LED_G = 11;
+const int LED_B = 10;
+const float BRIGHTNESS = 0.1;
+
+// State machine enum
+enum StateMachine {
+    UNARMED,
+    ARMED,
+    ALARMED,
+};
+
+bool IsMovementDetected = false;
+StateMachine CurrentState = UNARMED;
+bool IsDoorSet = false;
+
+// This function runs once after the Arduino is turned on
+void setup()
+{
+    // Start serial connection at 9600 baud rate
+    Serial.begin(9600);
+
+    // Test display & wait a bit
+    delay(2000);
+
+    // Set default values (turn off the LED and clear the display)
+
+    SetLed(0, 0, 0);
+
+    pinMode(LED_R, OUTPUT);             // Set `LED_R` pin to `OUTPUT`
+    pinMode(LED_G, OUTPUT);             // Set `LED_G` pin to `OUTPUT`
+    pinMode(LED_B, OUTPUT);             // Set `LED_B` pin to `OUTPUT`
+    pinMode(MOTION_SENSOR, INPUT);      // Set `MOTION_SENSOR` pin to `INPUT`
+
+}
+
+// This function repeats itself after the `setup()` has finished running
+void loop()
+{
+    // Detect inputs
+    DetectMovement();
+
+    // State machine
+    switch (CurrentState)
+    {
+        case UNARMED:
+            Unarmed();
+            break;
+        case ARMED:
+            Armed();
+            break;
+        case ALARMED:
+            Alarmed();
+            break;
+    }
+
+}
+
+// This function will be called in the `UNARMED` state
+void Unarmed()
+{
+    // If movement detected then turn on the light, otherwise turn it off
+    if (IsMovementDetected)
+    {
+        SetLed(255, 255, 255);
+    }
+    else 
+    {
+        SetLed(0, 0, 0);
+    }
+
+}
+
+// This function will be called in the `ARMED` state
+void Armed()
+{
+    // If the door is not set then open it
+    if (!IsDoorSet)
+    {
+        
+        IsDoorSet = true;
+    }
+
+    // Change the LED to orange
+    SetLed(255, 255, 0);
+
+    // If movement detected then change state to `ALARMED`
+    if (IsMovementDetected)
+    {
+        CurrentState = ALARMED;
+        IsDoorSet = false;
+    }
+}
+
+// This function will be called in the `ALARMED` state
+void Alarmed()
+{
+    // If the door is not set then close it
+    if (!IsDoorSet)
+    {
+        
+        IsDoorSet = true;
+    }
+    // Turn the light to red and start the buzzer
+    SetLed(255, 0, 0);
+}
+
+
+// This function lets you set the LED's RGB value
+// Usage: SetLed(255, 255, 255);
+//        SetLed(0, 0, 0); -> To turn it off
+void SetLed(int red, int green, int blue)
+{
+    // Setting the output values (inverted because of the schematic) and also calculate the brightness
+    analogWrite(LED_R, 255 - (red * BRIGHTNESS));       // red
+    analogWrite(LED_G, 255 - (green * BRIGHTNESS));     // green
+    analogWrite(LED_B, 255 - (blue * BRIGHTNESS));      // blue
+
+}
+
+// This function checks the RIP sensor whether is there movement or not
+// Usage: DetectMovement();
+void DetectMovement()
+{
+    IsMovementDetected = digitalRead(MOTION_SENSOR) == 1;
+}
+
+
+
