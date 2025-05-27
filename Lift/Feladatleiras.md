@@ -41,14 +41,7 @@
 
 ---
 
-# 1. Feladat:
-
-
-![1. Feladat](l-1.png)
-
----
-
-# 🧠 2. Feladat:
+# 🧠 1. Feladat:
 ## Kijelző kezelése: emeletszám és mozgásirány megjelenítése
 
 ### 🎯 Cél:
@@ -246,13 +239,11 @@ void loop() {
 }
 ```
 
-
-
-![2. Feladat](l-2.png)
+![1. Feladat](1.png)
 
 ---
 
-# 🧠 3. Feladat:
+# 🧠 2. Feladat:
 
 ## Ajtó működésének vezérlése gombbal
 
@@ -431,14 +422,13 @@ void loop() {
     }
 }
 
-
 ```
 
-![3. Feladat](l-3.png)
+![2. Feladat](2.png)
 
 ---
 
-# 4. Feladat:
+# 3. Feladat:
 
 🎯 Cél:
 Mozgatni a liftkocsit léptetőmotor segítségével különböző emeletek között:
@@ -485,7 +475,6 @@ cel_emelet = 2;
 cel_poz = cel_emelet * emelet_tavolsag;
 ```
 Ez segít a rendszernek tudni, hol álljon meg a kabin.
-
 
 
 ```cpp
@@ -689,7 +678,7 @@ void loop() {
 ```
 ![carbon](https://github.com/user-attachments/assets/8d913ef6-a73a-4ab3-8f36-8c6b66ad8296)
 
-![4. Feladat](l-4.png)
+![3. Feladat](3.png)
 
 ---
 
