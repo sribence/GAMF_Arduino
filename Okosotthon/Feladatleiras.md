@@ -62,8 +62,24 @@
 ---
 
 # 2. Feladat:
+🔥 Tűzriasztó rendszer 🚨
+**🛠️ Feladat:** Ebben a projektben egy egyszerű tűzjelző rendszert fogsz készíteni. A rendszer képes észlelni, ha tűz van a közelben (🔥), és riasztást ad ki egy piezo buzzer segítségével (🔔). A rendszer viselkedését egy állapotgép (State Machine) szabályozza.
 
+**A program három állapotot kezel:**
+- 🟡 UNARMED – A rendszer ki van kapcsolva, buzzer nem szól.
+- 🟢 ARMED – A rendszer figyel, ha tüzet érzékel, riaszt.
+- 🔴 ALARMED – Tűz észlelve, a buzzer szaggatott hangjelzést ad ki.
 
+**⚙️ Főbb funkciók**
+- DetectFlame() – Érzékeli, ha lángot észlel a szenzor.
+- Armed() – Ha tüzet érzékel, állapotot vált ALARMED-re.
+- Alarmed() – Buzzer ki-be kapcsol, riasztás mód.
+- Unarmed() – Kikapcsolt állapot, buzzer némán.
+
+🎯 Cél:🔧 Hozz létre egy megbízható tűzriasztó rendszert, amely:
+- figyel a környezetre,
+- felismeri a veszélyt,
+- hangjelzéssel figyelmeztet.
 
 ![2. Feladat](2.png)
 
