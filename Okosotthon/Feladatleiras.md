@@ -16,6 +16,7 @@
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
 -   [4. Feladat](#4-feladat)
+-   [Joystick használata](#joystick-használata)
 -   [Teljes rendszer](#a-teljes-rendszer-működtetése)
 -   [Extra Feladat](#extra-feladat)
 
@@ -124,9 +125,31 @@
 ---
 
 # 4. Feladat:
+🖥️ OLED kijelző szövegmegjelenítő Arduino-val 📟
+**🛠️ Feladat leírása:** Készíts egy egyszerű programot, amely képes szöveget megjeleníteni egy OLED kijelzőn! A kijelző I²C kommunikációval csatlakozik az Arduino-hoz, és az Adafruit könyvtárak segítségével vezérelhető.
 
+**💾 Kód működése**
+A program:
+- Inicializálja a kijelzőt a setup() függvényben.
+- Ellenőrzi, hogy sikeres volt-e a kijelző beállítása.
+- A loop() függvényben folyamatosan kiírja: "Hello world!"
+
+**🧠 Főbb funkciók**
+- display.begin(...) ➡️ kijelző inicializálása
+- display.clearDisplay() ➡️ képernyő törlése
+- display.setTextSize(...) ➡️ betűméret beállítása
+- display.setCursor(...) ➡️ szöveg pozíciója
+- display.println(...) ➡️ szöveg kiírása
+- display.display() ➡️ megjelenítés frissítése
 
 ![4. Feladat](4.png)
+
+---
+
+# Joystick használata 🎮
+
+
+
 
 ---
 
@@ -176,6 +199,7 @@
 - Folyamatosan mutatja az aktuálisan beírt jelszót.
 - Segítséget nyújt a karakterválasztáshoz.
 
+---
 
 ### **🏆 Extra feladat:**  
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
