@@ -40,13 +40,29 @@
 ---
 
 # 1. Feladat:
+🔔 Buzzer vezérlés Arduino-val 🎵
+**🛠️ Feladatleírás:** Ebben a projektben egy buzzer (piezo hangszóró) vezérlését fogjuk megvalósítani. A cél, hogy a buzzer folyamatosan hangot adjon ki meghatározott időközönként.
 
+**📋 A feladat lépései**
+⚙️ Állítsd be a hardvert:
+- Csatlakoztass egy piezo buzzert a D3-as digitális lábra.
+- (Opcionális) Csatlakoztass egy LED-et a D9-es lábra, amely halványan világít a program elindulásakor.
+
+🧠 Értsd meg a program működését:
+- A setup() függvény inicializálja a buzzer lábat kimenetként és beállít egy alap fényszintet a LED-nek.
+- A loop() függvény folyamatosan 100 Hz frekvenciájú hangot ad ki a buzzerre, fél másodperces szünetekkel.
+
+🔄 Kód részletei:
+- tone(BUZZER, 100); – 100 Hz-es hang indítása
+- delay(500); – fél másodperc várakozás
+- A IsBuzzerOn változó itt nem befolyásolja a működést, de később bővítéshez használható.
 
 ![1. Feladat](1.png)
 
 ---
 
 # 2. Feladat:
+
 
 
 ![2. Feladat](2.png)
