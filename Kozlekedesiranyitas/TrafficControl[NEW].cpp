@@ -1,349 +1,161 @@
 //////////////////////////////////////////////////////////
-//                      Variables                       //
+//                  Változók definíciója                 //
 //////////////////////////////////////////////////////////
-const int SERVO_PIN = 6;
-const int PAIR_ONE_GREEN = 8;
-const int PAIR_ONE_YELLOW = 9;
-const int PAIR_ONE_RED = 10;
-const int PAIR_TWO_GREEN = 11;
-const int PAIR_TWO_YELLOW = 12;
-const int PAIR_TWO_RED = 13;
-const int STANDBY_TRIGGER = 2;
-const int TRAIN_ON = 3;
-const int TRAIN_OFF = 4;
-const unsigned int GO_PERIOD = 5000;
-const unsigned int WAIT_PERIOD = 1500;
-const unsigned int STANDBY_BLINK_PERIOD = 500;
-//////////////////////////////////////////////////////////
+const int SOROMPO_PIN = 6;              // Sorompó szervó motor PIN-je
+const int ELSO_PAR_ZOLD = 8;            // Első pár zöld lámpa PIN-je
+const int ELSO_PAR_SARGA = 9;           // Első pár sárga lámpa PIN-je
+const int ELSO_PAR_PIROS = 10;          // Első pár piros lámpa PIN-je
+const int MASODIK_PAR_ZOLD = 11;        // Második pár zöld lámpa PIN-je
+const int MASODIK_PAR_SARGA = 12;       // Második pár sárga lámpa PIN-je
+const int MASODIK_PAR_PIROS = 13;       // Második pár piros lámpa PIN-je
+const int VARAKOZAS_GOMB = 2;           // Várakozási mód gomb PIN-je
+const int VONAT_ERKEZIK = 3;            // Vonat érkezik gomb PIN-je
+const int VONAT_ELMENT = 4;             // Vonat elment gomb PIN-je
 
-// State machine enum
-enum StateMachine {
-    PAIR_ONE_GO,
-    PAIR_TWO_GO,
-    PAIR_ONE_WAIT,
-    PAIR_TWO_WAIT,
-    STANDBY,
+// Időzítések (milliszekundumban)
+const unsigned int ZOLD_IDO = 5000;     // Zöld lámpa időtartama
+const unsigned int VARAKOZAS_IDO = 1500;// Várakozási idő
+const unsigned int VILLOGAS_IDO = 500;  // Várakozási mód villogás ideje
+
+// Állapotgép definíciója
+enum Allapot {
+    ELSO_PAR_ZOLD_ON,
+    MASODIK_PAR_ZOLD_ON,
+    ELSO_PAR_VARAKOZIK,
+    MASODIK_PAR_VARAKOZIK,
+    VARAKOZASI_MOD
 };
 
-// Helper variables
-unsigned int TimeCheckpoint;
-bool IsStandbyButtonPressed = false;
-StateMachine CurrentState = PAIR_ONE_GO;
+// Segédváltozók
+unsigned int Idozito;
+bool VarakozasGombNyomva = false;
+Allapot JelenlegiAllapot = ELSO_PAR_ZOLD_ON;
 
-// This function runs once after the Arduino is turned on
-void setup()
-{
-    pinMode(SERVO_PIN, OUTPUT);         // Set `SERVO_PIN` pin to `OUTPUT`
-    pinMode(PAIR_ONE_GREEN, OUTPUT);    // Set `PAIR_ONE_GREEN` pin to `OUTPUT`
-    pinMode(PAIR_ONE_YELLOW, OUTPUT);   // Set `PAIR_ONE_YELLOW` pin to `OUTPUT`
-    pinMode(PAIR_ONE_RED, OUTPUT);      // Set `PAIR_ONE_RED` pin to `OUTPUT`
-    pinMode(PAIR_TWO_GREEN, OUTPUT);    // Set `PAIR_TWO_GREEN` pin to `OUTPUT`
-    pinMode(PAIR_TWO_YELLOW, OUTPUT);   // Set `PAIR_TWO_YELLOW` pin to `OUTPUT`
-    pinMode(PAIR_TWO_RED, OUTPUT);      // Set `PAIR_TWO_RED` pin to `OUTPUT`
-    pinMode(STANDBY_TRIGGER, INPUT);    // Set `STANDBY` pin to `INPUT`
-    pinMode(TRAIN_ON, INPUT);           // Set `TRAIN_ON` pin to `INPUT`
-    pinMode(TRAIN_OFF, INPUT);          // Set `TRAIN_OFF` pin to `INPUT`
+// Lámpa állapotok kezelése
+struct LampakAllapota {
+    bool zold;
+    bool sarga;
+    bool piros;
+};
 
-    Serial.begin(9600);                 // Connect to serial port, set baud rate at `9600`
-
-    TimeCheckpoint = millis();          // Set an initial value of `TimeCheckpoint`
+// Lámpa állapotok beállítása
+void LampakBeallitasa(int zold_pin, int sarga_pin, int piros_pin, LampakAllapota allapot) {
+    digitalWrite(zold_pin, allapot.zold ? HIGH : LOW);
+    digitalWrite(sarga_pin, allapot.sarga ? HIGH : LOW);
+    digitalWrite(piros_pin, allapot.piros ? HIGH : LOW);
 }
 
-// This function repeats itself after the `setup()` has finished running
-void loop()
-{
-    // State machine
-    switch (CurrentState)
-    {
-        case PAIR_ONE_GO:
-            PairOneGo();
+// Sorompó vezérlése
+void SorompoVezerele(int szog) {
+    int impulzus = (szog * 11) + 500;
+    for (int i = 0; i < 50; i++) {
+        digitalWrite(SOROMPO_PIN, HIGH);
+        delayMicroseconds(impulzus);
+        digitalWrite(SOROMPO_PIN, LOW);
+        delay(20 - impulzus / 1000);
+    }
+}
+
+void setup() {
+    // PIN-ek beállítása
+    pinMode(SOROMPO_PIN, OUTPUT);
+    pinMode(ELSO_PAR_ZOLD, OUTPUT);
+    pinMode(ELSO_PAR_SARGA, OUTPUT);
+    pinMode(ELSO_PAR_PIROS, OUTPUT);
+    pinMode(MASODIK_PAR_ZOLD, OUTPUT);
+    pinMode(MASODIK_PAR_SARGA, OUTPUT);
+    pinMode(MASODIK_PAR_PIROS, OUTPUT);
+    pinMode(VARAKOZAS_GOMB, INPUT);
+    pinMode(VONAT_ERKEZIK, INPUT);
+    pinMode(VONAT_ELMENT, INPUT);
+
+    Serial.begin(9600);
+    Idozito = millis();
+}
+
+// Állapotgép függvények
+void ElsoParZoldAllapot() {
+    LampakBeallitasa(ELSO_PAR_ZOLD, ELSO_PAR_SARGA, ELSO_PAR_PIROS, {true, false, false});
+    LampakBeallitasa(MASODIK_PAR_ZOLD, MASODIK_PAR_SARGA, MASODIK_PAR_PIROS, {false, false, true});
+    if (millis() - Idozito >= ZOLD_IDO) {
+        Idozito = millis();
+        JelenlegiAllapot = MASODIK_PAR_VARAKOZIK;
+    }
+}
+
+void MasodikParZoldAllapot() {
+    LampakBeallitasa(ELSO_PAR_ZOLD, ELSO_PAR_SARGA, ELSO_PAR_PIROS, {false, false, true});
+    LampakBeallitasa(MASODIK_PAR_ZOLD, MASODIK_PAR_SARGA, MASODIK_PAR_PIROS, {true, false, false});
+    if (millis() - Idozito >= ZOLD_IDO) {
+        Idozito = millis();
+        JelenlegiAllapot = ELSO_PAR_VARAKOZIK;
+    }
+}
+
+void ElsoParVarakozik() {
+    LampakBeallitasa(ELSO_PAR_ZOLD, ELSO_PAR_SARGA, ELSO_PAR_PIROS, {false, true, true});
+    LampakBeallitasa(MASODIK_PAR_ZOLD, MASODIK_PAR_SARGA, MASODIK_PAR_PIROS, {false, true, false});
+    if (millis() - Idozito >= VARAKOZAS_IDO) {
+        Idozito = millis();
+        JelenlegiAllapot = ELSO_PAR_ZOLD_ON;
+    }
+}
+
+void MasodikParVarakozik() {
+    LampakBeallitasa(ELSO_PAR_ZOLD, ELSO_PAR_SARGA, ELSO_PAR_PIROS, {false, true, false});
+    LampakBeallitasa(MASODIK_PAR_ZOLD, MASODIK_PAR_SARGA, MASODIK_PAR_PIROS, {false, true, true});
+    if (millis() - Idozito >= VARAKOZAS_IDO) {
+        Idozito = millis();
+        JelenlegiAllapot = MASODIK_PAR_ZOLD_ON;
+    }
+}
+
+void VarakozasiMod() {
+    if (millis() - Idozito < VILLOGAS_IDO) {
+        // Mindkét pár sárgán villog
+        LampakBeallitasa(ELSO_PAR_ZOLD, ELSO_PAR_SARGA, ELSO_PAR_PIROS, {false, true, false});
+        LampakBeallitasa(MASODIK_PAR_ZOLD, MASODIK_PAR_SARGA, MASODIK_PAR_PIROS, {false, true, false});
+    } else if (millis() - Idozito < VILLOGAS_IDO * 2) {
+        // Mindkét pár kikapcsolva
+        LampakBeallitasa(ELSO_PAR_ZOLD, ELSO_PAR_SARGA, ELSO_PAR_PIROS, {false, false, false});
+        LampakBeallitasa(MASODIK_PAR_ZOLD, MASODIK_PAR_SARGA, MASODIK_PAR_PIROS, {false, false, false});
+    } else {
+        Idozito = millis();
+    }
+}
+
+void loop() {
+    // Állapotgép kezelése
+    switch (JelenlegiAllapot) {
+        case ELSO_PAR_ZOLD_ON:
+            ElsoParZoldAllapot();
             break;
-        case PAIR_TWO_GO:
-            PairTwoGo();
+        case MASODIK_PAR_ZOLD_ON:
+            MasodikParZoldAllapot();
             break;
-        case PAIR_ONE_WAIT:
-            PairOneWait();
+        case ELSO_PAR_VARAKOZIK:
+            ElsoParVarakozik();
             break;
-        case PAIR_TWO_WAIT:
-            PairTwoWait();
-            break;    
-        case STANDBY:
-            Standby();
-            break;         
+        case MASODIK_PAR_VARAKOZIK:
+            MasodikParVarakozik();
+            break;
+        case VARAKOZASI_MOD:
+            VarakozasiMod();
+            break;
     }
 
-    // If the program isn't in the `STANDBY` state and the button is pressed then change to that state
-    if (digitalRead(STANDBY) == HIGH && !IsStandbyButtonPressed && CurrentState != STANDBY) 
-    {
-        IsStandbyButtonPressed = true;
-        CurrentState = STANDBY;
-    } 
-
-    // If the program is in the `STANDBY` state and the button is pressed then change to the default state (`PAIR_ONE_GO`)
-    else if (digitalRead(STANDBY) == HIGH && !IsStandbyButtonPressed)
-    {
-        IsStandbyButtonPressed = true;
-        CurrentState = PAIR_ONE_GO;
+    // Várakozási mód gomb kezelése
+    if (digitalRead(VARAKOZAS_GOMB) == HIGH && !VarakozasGombNyomva) {
+        VarakozasGombNyomva = true;
+        JelenlegiAllapot = (JelenlegiAllapot == VARAKOZASI_MOD) ? ELSO_PAR_ZOLD_ON : VARAKOZASI_MOD;
+    } else if (digitalRead(VARAKOZAS_GOMB) == LOW) {
+        VarakozasGombNyomva = false;
     }
 
-    // Reset the `IsStandbyButtonPressed` helper variable
-    else
-    {
-        IsStandbyButtonPressed = false;
+    // Vonat érzékelés kezelése
+    if (digitalRead(VONAT_ERKEZIK) == HIGH) {
+        SorompoVezerele(70);  // Sorompó leengedése
+    } else if (digitalRead(VONAT_ELMENT) == HIGH) {
+        SorompoVezerele(160); // Sorompó felemelése
     }
-
-    // If the train is coming button pressed then lower the barrier
-    if (digitalRead(TRAIN_ON) == HIGH)
-    {
-        SetBarrier("down");
-    }
-
-    // If the train has passed button pressed then raise the barrier
-    else if (digitalRead(TRAIN_OFF) == HIGH)
-    {
-        SetBarrier("up");
-    }
-}
-
-// Function to call when the program is in the `PAIR_ONE_GO` state
-void PairOneGo()
-{
-    // Set the lights
-    ManagePairOne("green");
-    ManagePairTwo("red");
-
-    // After a fix amount of time enter to the next state
-    if (millis() - TimeCheckpoint >= GO_PERIOD)
-    {
-        TimeCheckpoint = millis();
-        CurrentState = PAIR_TWO_WAIT;
-    }
-}
-
-// Function to call when the program is in the `PAIR_TWO_GO` state
-void PairTwoGo()
-{
-    // Set the lights
-    ManagePairOne("red");
-    ManagePairTwo("green");
-
-    // After a fix amount of time enter to the next state
-    if (millis() - TimeCheckpoint >= GO_PERIOD)
-    {
-        TimeCheckpoint = millis();
-        CurrentState = PAIR_ONE_WAIT;
-    }
-}
-
-// Function to call when the program is in the `PAIR_ONE_WAIT` state
-void PairOneWait()
-{
-    // Set the lights
-    ManagePairOne("red-yellow");
-    ManagePairTwo("yellow");
-
-    // After a fix amount of time enter to the next state
-    if (millis() - TimeCheckpoint >= WAIT_PERIOD)
-    {
-        TimeCheckpoint = millis();
-        CurrentState = PAIR_ONE_GO;
-    }
-}
-
-// Function to call when the program is in the `PAIR_TWO_WAIT` state
-void PairTwoWait()
-{
-    // Set the lights
-    ManagePairOne("yellow");
-    ManagePairTwo("red-yellow");
-
-    // After a fix amount of time enter to the next state
-    if (millis() - TimeCheckpoint >= WAIT_PERIOD)
-    {
-        TimeCheckpoint = millis();
-        CurrentState = PAIR_TWO_GO;
-    }
-}
-
-// Function to call when the program is in the `STANDBY` state
-void Standby()
-{
-    // Turn on yellow
-    if (millis() - TimeCheckpoint < STANDBY_BLINK_PERIOD)
-    {
-        ManagePairOne("yellow");
-        ManagePairTwo("yellow");
-    }
-
-    // Turn off yellow
-    else if (millis() - TimeCheckpoint < STANDBY_BLINK_PERIOD * 2)
-    {
-        ManagePairOne("off");
-        ManagePairTwo("off");
-    }
-
-    // Reset time
-    else
-    {
-        TimeCheckpoint = millis();
-    }
-}
-
-//////////////////////////////////////////////////////////
-//                   Helper Functions                   //
-//////////////////////////////////////////////////////////
-
-// This function controls the barrier
-// Usage: SetBarrier("up");
-//        SetBarrier("down");
-void SetBarrier(String state)
-{
-    // Set the degree based on the state and calculate the pulse with
-    int angle;
-    if (state == "up") angle = 160;
-    else if (state == "down") angle = 70;
-    int pulsewidth = (angle * 11) + 500;                  // Calculate pulse with based on the degree (range: 500-2480)
-
-    // Send the signal to the servo motor
-    for (int i = 0; i < 50; i++)
-    {
-        digitalWrite(SERVO_PIN, HIGH);                    // Set the level of servo pin as `HIGH`
-        delayMicroseconds(pulsewidth);                    // Delay microsecond of pulse width
-        digitalWrite(SERVO_PIN, LOW);                     // Set the level of servo pin as `LOW`
-        delay(20 - pulsewidth / 1000);
-    }
-}
-
-// This function controls a pair of traffic lights
-// Usage: ManagePairOne("red");
-//        ManagePairOne("yellow");
-//        ManagePairOne("green");
-//        ManagePairOne("red-yellow");
-//        ManagePairOne("off");
-void ManagePairOne(String state)
-{
-    // Variables to change based on the required state of the lights
-    auto IsGreenEnabled = HIGH;
-    auto IsYellowEnabled = HIGH;
-    auto IsRedEnabled = HIGH;
-
-    // Set in case of state `red`
-    if (state == "red")
-    {
-        IsGreenEnabled = LOW;
-        IsYellowEnabled = LOW;
-        IsRedEnabled = HIGH;
-    }
-
-    // Set in case of state `yellow`
-    else if (state == "yellow")
-    {
-        IsGreenEnabled = LOW;
-        IsYellowEnabled = HIGH;
-        IsRedEnabled = LOW;
-    }
-
-    // Set in case of state `green`
-    else if (state == "green")
-    {
-        IsGreenEnabled = HIGH;
-        IsYellowEnabled = LOW;
-        IsRedEnabled = LOW;
-    }
-
-    // Set in case of state `red-yellow`
-    else if (state == "red-yellow")
-    {
-        IsGreenEnabled = LOW;
-        IsYellowEnabled = HIGH;
-        IsRedEnabled = HIGH;
-    }
-
-    // Set in case of state `off`
-    else if (state == "off")
-    {
-        IsGreenEnabled = LOW;
-        IsYellowEnabled = LOW;
-        IsRedEnabled = LOW;
-    }
-
-    // Turn on all lights in any other case
-    else
-    {
-        IsGreenEnabled = HIGH;
-        IsYellowEnabled = HIGH;
-        IsRedEnabled = HIGH;
-    }
-
-    // Write the date to the lights
-    digitalWrite(PAIR_ONE_GREEN, IsGreenEnabled);
-    digitalWrite(PAIR_ONE_YELLOW, IsYellowEnabled);
-    digitalWrite(PAIR_ONE_RED, IsRedEnabled);
-}
-
-// This function controls a pair of traffic lights
-// Usage: ManagePairTow("red");
-//        ManagePairTow("yellow");
-//        ManagePairTow("green");
-//        ManagePairTow("red-yellow");
-//        ManagePairTow("off");
-void ManagePairTwo(String state)
-{
-    // Variables to change based on the required state of the lights
-    auto IsGreenEnabled = HIGH;
-    auto IsYellowEnabled = HIGH;
-    auto IsRedEnabled = HIGH;
-
-    // Set in case of state `red`
-    if (state == "red")
-    {
-        IsGreenEnabled = LOW;
-        IsYellowEnabled = LOW;
-        IsRedEnabled = HIGH;
-    }
-
-    // Set in case of state `yellow`
-    else if (state == "yellow")
-    {
-        IsGreenEnabled = LOW;
-        IsYellowEnabled = HIGH;
-        IsRedEnabled = LOW;
-    }
-
-    // Set in case of state `green`
-    else if (state == "green")
-    {
-        IsGreenEnabled = HIGH;
-        IsYellowEnabled = LOW;
-        IsRedEnabled = LOW;
-    }
-
-    // Set in case of state `red-yellow`
-    else if (state == "red-yellow")
-    {
-        IsGreenEnabled = LOW;
-        IsYellowEnabled = HIGH;
-        IsRedEnabled = HIGH;
-    }
-
-    // Set in case of state `off`
-    else if (state == "off")
-    {
-        IsGreenEnabled = LOW;
-        IsYellowEnabled = LOW;
-        IsRedEnabled = LOW;
-    }
-
-    // Turn on all lights in any other case
-    else
-    {
-        IsGreenEnabled = HIGH;
-        IsYellowEnabled = HIGH;
-        IsRedEnabled = HIGH;
-    }
-
-    // Write the date to the lights
-    digitalWrite(PAIR_TWO_GREEN, IsGreenEnabled);
-    digitalWrite(PAIR_TWO_YELLOW, IsYellowEnabled);
-    digitalWrite(PAIR_TWO_RED, IsRedEnabled);
 }
