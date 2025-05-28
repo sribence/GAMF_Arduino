@@ -36,6 +36,132 @@ Ebben a projektben két ESP32 mikrokontroller együttműködésével valósul me
 
 ---
 
+# 8x8 LED Mátrix Tutorial - Haladó útmutató
+
+Üdv! Ha középiskolás vagy és érdeklődsz az ESP32 mikrokontrollerek iránt, ez a tutorial segít megérteni a 8x8 LED mátrixok használatát egy gyakorlati projektben. Elmagyarázom a kulcskoncepciókat, mint az I2C címzés, pixelkezelés és animáció, lépésről lépésre, de már egy kicsit mélyebben, hogy lásd, hogyan épül fel egy ilyen rendszer. Használd ki a példákat kódoláshoz!
+
+## 1. Lépés: Inicializálás (Ébreszd fel a mátrixot)
+Az I2C protokollon keresztül kommunikálunk a mátrixokkal, ami azt jelenti, hogy mindegyiknek egyedi címet adunk (pl. 0x70). Ez biztosítja, hogy az ESP32 külön-külön irányíthassa őket. Példa:
+```cpp
+matrix0.begin(0x70);  // Inicializálja az első mátrixot az I2C címen
+// Miért fontos? Ha nem adsz címet, az ESP32 nem tudja, melyik mátrixnak küldje az adatokat.
+```
+
+## 2. Lépés: Kijelző törlése (Clear screen)
+Mielőtt rajzolsz, töröld a mátrixot, hogy tiszta felületen dolgozhass. Ez a mátrix memóriájának nullázását jelenti:
+```cpp
+matrix0.clear();  // Törli a mátrix tartalmát
+matrix0.writeDisplay();  // Frissíti a kijelzőt
+// Technikailag ez a mátrix bufferét üríti, ami gyorsabbá teszi a frissítéseket.
+```
+
+## 3. Lépés: Egyetlen pixel kirajzolása
+A mátrix 64 pixelből (8x8) áll, és pixelenként vezérelheted őket. Ez alapvető a grafikus megjelenítéshez:
+```cpp
+matrix0.drawPixel(3, 4, LED_ON);  // Bekapcsol egy pixelt a 3. oszlopban, 4. sorban
+matrix0.writeDisplay();  // Láthatod a változást
+// Példa bővítése: Kipróbálhatod, hogyan rajzolsz egy vonalat több pixelből: for ciklusokkal sorban bekapcsolhatsz pixeleket.
+```
+
+## 4. Lépés: Alakzat kirajzolása (Pl. számok vagy formák)
+Használhatsz tömböket, hogy komplexebb mintákat rajzolj, mint egy számot. Ez már a bitek manipulációjára épül:
+```cpp
+const uint8_t num1[] = {B00000000, B00010000, B00110000, B00010000, B00010000, B00010000, B00111000, B00000000};
+for (uint8_t y = 0; y < 8; y++) {
+    for (uint8_t x = 0; x < 8; x++) {
+        if (num1[y] & (1 << x)) {
+            matrix0.drawPixel(7 - x, y, LED_ON);  // Bitek alapján rajzol
+        }
+    }
+}
+matrix0.writeDisplay();  // Megjeleníti a számot
+// Miért bitsor? Ez hatékony, mert kis memóriával dolgozunk az ESP32-n.
+```
+
+## 5. Lépés: Animáció és több mátrix kezelése
+Hozd mozgásba a mátrixot! Például villogasd a pixelt, vagy szinkronizáld több mátrixot:
+```cpp
+void loop() {
+    matrix0.clear();
+    matrix0.drawPixel(3, 4, LED_ON);  // Első pixel bekapcsolása
+    matrix0.writeDisplay();
+    delay(500);  // 0.5 másodperc várakozás
+    matrix0.clear();
+    matrix0.writeDisplay();  // Kikapcsolás
+    delay(500);
+
+    // Több mátrix: Pl. szinkronizált rajz
+    matrix1.drawPixel(0, 0, LED_ON);  // Másik mátrixon rajzolás
+    matrix1.writeDisplay();
+}
+// Ez demonstrálja a loop használatát animációkhoz, ami a játékokban kulcsfontosságú.
+```
+
+## 6. Lépés: Teljes példa integráció
+Próbáld ki egy egyszerű játékfragmentumot, ahol több elemet kombinálsz:
+```cpp
+// Példa: Egy egyszerű villogó minta több mátrixon
+matrix0.begin(0x70);
+matrix1.begin(0x71);
+while(true) {
+    matrix0.drawPixel(0, 0, LED_ON);
+    matrix1.drawPixel(7, 7, LED_ON);
+    matrix0.writeDisplay();
+    matrix1.writeDisplay();
+    delay(200);
+    matrix0.clear();
+    matrix1.clear();
+    matrix0.writeDisplay();
+    matrix1.writeDisplay();
+    delay(200);
+}
+// Ez mutatja, hogyan kezelhetsz több eszközt egyszerre.
+```
+
+Végül, íme a teljes mintakód az OrderConfigurator.cpp fájlból, hogy lásd a kontextust és kipróbálhasd:
+```cpp
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_LEDBackpack.h>
+
+Adafruit_8x8matrix matrix0 = Adafruit_8x8matrix();
+// ... (a teljes kód folytatása) ...
+// [Teljes kód itt:]
+static const uint8_t num0[] = {B00000000, B00110000, B01001000, B01001000, B01001000, B01001000, B00110000, B00000000};
+// ... (további num tömbök) ...
+
+void setup() {
+    Serial.begin(9600);
+    matrix0.begin(0x70);
+    // ... (további inicializálások) ...
+    clearScreen();
+}
+
+void loop() {
+    clearScreen();
+    szamKiir(matrix0, 0);
+    delay(500);
+    // ... (további loop tartalom) ...
+}
+
+void szamKiir(Adafruit_8x8matrix matrix, int num) {
+    // ... (funkció teljes tartalma) ...
+}
+
+char reverseBits(char b) {
+    // ... (funkció) ...
+}
+
+void clearScreen() {
+    // ... (funkció) ...
+}
+// A teljes kód itt fejeződik be.
+```
+
+Ez a tutorial most már részletesebb, hogy középiskolásként mélyebben megérthesd a rendszert. Próbáld ki a példákat, és építsd be a saját projektedbe!
+
+---
+
 # 1. Feladat:
 
 
