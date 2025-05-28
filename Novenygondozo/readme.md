@@ -13,8 +13,8 @@
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
--   [Teljes rendszer](#a-teljes-rendszer-működtetése)
--   [Extra Feladat](#extra-feladat)
+-   [Teljes rendszer](#teljes-rendszer)
+-   [Extra Feladat](#-extra-feladat)
 
 ---
 
@@ -78,7 +78,6 @@ Magyarázat:
 
 ---
 
-
 # Teljes rendszer
 **A teljes növénygondozó vezérlése** 
 
@@ -121,8 +120,9 @@ A rendszer tartalmaz egy beépített webkiszolgálót, amelyen keresztül a köv
 - ❌ Szivattyú kikapcsolása
 - 🔁 Automatikus öntözés (talaj és eső alapján)
 
+---
 
-### **🏆 Extra feladat:**  
+# **🏆 Extra feladat:**  
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
 📈 1. Érzékelt értékek megjelenítése a weboldalon
