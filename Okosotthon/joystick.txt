@@ -28,13 +28,13 @@ int LimitB = 512 - JOYSTICK_DEADZONE_RADIUS;
 
 
 
-// This function runs once after the Arduino is turned on
+// Ez a funkció egyszer fut le az Arduino bekapcsolása után.
 void setup()
 {
-    // Start serial connection at 9600 baud rate
+    // Soros kapcsolat indítása 9600 baud sebességgel
     Serial.begin(9600);
 
-    // Initialize display, if failed then stop the code
+    // Kijelző inicializálása, ha nem sikerült, akkor leállítjuk a kódot.
     if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) 
     {
         Serial.println(F("SSD1306 allocation failed"));
@@ -45,7 +45,7 @@ void setup()
     display.display();
     delay(2000);
 
-    // Set default values (turn off the LED and clear the display)
+    // Alapértelmezett értékek beállítása (a LED kikapcsolása és a kijelző törlése) 
     display.clearDisplay();
 
     pinMode(JOYSTICK_BTN, INPUT);       // Set `JOYSTICK_BTN` pin to `INPUT`
@@ -54,18 +54,18 @@ void setup()
 }
 
 
-// This function repeats itself after the `setup()` has finished running
+// Ez a függvény megismétli magát, miután a `setup()` futása befejeződött.
 void loop()
 {
     
-    // Detect inputs
+    // A bemenetek érzékelése
     UpdateJoystick();
     ReadPass();
 
-    // Update display
+    // Kijelző frissítése
     PrintPass();
 
-// Ha megnyomták a joystick gombját, és előzőleg nem volt lenyomva
+// Ha a joystick gombot megnyomták, és korábban nem volt megnyomva.
     if (IsJoyStickPressed && !PrevIsJoyStickPressed)
     {
         PrevIsJoyStickPressed = true;
@@ -92,7 +92,7 @@ void loop()
     }
 
 
-    // If the joystick button is released then reset the `PrevIsJoyStickPressed` variable
+    // Ha a joystick gombot elengedtük, akkor visszaállítjuk a `PrevIsJoyStickPressed` változót.
     if (!IsJoyStickPressed)
     {
         PrevIsJoyStickPressed = false;
@@ -101,8 +101,8 @@ void loop()
 }
 
 
-// This function updates the coordinates and the button
-// Usage: UpdateJoystick();
+// Ez a függvény frissíti a koordinátákat és a gombot.
+// Használat: UpdateJoystick();
 void UpdateJoystick()
 {
     x = analogRead(JOYSTICK_X);
@@ -111,8 +111,8 @@ void UpdateJoystick()
 }
 
 
-// This function prints text to the OLED display
-// Useage: PrintText("Hello world!");
+// Ez a funkció szöveget nyomtat az OLED kijelzőre.
+// Használat:PrintText("Hello world!");
 void PrintText(String msg)
 {
     display.clearDisplay();                 // Clear the display
@@ -125,8 +125,8 @@ void PrintText(String msg)
     display.display();                      // Write the buffer to the display
 }
 
-// This function prints the password to the OLED display
-// Usage: PrintPass();
+// Ez a funkció kiírja a jelszót az OLED kijelzőre.
+// Használat: PrintPass();
 void PrintPass()
 {
     String passwd = "";
@@ -138,112 +138,50 @@ void PrintPass()
     PrintText("Password:\n" + passwd);
 }
 
-// This function will read the password through joystick input
-// Usage: ReadPass();
-void ReadPass()
-{
-    // Save the move
-    String JoyStickMove = "";
+// Ez a funkció a jelszót a joystick bemenetén keresztül olvassa be.
+// Használat: ReadPass();
+// Visszaadja a joystick irányát: "up", "down", "left", "right", or "none"
+String GetJoyDirection() {
+    bool inDeadX = x < LimitT && x > LimitB;
+    bool inDeadY = y < LimitT && y > LimitB;
 
-    // If joystick moved up and isn't checked before then register the movement
-    if (IsJoyUp() && !IsJoyStickMoved)
-    {
-        JoyStickMove = "up";
-        IsJoyStickMoved = true;
-        ChangeCurrentPassChar(1);       // Change the selecter char in the password
-    }
+    if (inDeadX && y > LimitT) return "up";
+    if (inDeadX && y < LimitB) return "down";
+    if (x < LimitB && inDeadY) return "left";
+    if (x > LimitT && inDeadY) return "right";
+    if (inDeadX && inDeadY) return "none";
+    return "";
+}
 
-    // If joystick moved down and isn't checked before then register the movement
-    else if (IsJoyDown() && !IsJoyStickMoved)
-    {
-        JoyStickMove = "down";
-        IsJoyStickMoved = true;
-        ChangeCurrentPassChar(-1);      // Change the selecter char in the password
-    }
+// A kiválasztott jelszó karaktermutatójának módosítása
+void MovePassPointer(int value) {
+    PasswordPointer = (PasswordPointer + value + 4) % 4;
+}
 
-    // If joystick moved left and isn't checked before then register the movement
-    else if (IsJoyLeft() && !IsJoyStickMoved)
-    {
-        JoyStickMove = "left";
-        IsJoyStickMoved = true;
-        MovePassPointer(-1);            // Change the selected char in the password
-    }
+// Az aktuális karakter indexének módosítása a Password tömbben
+void ChangeCurrentPassChar(int value) {
+    Password[PasswordPointer] = (Password[PasswordPointer] + value + PasswordChars.length()) % PasswordChars.length();
+}
 
-    // If joystick moved right and isn't checked before then register the movement
-    else if (IsJoyRight() && !IsJoyStickMoved)
-    {
-        JoyStickMove = "right";
-        IsJoyStickMoved = true;
-        MovePassPointer(1);             // Change the selected char in the password
-    }
+// Fő jelszóolvasó funkció a joystick segítségével
+void ReadPass() {
+    String dir = GetJoyDirection();
 
-    // If joystick is in the deadzone then let registering possible again
-    else if (IsJoyInDeadzone() && IsJoyStickMoved)
-    {
+    if (!IsJoyStickMoved) {
+        if (dir == "up") {
+            ChangeCurrentPassChar(1);
+            IsJoyStickMoved = true;
+        } else if (dir == "down") {
+            ChangeCurrentPassChar(-1);
+            IsJoyStickMoved = true;
+        } else if (dir == "left") {
+            MovePassPointer(-1);
+            IsJoyStickMoved = true;
+        } else if (dir == "right") {
+            MovePassPointer(1);
+            IsJoyStickMoved = true;
+        }
+    } else if (dir == "none") {
         IsJoyStickMoved = false;
     }
-}
-
-// Checks if the joystick is moved up
-bool IsJoyUp()
-{
-    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
-    bool ConditionY = y > LimitT;                   // Is over the top limit of y
-
-    if (ConditionX && ConditionY) return true;
-    return false;
-}
-
-// Checks if the joystick is moved down
-bool IsJoyDown()
-{
-    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
-    bool ConditionY = y < LimitB;                   // Is under the bottom limit of y
-
-    if (ConditionX && ConditionY) return true;
-    return false;
-}
-
-// Checks if the joystick is moved left
-bool IsJoyLeft()
-{
-    bool ConditionX = x < LimitB;                   // Is under the bottom limit of x
-    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
-
-    if (ConditionX && ConditionY) return true;
-    return false;
-}
-
-// Checks if the joystick is moved right
-bool IsJoyRight()
-{
-    bool ConditionX = x > LimitT;                   // Is over the top limit of x
-    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
-
-    if (ConditionX && ConditionY) return true;
-    return false;
-}
-
-// Checks if the joystick is in the deadzone
-bool IsJoyInDeadzone()
-{
-    bool ConditionX = x < LimitT && x > LimitB;     // Is in deadzone of x
-    bool ConditionY = y < LimitT && y > LimitB;     // Is in deadzone of y
-
-    if (ConditionX && ConditionY) return true;
-    return false;
-}
-
-// Change the selected password character
-void MovePassPointer(int value)
-{
-    PasswordPointer += value;
-    if (PasswordPointer >= 4) PasswordPointer = 0;
-    else if (PasswordPointer < 0) PasswordPointer = 3;
-}
-
-// Change the selecter password character's value
-void ChangeCurrentPassChar(int value)
-{
-    Password[PasswordPointer] = (Password[PasswordPointer] + value + PasswordChars.length()) % PasswordChars.length();
 }
