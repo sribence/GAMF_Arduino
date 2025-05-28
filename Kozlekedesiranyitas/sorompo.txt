@@ -1,0 +1,81 @@
+// sorompo
+
+#include <Servo.h>
+
+const int STANDBY_TRIGGER = 2;
+const int TRAIN_ON = 3;
+const int TRAIN_OFF = 4;
+const unsigned int STANDBY_BLINK_PERIOD = 500;
+
+// This function runs once after the Arduino is turned on
+void setup()
+{
+    pinMode(SERVO_PIN, OUTPUT);         // Set `SERVO_PIN` pin to `OUTPUT`
+
+    pinMode(STANDBY_TRIGGER, INPUT);    // Set `STANDBY` pin to `INPUT`
+    pinMode(TRAIN_ON, INPUT);           // Set `TRAIN_ON` pin to `INPUT`
+    pinMode(TRAIN_OFF, INPUT);          // Set `TRAIN_OFF` pin to `INPUT`
+
+}
+
+// This function repeats itself after the `setup()` has finished running
+void loop()
+{
+    // If the train is coming button pressed then lower the barrier
+    if (digitalRead(TRAIN_ON) == HIGH)
+    {
+        SetBarrier("down");
+    }
+
+    // If the train has passed button pressed then raise the barrier
+    else if (digitalRead(TRAIN_OFF) == HIGH)
+    {
+        SetBarrier("up");
+    }
+}
+
+// Function to call when the program is in the `STANDBY` state
+void Standby()
+{
+    // Turn on yellow
+    if (millis() - TimeCheckpoint < STANDBY_BLINK_PERIOD)
+    {
+        ManagePairOne("yellow");
+        ManagePairTwo("yellow");
+    }
+
+    // Turn off yellow
+    else if (millis() - TimeCheckpoint < STANDBY_BLINK_PERIOD * 2)
+    {
+        ManagePairOne("off");
+        ManagePairTwo("off");
+    }
+
+    // Reset time
+    else
+    {
+        TimeCheckpoint = millis();
+    }
+}
+
+// This function controls the barrier
+// Usage: SetBarrier("up");
+//        SetBarrier("down");
+void SetBarrier(String state)
+{
+    // Set the degree based on the state and calculate the pulse with
+    int angle;
+    if (state == "up") angle = 160;
+    else if (state == "down") angle = 70;
+    int pulsewidth = (angle * 11) + 500;                  // Calculate pulse with based on the degree (range: 500-2480)
+
+    // Send the signal to the servo motor
+    for (int i = 0; i < 50; i++)
+    {
+        digitalWrite(SERVO_PIN, HIGH);                    // Set the level of servo pin as `HIGH`
+        delayMicroseconds(pulsewidth);                    // Delay microsecond of pulse width
+        digitalWrite(SERVO_PIN, LOW);                     // Set the level of servo pin as `LOW`
+        delay(20 - pulsewidth / 1000);
+    }
+}
+
