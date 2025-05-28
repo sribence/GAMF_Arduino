@@ -37,138 +37,260 @@ A projekt egy több szervómotorral vezérelt, asztali méretű robotkar megép�
 ---
 
 # 1. Feladat:
-A szervómotorok alapvető vezérlése potméterekkel. A potméterek értékeit beolvassuk az A0-A3 analóg bemenetekről, és ezek alapján vezéreljük a szervómotorokat. A szervók csak 70-140 fok között mozoghatnak a biztonságos működés érdekében.
 
+## Szervómotorok vezérlése potméterrel – Lépésről lépésre
+
+Ebben a feladatban megtanulod, hogyan lehet egy szervómotort (vagy többet) vezérelni egy potméter segítségével. Ez a robotkar alapja, hiszen minden ízületet (tengelyt) egy szervómotor mozgat, a potméter pedig olyan, mint egy "kézi vezérlő".
+
+### 1. Mi az a szervómotor?
+A szervómotor egy olyan motor, amelyet pontosan be tudsz állítani egy adott szögbe. Ezért tökéletes robotkarokhoz, ahol minden tengelynek pontosan kell mozognia.
+
+### 2. Mi az a potméter?
+A potméter egy tekerhető ellenállás, amivel egy analóg jelet (0-1023) tudsz beállítani. Olyan, mint egy hangerőszabályzó, csak itt a szervó szögét állítod vele.
+
+### 3. Hogyan működik együtt?
+- A potmétert az Arduino analóg bemenetére kötöd (pl. A0).
+- A szervót egy PWM (pl. D9) kimenetre kötöd.
+- Az Arduino beolvassa a potméter értékét, és átszámolja egy szögre (pl. 70-140 fok).
+- A szervó ezt a szöget beállítja.
+
+### 4. Lépésről lépésre példa
+
+**Bekötés:**
+- Potméter középső lába: A0
+- Potméter két szélső lába: 5V és GND
+- Szervó narancs: D9, piros: 5V, barna: GND
+
+**Kód részlet:**
 ```cpp
 #include <Servo.h>
-
-// Szervó motorok létrehozása
 Servo szervo1;
-Servo szervo2;
-Servo szervo3;
-Servo szervo4;
-
 void setup() {
-  // Szervók csatlakoztatása PWM lábakhoz
-  szervo1.attach(9);  // D9 PWM láb
-  szervo2.attach(10); // D10 PWM láb
-  szervo3.attach(11); // D11 PWM láb
-  szervo4.attach(12); // D12 PWM láb
-  
-  Serial.begin(9600);
+  szervo1.attach(9); // Szervó a D9-re
 }
-
 void loop() {
-  // Potméterek értékeinek beolvasása (0-1023)
-  int pot1 = analogRead(A0);
-  int pot2 = analogRead(A1);
-  int pot3 = analogRead(A2);
-  int pot4 = analogRead(A3);
-  
-  // Értékek átkonvertálása 70-140 fok közé
-  int szog1 = map(pot1, 0, 1023, 70, 140);
-  int szog2 = map(pot2, 0, 1023, 70, 140);
-  int szog3 = map(pot3, 0, 1023, 70, 140);
-  int szog4 = map(pot4, 0, 1023, 70, 140);
-  
-  // Szervók mozgatása
-  szervo1.write(szog1);
-  szervo2.write(szog2);
-  szervo3.write(szog3);
-  szervo4.write(szog4);
-  
-  // Értékek kiírása soros portra
-  Serial.print("Potméter értékek: ");
-  Serial.print(pot1); Serial.print(" ");
-  Serial.print(pot2); Serial.print(" ");
-  Serial.print(pot3); Serial.print(" ");
-  Serial.println(pot4);
-  
-  delay(15); // Kis késleltetés a stabil működéshez
+  int pot = analogRead(A0); // Potméter olvasása
+  int szog = map(pot, 0, 1023, 70, 140); // Átszámolás szögre
+  szervo1.write(szog); // Szervó beállítása
+  delay(15); // Stabil működés
 }
+```
+
+### 5. Miért fontos ez?
+A robotkar minden ízületét így tudod kézzel mozgatni, "tanítani". Ha ezt érted, már tudsz egy teljes kart is vezérelni több potméterrel és szervóval.
+
+### 6. Extra ötletek, magyarázatok
+- Próbáld ki, hogy több szervót és potmétert kötsz be! (pl. szervo2.attach(10), pot2 = analogRead(A1), stb.)
+- Írd ki a soros monitorra a potméter és szervó értékeket, hogy lásd, mi történik!
+- Gondold végig: ha minden szervó egy-egy ízület, hány szabadságfoka van a robotkarnak?
 
 ---
 
 # 2. Feladat:
-A szervómotorok pontosabb vezérlése PWM jelszinttel. A potméterek értékeit most már közvetlenül PWM impulzusszélességre konvertáljuk (500-2500 mikroszekundum), ami pontosabb vezérlést tesz lehetővé. A motorok mozgatása fokozatos, a for ciklusok segítségével.
 
+## Szervómotorok pontosabb vezérlése – PWM és finomhangolás
+
+Most tovább lépünk: nem csak szöget állítunk, hanem közvetlenül a szervó vezérlőjelét (PWM – impulzusszélesség) szabályozzuk. Ez még pontosabb mozgást tesz lehetővé, és közelebb visz a profi robotikához!
+
+### 1. Mi az a PWM?
+A PWM (Pulse Width Modulation) egy olyan jel, amivel a szervó "megmondja", milyen szögbe álljon. A jel hossza (pl. 500-2500 mikrosec) határozza meg a szöget.
+
+### 2. Miért jó közvetlenül PWM-et vezérelni?
+- Finomabb, pontosabb mozgás
+- Egyes szervók csak bizonyos PWM tartományban működnek jól
+- Profi robotikában gyakran közvetlenül PWM-mel dolgozunk
+
+### 3. Lépésről lépésre példa
+
+**Bekötés:**
+- Ugyanaz, mint az előző feladatban
+
+**Kód részlet:**
 ```cpp
 #include <Servo.h>
-
 Servo szervo1;
-Servo szervo2;
-Servo szervo3;
-Servo szervo4;
-
-// PWM értékek tartománya (mikroszekundum)
-const int MIN_PWM = 500;   // 0 fok
-const int MAX_PWM = 2500;  // 180 fok
-
+const int MIN_PWM = 500;   // Minimum impulzus (0 fok)
+const int MAX_PWM = 2500;  // Maximum impulzus (180 fok)
 void setup() {
   szervo1.attach(9);
-  szervo2.attach(10);
-  szervo3.attach(11);
-  szervo4.attach(12);
-  
-  Serial.begin(9600);
 }
-
 void loop() {
-  // Potméterek beolvasása
-  int pot1 = analogRead(A0);
-  int pot2 = analogRead(A1);
-  int pot3 = analogRead(A2);
-  int pot4 = analogRead(A3);
-  
-  // Értékek konvertálása PWM tartományra
-  int pwm1 = map(pot1, 0, 1023, MIN_PWM, MAX_PWM);
-  int pwm2 = map(pot2, 0, 1023, MIN_PWM, MAX_PWM);
-  int pwm3 = map(pot3, 0, 1023, MIN_PWM, MAX_PWM);
-  int pwm4 = map(pot4, 0, 1023, MIN_PWM, MAX_PWM);
-  
-  // Fokozatos mozgatás for ciklusokkal
-  for(int i = 0; i < 180; i++) {
-    // PWM jelek generálása
-    digitalWrite(9, HIGH);
-    delayMicroseconds(pwm1);
-    digitalWrite(9, LOW);
-    
-    digitalWrite(10, HIGH);
-    delayMicroseconds(pwm2);
-    digitalWrite(10, LOW);
-    
-    digitalWrite(11, HIGH);
-    delayMicroseconds(pwm3);
-    digitalWrite(11, LOW);
-    
-    digitalWrite(12, HIGH);
-    delayMicroseconds(pwm4);
-    digitalWrite(12, LOW);
-    
-    delay(20); // Teljes ciklus időtartama
-  }
-  
-  // PWM értékek kiírása
-  Serial.print("PWM értékek (μs): ");
-  Serial.print(pwm1); Serial.print(" ");
-  Serial.print(pwm2); Serial.print(" ");
-  Serial.print(pwm3); Serial.print(" ");
-  Serial.println(pwm4);
+  int pot = analogRead(A0);
+  int pwm = map(pot, 0, 1023, MIN_PWM, MAX_PWM);
+  szervo1.writeMicroseconds(pwm); // Közvetlen PWM vezérlés
+  delay(15);
 }
+```
+
+### 4. Fokozatos mozgatás – miért jó?
+Ha a szervót nem "ugrasztod" azonnal a célpozícióba, hanem kis lépésekben mozgatod, a mozgás simább, a robotkar nem rángatózik.
+
+**Példa:**
+```cpp
+for (int szog = 70; szog <= 140; szog++) {
+  szervo1.write(szog);
+  delay(10);
+}
+```
+
+### 5. Miért fontos ez?
+A robotkar precíz, ismételhető mozgásához elengedhetetlen a pontos vezérlés. Ha később programból szeretnél mozdulatsorokat tanítani, a PWM-es vezérlés lesz az alap.
+
+### 6. Extra ötletek, magyarázatok
+- Próbáld ki, hogy a szervót lassan mozgatod egyik pozícióból a másikba!
+- Mérd meg, hogy a különböző szervók milyen PWM tartományban működnek jól!
+- Gondold végig: hogyan lehetne több szervót egyszerre, szinkronban mozgatni?
 
 ---
 
 # 3. Feladat:
 
+## Parancsvezérelt robotkar – pozíciók mentése, visszajátszása
 
-![3. Feladat](3.png)
+A robotkar valós kódja nem csak egyszerű potméter-szervó vezérlés, hanem egy **parancsvezérelt rendszer**. Ez azt jelenti, hogy a robotkart a soros porton keresztül utasításokkal (parancsokkal) lehet irányítani, például:
+- **Mozgás egy adott pozícióba**
+- **Pozíciók elmentése**
+- **Elmentett pozíciók visszatöltése és végrehajtása**
+- **Információ lekérdezése a szervókról**
+
+### Fő elvek:
+- **Objektum-orientált szervókezelés:** Minden szervó egy MyServo objektum, amely tudja a saját határait, aktuális pozícióját, PWM értékét.
+- **Szinkronizált mozgás:** A Servos osztály gondoskodik arról, hogy minden szervó egyszerre, fokozatosan érje el a kívánt pozíciót.
+- **Pozíciók mentése/töltése:** Több pozíciót is elmenthetsz, majd ezeket visszajátszhatod, így a robotkar ismételhető mozdulatsorokat hajt végre.
+- **LED visszajelzés:** Mozgás közben piros, végén sárga fény.
+
+### Példák a parancsokra:
+
+- **Mozgás egy adott pozícióba:**
+  ```
+  mov 0 45
+  mov 1 -30
+  mov 2 60
+  mov 3 0
+  mov 4 90
+  mov 5 -45
+  go
+  ```
+  Ez a sorozat beállítja a 6 szervó kívánt szögét, majd a `go` parancsra a kar egyszerre, szinkronizáltan elmozdul ezekbe a pozíciókba.
+
+- **Pozíció mentése:**
+  ```
+  save_cur 0
+  ```
+  Elmenti a jelenlegi szervóállásokat a 0. pozícióba.
+
+- **Pozíció betöltése és végrehajtása:**
+  ```
+  load 0
+  go
+  ```
+
+- **Információ lekérdezése:**
+  ```
+  info
+  ```
+  Kiírja a szervók aktuális szögét, határait, lépésközét.
+
+### Kódrészletek magyarázattal:
+
+- **Szervók tömbje, paraméterezés:**
+  ```cpp
+  MyServo servo_array[] = {
+      MyServo(11, 650, 1950, -90, 90, 1, 0.5),
+      MyServo(10, 500, 1800, -90, 90, 1, 0.5),
+      MyServo( 9, 750, 1750,   0, 90, 1, 0),
+      MyServo( 6, 700, 1700,   0, 90, 1, 0),
+      MyServo( 5, 500, 1700,   0, 90, 1, 1),
+      MyServo( 4, 544, 2400, -90, 90, 1, 0.5),
+  };
+  ```
+  Itt minden szervóhoz megadod: pin, min/max PWM, min/max szög, sebesség, kezdőpozíció.
+
+- **Szervók szinkronizált mozgatása:**
+  ```cpp
+  void move(int del = 10) {
+      strip.fill(red);
+      strip.show();
+      // ... minden szervó egyszerre, fokozatosan mozog a célpozícióba
+      strip.fill(yellow);
+      strip.show();
+  }
+  ```
+
+- **Pozíciók mentése/töltése:**
+  ```cpp
+  void save(byte idx) { ... }
+  void load(byte idx) { ... }
+  ```
+
+- **Soros parancsok feldolgozása:**
+  ```cpp
+  void process_command() {
+      // pl. "mov 0 45", "go", "save_cur 0", "load 0", "info"
+  }
+  ```
 
 ---
 
 # 4. Feladat:
 
+## Saját mozdulatsor programozása és visszajátszása
 
-![4. Feladat](4.png)
+A robotkar képes több pozíciót is elmenteni, majd ezeket egymás után végrehajtani. Így például megtaníthatod a kart, hogy felemeljen egy tárgyat, áthelyezze, majd visszatérjen a kiinduló helyzetbe.
+
+### Lépések:
+
+1. **Állítsd be a kart a kívánt pozícióba** (pl. potméterekkel vagy soros parancsokkal: `mov 0 0`, `mov 1 45`, stb.)
+2. **Mentsd el a pozíciót:**
+   ```
+   save_cur 0
+   ```
+3. **Állítsd be a következő pozíciót** (pl. másik tárgy fölé, más szögekkel), majd mentsd el:
+   ```
+   save_cur 1
+   ```
+4. **Tetszőleges számú pozíciót elmenthetsz (pl. 0-9-ig).**
+5. **A mozdulatsor visszajátszása:**
+   ```
+   load 0
+   go
+   load 1
+   go
+   load 0
+   go
+   ```
+   Ezzel a kar végrehajtja a tanított mozdulatsort.
+
+### Automatizált visszajátszás (bővítés):
+
+Írhatsz egy egyszerű ciklust a soros monitoron keresztül, vagy akár a kódot is bővítheted, hogy egy gombnyomásra végigmenjen az összes elmentett pozíción:
+
+```cpp
+for (int i = 0; i < 3; ++i) {
+    servos.load(i);
+    servos.move();
+}
+```
+
+### Tippek, magyarázatok:
+- **A mozgás mindig szinkronizált, minden szervó egyszerre mozog.**
+- **A LED szalag pirosan világít mozgás közben, sárgán, ha végzett.**
+- **A pozíciók elmentése után a robotkar képes ismételni a tanult mozdulatsort, akárhányszor.**
+- **A parancsokat a soros monitoron keresztül adhatod ki, így könnyen kísérletezhetsz.**
+
+### Extra ötlet:
+- **Írj egy "macro" parancsot, ami egy előre elmentett mozdulatsort automatikusan végigjátszik!**
+- **Próbáld ki, hogy a robotkar egy tárgyat felemel, áthelyez, majd visszatesz!**
+
+---
+
+# Összefoglalás
+
+A valós robotkar.cpp kód sokkal többet tud, mint az alap potméteres vezérlés:
+- 6 szervó, szinkronizált mozgás, pozíciók mentése, visszajátszása, LED visszajelzés, soros parancsvezérlés.
+A 3. és 4. feladatban a diákok megtanulják a robotkar programozott vezérlését, a mozdulatsorok tanítását és visszajátszását, így valóban kipróbálhatják a robotot, és kreatívan használhatják a rendszert.
+
+Ha elakadsz, nézd át ezt a leírást, vagy kérdezz bátran! Jó kísérletezést és jó tanulást! :)
 
 ---
 
