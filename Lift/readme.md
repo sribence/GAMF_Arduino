@@ -16,8 +16,8 @@
 -   [0. Feladat](#0-feladat)
 -   [1. Feladat](#-1-feladat)
 -   [2. Feladat](#-2-feladat) 
--   [3. Feladat](#-3-feladat)
--   [Teljes rendszer](#-a-teljes-rendszer-működtetése)
+-   [3. Feladat](#3-feladat)
+-   [Teljes rendszer](#teljes-rendszer)
 -   [Extra Feladat](#-extra-feladat)
 
 ---

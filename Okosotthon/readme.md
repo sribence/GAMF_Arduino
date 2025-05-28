@@ -211,13 +211,6 @@ A     `// Detect inputs` kiegészítése:
     }
 ```
 
-
-
-
-
-
-
-
 ---
 
 # Teljes rendszer
@@ -268,7 +261,7 @@ A     `// Detect inputs` kiegészítése:
 
 ---
 
-### **🏆 Extra feladat:**  
+# **🏆 Extra feladat:**  
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
 **Hibás jelszó számláló**
