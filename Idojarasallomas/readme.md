@@ -330,7 +330,7 @@ A Nano 33 IoT egy beépített webszervert futtat, amely a szenzoradatokat egy we
 
 ---
 
-# **🏆 Extra feladat:**  
+# 🏆 Extra feladat:
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
 **🔁 1. Vízgőz és hőmérséklet összefüggés (Steam alert logic)**
