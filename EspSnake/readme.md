@@ -1,6 +1,22 @@
 # EspSnake vezérlése 🐍
 
-Ebben a projektben két ESP32 mikrokontroller együttműködésével valósul meg egy kétszemélyes Snake játék. A kijelzőfelületet 8 db 8x8 LED mátrix alkotja, amelyek 2 sorba, 4-4-es elrendezésben vannak sorba kötve. Az egyik ESP32 fogadja a saját játékos joystick bemenetét, míg a másik ESP32-től ESP-NOW protokollon keresztül megkapja a másik játékos irányítását. A két irányítási adatot összevetve egyetlen játékképernyőt rajzol ki a mátrixokra, így lehetővé válik a Snake PvP üzemmód. A projekt során a résztvevők megismerik az ESP-NOW kommunikáció alapjait, mátrixkezelést, játékszabály-implementációt, és többkijelzős grafikus megjelenítést.
+**📘 Projektleírás:** Ebben a projektben két ESP32 mikrokontroller 🧠 működik együtt, hogy megvalósítsanak egy kétszemélyes Snake játékot 🐍👾. A játék egy nagy LED mátrix kijelzőn 🟩 jelenik meg, amelyen mindkét játékos irányíthatja saját kígyóját, és egymással versenyezhetnek!
+
+**🧱 Hardverfelépítés**
+- 📟 8 db 8x8-as LED mátrix, összesen 64x16 pixel felbontással
+- Elrendezés: 2 sor, 4-4 mátrix = 128 oszlop LED
+- 🕹️ Két külön joystick: egyik játékos az egyik ESP32-vel, másik a másikkal irányít
+- 📡 ESP-NOW kommunikáció: gyors, Wi-Fi alapú, peer-to-peer adatküldés
+
+**🕹️ Játékmechanika:**
+- Mindkét ESP32 fogadja a saját joystick adatát
+- Az egyik ESP32 (fő vezérlő) összegyűjti az irányítási adatokat
+- Ez a vezérlő kirajzolja a játékot a LED mátrixra:
+
+**🐍🐍Két kígyó**
+- Ütközésérzékelés (játék vége, ha falnak vagy egymásnak mennek)
+- Pontszerzés, hosszabbodás, gyümölcsök 🎯
+
 
 **🛠️ Fontos:** 📝 mindent a rajz alapján csináljatok, mert így biztosított a tökéletes működés. A progranban az elnevezések relatívak, nem muszáj azt használni. Ha mást használtok, akkor figyeljetek arra, hogy könnyen lehessen azonosítani az egyes vátozó neveket. 🔍
 
@@ -12,12 +28,16 @@ Ebben a projektben két ESP32 mikrokontroller együttműködésével valósul me
 **Tartalomjegyzék:**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
 -   [0. Feladat](#0-feladat)
--   [1. Feladat](#1-feladat)
--   [2. Feladat](#2-feladat) 
--   [3. Feladat](#3-feladat)
--   [4. Feladat](#4-feladat)
--   [Teljes rendszer](#a-teljes-rendszer-működtetése)
--   [Extra Feladat](#extra-feladat)
+-   [1. Feladat](#1-lépés-inicializálás-ébreszd-fel-a-mátrixot)
+-   [2. Feladat](#2-lépés-kijelző-törlése-clear-screen) 
+-   [3. Feladat](#3-lépés-egyetlen-pixel-kirajzolása)
+-   [4. Feladat](#4-lépés-alakzat-kirajzolása-pl-számok-vagy-formák)
+-   [5. Feladat](#5-lépés-animáció-és-több-mátrix-kezelése)
+-   [6. Feladat](#6-lépés-teljes-példa-integráció)
+-   [Összefoglaló](#összefoglalva)
+-   [Összefoglaló](#összefoglalva)
+-   [Összefoglaló](#szószedet--fontosabb-változók-és-függvények)
+-   [Extra Feladat](#extra-ötletek-bővítési-lehetőségek)
 
 ---
 
@@ -158,14 +178,6 @@ void clearScreen() {
 // A teljes kód itt fejeződik be.
 ```
 
-
----
-
-# 1. Feladat:
-
-
-![1. Feladat](1.png)
-
 ---
 
 # ESP-NOW Kommunikáció: Bevezetés és Példák
@@ -255,13 +267,6 @@ Próbáld ki: Futtasd a feladó kódot az egyik ESP32-n, a fogadót a másikon. 
 
 ---
 
-# 2. Feladat:
-
-
-![2. Feladat](2.png)
-
----
-
 # Snake Játék 8x8-as Kijelzőkön: PVP Módban Két Joystickkel
 
 ## Bevezető és Elvek
@@ -315,13 +320,6 @@ Ez a rész mutatja a griden való mozgást és ütközést, ami a PVP alapja.
 
 ---
 
-# 3. Feladat:
-
-
-![3. Feladat](3.png)
-
----
-
 # Snake Játék További Részletei: PVP Implementáció
 
 A 3. feladatban építünk a 2.-re, és részletezzük, hogyan valósul meg a teljes PVP játék. Az elvek hasonlóak, de most hangsúlyozzuk a játékállapot-kezelést és a kijelzőfrissítést:
@@ -351,13 +349,6 @@ void JoystickBemenet() {
 }
 ```
 Ez illusztrálja, hogyan frissül a grid és hogyan olvassák a joystickok.
-
----
-
-# 4. Feladat:
-
-
-![4. Feladat](4.png)
 
 ---
 
@@ -424,24 +415,6 @@ if (tempP1Ready && tempP2Ready)
 
 ## Összefoglalva
 A 4. feladatban a Snake játék igazi, vezeték nélküli PVP élménnyé válik. Az ESP-NOW kommunikációval a két ESP32 közös játékmezőt alkot, a joystickok mozgása és a játékállapotok szinkronban vannak, így egy izgalmas multiplayer játékot hozhattok létre saját hardveren!
-
----
-
-# Teljes rendszer
-**A teljes esp vezérlése** 
-
-🛠️ Eszközök:
-- 🧠 2 db ESP32 mikrokontroller
-- 🟦 8 db 8×8 LED mátrix ( MAX7219-es vagy sorba köthető típus )
-- 🎮 2 db joystick modul
-- 📡 ESP-NOW protokoll ( ESP32 közötti vezeték nélküli kommunikációhoz )
-- 🎯 Kettős vezérlés, közös játéktér frissítéssel
-
-### **🏆 Extra feladat:**  
-**🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
-
-
-✅ Sok sikert! 😊
 
 ---
 
