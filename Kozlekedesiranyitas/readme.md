@@ -16,7 +16,6 @@
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
--   [4. Feladat](#4-feladat)
 -   [Teljes rendszer](#a-teljes-rendszer-működtetése)
 -   [Extra Feladat](#extra-feladat)
 
@@ -54,7 +53,7 @@
 
 ⏳delay() függvény használatával állítjuk be az egyes lámpák időzítését.  
 
-![1. feladat](egy_lampapar.png)
+![1. feladat](1.png)
 
 ---
 
@@ -81,7 +80,7 @@
 
 ⏳ millis() függvény használatával biztosítjuk a megfelelő időzítést, így pontosabb és hatékonyabb!  
 
-![2. feladat](ket_lampapar.png)
+![2. feladat](2.png)
 
 ---
 
@@ -103,27 +102,8 @@
 -	Felnyitás gombbal 🔺 – Ha a gomb_fel megnyomódik, a sorompó visszaáll 160°-ra.  
 -	A program folyamatosan figyeli a gombokat és reagál! 🔄  
 
-![3. feladat](sorompo.png)
+![3. feladat](3.png)
 
----
-
-# 4. Feladat:
-**Standby mód és teljes működés 🚀✅⚡**
-
-**🛠️ Feladat:** Az eddigi projekteket összevonva egy teljes közlekedési rendszer vezérlést valósítunk meg! Két lámpapárt, egy sorompót és egy standby üzemmódot vezérlünk egyetlen programban.
-
-🔹 Rendszer elemei  
--	🚦 Két közlekedési lámpa váltakozó működéssel.  
--	🚧 Sorompó gombvezérléssel (le- és felnyitás).
--	🔄 Standby mód, amely sárga villogással jelzi a rendszerszünetet.
-
-🚀 Program működése
--	Standby mód 🟡 – A gomb megnyomásával a sárga lámpák villognak, és a rendszer megáll.  
--	Sorompó vezérlés 🎮 – Egy gombbal leengedhető, egy másikkal felnyitható.  
--	Lámpák váltakozása 🚥 – Az egyik lámpa piros, a másik zöld, majd 4 másodpercenként cserélnek.  
--	Automatikus időzítés ⏳ – A váltás millis() segítségével történik, így nincs delay() blokkolás.  
-
-![4. feladat](teljes.png)
 
 ---
 
