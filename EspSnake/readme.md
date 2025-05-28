@@ -35,8 +35,7 @@
 -   [5. Feladat](#5-lépés-animáció-és-több-mátrix-kezelése)
 -   [6. Feladat](#6-lépés-teljes-példa-integráció)
 -   [Összefoglaló](#összefoglalva)
--   [Összefoglaló](#összefoglalva)
--   [Összefoglaló](#szószedet--fontosabb-változók-és-függvények)
+-   [Fontos változók, függvények](#szószedet--fontosabb-változók-és-függvények)
 -   [Extra Feladat](#extra-ötletek-bővítési-lehetőségek)
 
 ---
