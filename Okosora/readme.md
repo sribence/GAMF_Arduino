@@ -15,7 +15,7 @@
 -   [3. Feladat](#3-feladat)
 -   [4. Feladat](#4-feladat)
 -   [Teljes rendszer](#teljes-rendszer)
--   [Extra Feladat](#extra-feladat)
+-   [Extra Feladat](#-extra-feladat)
 
 ---
 
@@ -112,7 +112,7 @@ A felhasználó egy rotary encoder (forgatható nyomógomb) segítségével men�
 
 ---
 
-# **🏆 Extra feladat:**  
+# 🏆 Extra feladat:  
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
 **🔢 1. Pulzus átlagolása mozgóablakkal**

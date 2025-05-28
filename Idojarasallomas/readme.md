@@ -1,8 +1,5 @@
 # Időjárásállomás 🌡️🌁
 
-Mini időjárásállomás 
-Valósíts meg egy környezeti szenzorokon alapuló időjárásállomást Arduino Nano 33 Sense segítségével, amely hőmérsékletet, páratartalmat, napfényerősséget és hangszennyezettséget mér. Az adatok grafikonos formában jelennek meg egy weboldalon, amelyet a Nano beépített WiFi kapcsolattal szolgál ki. A rendszer napelemes táplálásra van tervezve, és a napelem aktuális feszültségszintjét is megjeleníti, hogy követhető legyen a töltés. Opcionálisan egy szervómotor a fény irányába fordítja a napelemet, a beépített fényérzékelő adatainak felhasználásával.
-
 **🛠️ Fontos:** 📝 mindent a rajz alapján csináljatok, mert így biztosított a tökéletes működés. A progranban az elnevezések relatívak, nem muszáj azt használni. Ha mást használtok, akkor figyeljetek arra, hogy könnyen lehessen azonosítani az egyes vátozó neveket. 🔍
 
 🤓 Aki foglalkozott már hasonlóval és szertne egy kicsit bonyolultabb feladaton gondolkodni annak van egy **exta feladat** a füzet végén. 📖💡
@@ -16,9 +13,8 @@ Valósíts meg egy környezeti szenzorokon alapuló időjárásállomást Arduin
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
--   [4. Feladat](#4-feladat)
--   [Teljes rendszer](#a-teljes-rendszer-működtetése)
--   [Extra Feladat](#extra-feladat)
+-   [Teljes rendszer](#teljes-rendszer)
+-   [Extra Feladat](#-extra-feladat)
 
 ---
 
@@ -297,17 +293,12 @@ void loop() {
 
 ---
 
-# 4. Feladat:
-
-
-![4. Feladat](4.png)
-
----
-
 # Teljes rendszer
-**A teljes időjárásállomás vezérlése** 
+**A teljes 🌦️ Mini időjárásállomás vezérlése** 
 
-🛠️ Eszközök: 
+**🧪 Feladatleírás:** Valósíts meg egy környezeti szenzorokon alapuló mini időjárásállomást az Arduino Nano 33 IoT (vagy Nano 33 Sense) segítségével. A rendszer képes a következő környezeti értékek mérésére és kijelzésére:
+
+**🛠️ Eszközök:**
 - 📶 Arduino MKR WiFi
 - ☀️ Napelem + feszültségosztó ( 🔋 töltöttség méréshez )
 - 🌗 Beépített fényérzékelő ( ALS )
@@ -316,8 +307,46 @@ void loop() {
 - ⚙️ Szervómotor ( 🌞 napkövető funkció – opcionális )
 - 📊 Webes adatmegjelenítés grafikonokkal WiFi-n keresztül
 
-### **🏆 Extra feladat:**  
+**🌡️ Hőmérséklet:**
+- 💧 Páratartalom
+- ☀️ Napfény erőssége
+- 🔊 Hangszennyezettség (pl. zajszint)
+- 🔋 Napelem feszültségszintje
+
+Az adatokat a Nano beépített Wi-Fi kapcsolatán keresztül elérhető weboldalon jelenítsd meg grafikonos formában, lehetőség szerint valós időben frissülő nézettel (akár JavaScriptes grafikon segítségével, pl. Chart.js).
+
+**🌞 Napelemes tápellátás figyelése:** Mivel a rendszer napelemes táplálásra van tervezve, fontos a töltöttségi szint (azaz a napelem aktuális feszültségének) megjelenítése is, például:
+- 🔋 Napelem feszültség: 3.7V
+Ez segít nyomon követni, mikor van szükség energiatakarékos működésre.
+
+**🛠️ Extra funkció (opcionális) – Napkövető szervómotor:** Ha szeretnéd, egy szervómotorral megvalósítható egy napkövető rendszer, amely a beépített fényérzékelő adatai alapján:
+- 👉 a napfény irányába fordítja a napelemet
+Ez növelheti a töltési hatékonyságot.
+- 📈 Webes megjelenítés
+A Nano 33 IoT egy beépített webszervert futtat, amely a szenzoradatokat egy weboldalon jeleníti meg:
+- 🕸️ Helyi IP-címről elérhető
+- 📊 Az adatok grafikonként is látszanak (használható: Chart.js, Google Charts, stb.)
+- 🔁 Automatikus frissítés 2–5 másodpercenként
+
+---
+
+# 🏆 Extra feladat:
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
+**🔁 1. Vízgőz és hőmérséklet összefüggés (Steam alert logic)**
+
+**Cél:** Ha a hőmérséklet 30°C felett van ÉS a steam szenzor is magas értéket mutat, akkor a rendszer „Magas páratartalom és hő!” figyelmeztetést írjon ki a soros monitorra.
+
+**Kihívás:** Kombinált feltételek, több változó figyelése egyszerre.ű
+
+**🔁 2. Napkövetés időkorlát (Solar tracking cooldown)**
+**Cél:** Limitáljuk a szervó mozgását úgy, hogy csak óránként maximum 10-szer állítódhat át, függetlenül attól, hogy a fotocellák milyen értéket adnak.
+
+**Kihívás:** Egy mozgásszámláló és idő alapú reset implementálása.
+
+**🔁 3. Éjszakai mód aktiválása (Night mode)**
+**Cél:** Ha a fényérzékelő értéke alacsonyabb egy adott küszöbnél (pl. 150), akkor a weboldalon jelenjen meg egy új adatkártya: „Night Mode: ON”.
+
+**Kihívás:** Webes HTML tartalom feltételes bővítése, logikai vezérlés a kijelzésben.
 
 ✅ Sok sikert! 😊
