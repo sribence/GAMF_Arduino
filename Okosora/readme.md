@@ -32,7 +32,8 @@ A projekt célja egy olyan hordozható egészségügyi monitor megvalósítása,
 ---
 
 # 0. Feladat:
-⚙️ Kapcsolási rajz: Ezt ebben a feladatban megcsináltuk már nektek. Óratosan vegyétek ki a dobozból, nehogy valamit kihúzzatok!
+⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
+![kapcsolási rajz](bekotes.png)
 
 ---
 
