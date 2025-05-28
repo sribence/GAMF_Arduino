@@ -159,63 +159,60 @@ Ez a program egy jelszóval védett rendszer, amit egy joystick és egy OLED kij
 
 ![Változók](5-1.png)
 
-**setup() és loop() megírása:** Az előzőektől csak kicsit eltérő változtatásokat kell eszközölni. 
-- A setup felépítése ugyanaz, mint a **4. Feladatban** láthattuk, csak egy pinMode()-ot kell hozzáadni:
+📌 Fontos: A teljes kódot másold be az Arduino IDE-be, töltsd fel a mikrokontrollerre, és nézd meg, hogyan reagál a joystick mozgásaira. Az alábbiakban a program működésének logikáját bontjuk lépésekre.
+
+#### 1️⃣ Inicializálás és kijelző beállítása
+A setup() függvény felelős az eszközök induláskori inicializálásáért:
+
+- Soros kapcsolat elindítása a hibakereséshez (Serial.begin)
+- OLED kijelző inicializálása (display.begin)
+- A kijelző törlése, majd egy üzenet megjelenítése
+- A joystick gomb bemenetként való beállítása
+
+> 👉 Célja: felkészíteni a mikrokontrollert és a kijelzőt a működésre.
+
+##### 2️⃣ Folyamatos működés: loop()
+Ez a fő ciklus, ahol minden másodpercben frissül a rendszer:
+- Beolvassa a joystick aktuális állapotát (UpdateJoystick())
+- Ellenőrzi, hogy mozdítottuk-e a joystickot → módosítja a jelszót (ReadPass())
+- Kirajzolja az aktuálisan összeállított jelszót (PrintPass())
+
+📌 Jelszóellenőrzés: ha a joystick gombját lenyomták, akkor:
+- összeállítja a beírt jelszót (4 karakter)
+- összehasonlítja az előre megadott jelszóval
+- kiírja a „Correct” vagy „Wrong” szót a kijelzőre
+- vár 2 másodpercet, majd törli a jelszót
+
+##### 3️⃣ A joystick kezelése: UpdateJoystick()
+Ez a függvény beolvassa a joystick X és Y tengelyének analóg értékeit és a gomb állapotát:
 
 ```cpp
-    pinMode(JOYSTICK_BTN, INPUT);       // Set `JOYSTICK_BTN` pin to `INPUT`
+x = analogRead(JOYSTICK_X);
+y = analogRead(JOYSTICK_Y);
+IsJoyStickPressed = digitalRead(JOYSTICK_BTN) == HIGH;
 ```
+📌 A „deadzone” figyelmen kívül hagyja az apró mozgásokat, csak akkor érzékel irányt, ha ténylegesen elmozdították.
 
-- A loop() vátoztatása: 
-A     `// Detect inputs` kiegészítése:
-``` cpp
-    UpdateJoystick();
-```
+##### 4️⃣ A jelszó megjelenítése: PrintPass()
+Összefűzi a négy karakteres jelszót, amit épp beállítottunk, és megjeleníti az OLED-en. Használja a Password tömböt és a PasswordChars karakterkészletet.
 
-🕹️ Gombnyomás figyelése: A rendszer csak akkor reagáljon, ha a joystick gombot frissen nyomták le (ne ismétlődően). Ehhez figyeld a korábbi állapotot: PrevIsJoyStickPressed.
+##### 5️⃣ A joystick irányának értelmezése: GetJoyDirection()
+Ez egy segédfüggvény, amely a joystick pozícióját iránnyá alakítja ("up", "down", "left", "right" vagy "none"), figyelembe véve a halott zónát.
 
-🔡 Jelszó összeállítása és ellenőrzése:
-- Az aktuálisan beállított karaktereket (Password tömb) alakítsd át egy szöveggé (enteredPassword) a PasswordChars alapján.
-- Hasonlítsd össze az előre beállított jelszóval: CORRECT_PASSWORD.
+##### 6️⃣ A jelszó szerkesztése joystickkal: ReadPass()
+A ReadPass() a joystick aktuális iránya alapján módosítja:
+- ⬅️ vagy ➡️ → kurzor mozgatása a jelszó 4 pozíciója közöt.
+- ⬆️ vagy ⬇️ → karakter módosítása az adott helyen (pl. A → B → C → ...)
+- 👉 IsJoyStickMoved figyel arra, hogy egy mozdulatra csak egyszer módosítson (ne ismétlődjön folyamatosan).
 
-🖥️ OLED kijelző visszajelzés:
-- ✅ Helyes jelszó esetén: jelenjen meg a „Correct” szöveg.
-- ❌ Hibás jelszó esetén: jelenjen meg a „Wrong” szöveg.
-- ⏳ 2 másodpercig tartsd meg az üzenetet, majd nullázd a jelszót.
+##### 7️⃣ Jelszóellenőrzés logikája
+Ha a joystick gombot lenyomták:
+- Összeáll egy String típusú enteredPassword
+- Összehasonlítás történik a CORRECT_PASSWORD értékével
+- Ha egyezik: „Correct”, ha nem: „Wrong” felirat
+- Ezután 2 másodpercig vár, majd a jelszót nullázza
 
-``` cpp
-// Ha megnyomták a joystick gombját, és előzőleg nem volt lenyomva
-    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
-    {
-        PrevIsJoyStickPressed = true;
-
-        // Összerakjuk a beállított jelszót stringként
-        String enteredPassword = "";
-        for (int i = 0; i < 4; i++)
-        {
-            enteredPassword += PasswordChars[Password[i]];
-        }
-
-        // Ellenőrizzük a jelszót
-        if (enteredPassword == CORRECT_PASSWORD)
-        {
-            PrintText("Correct");
-        }
-        else
-        {
-            PrintText("Wrong");
-        }
-
-        delay(2000); // Rövid szünet a visszajelzéshez
-        for (int i = 0; i < 4; i++) Password[i] = 0; // Jelszó nullázása
-    }
-```
-
-
-
-
-
-
+![Teljeskód](5-2.png)
 
 
 ---
