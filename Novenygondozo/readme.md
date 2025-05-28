@@ -1,8 +1,7 @@
-# Időjárásállomás 🌡️🌁
+# Növénygondozó 🌱🧑‍🌾
 
-Mini időjárásállomás 
-Valósíts meg egy környezeti szenzorokon alapuló időjárásállomást Arduino Nano 33 Sense segítségével, amely hőmérsékletet, páratartalmat, napfényerősséget és hangszennyezettséget mér. Az adatok grafikonos formában jelennek meg egy weboldalon, amelyet a Nano beépített WiFi kapcsolattal szolgál ki. A rendszer napelemes táplálásra van tervezve, és a napelem aktuális feszültségszintjét is megjeleníti, hogy követhető legyen a töltés. Opcionálisan egy szervómotor a fény irányába fordítja a napelemet, a beépített fényérzékelő adatainak felhasználásával.
-
+Készíts egy automatikusan öntöző és fénykiegészítő rendszert, amely a növény környezeti állapotát (fény, talajnedvesség, eső) figyeli, és az adatokat WiFi-n keresztül továbbítja egy weboldalra. Az Arduino MKR1000 eszközön keresztül a felhasználó mobiltelefonról WiFi-n is vezérelheti a szivattyút és a világítást (be/ki kapcsolás). Az öntözést egy relén keresztül vezérelt szivattyú, a világítást egy nagy fényerejű power LED biztosítja. Az eszköz opcionálisan gyorsulásérzékelővel figyelheti a mozgatást, például lopási kísérlet esetén. 
+ 
 **🛠️ Fontos:** 📝 mindent a rajz alapján csináljatok, mert így biztosított a tökéletes működés. A progranban az elnevezések relatívak, nem muszáj azt használni. Ha mást használtok, akkor figyeljetek arra, hogy könnyen lehessen azonosítani az egyes vátozó neveket. 🔍
 
 🤓 Aki foglalkozott már hasonlóval és szertne egy kicsit bonyolultabb feladaton gondolkodni annak van egy **exta feladat** a füzet végén. 📖💡
@@ -23,13 +22,14 @@ Valósíts meg egy környezeti szenzorokon alapuló időjárásállomást Arduin
 ---
 
 # 🛠️ Eszközök, amikre szükséged lesz:
-- 📶 Arduino MKR WiFi
-- ☀️ Napelem + feszültségosztó
-- 🌗 Beépített fényérzékelő 
-- 🎤 Beépített mikrofon 
-- 🌡️ DHT11 vagy beépített szenzor – hőmérséklet & páratartalom
-- ⚙️ Szervómotor 
-- 📊 Webes adatmegjelenítés grafikonokkal WiFi-n keresztül
+- 📡 Arduino MKR1000
+- 🌱 Soil Humidity Sensor 
+- 💧 Water Sensor 
+- 💡 TEMT6000 Light Sensor 
+- 🔦 Power LED
+- 🚰 Szivattyú + 12V relay
+- 🌀 MMA8452Q gyorsulásérzékelő
+- 🌐 WiFi webes vezérlés – 🔘 ki/bekapcsoló gombok a világításhoz és szivattyúhoz
 
 ---
 
@@ -68,16 +68,18 @@ Valósíts meg egy környezeti szenzorokon alapuló időjárásállomást Arduin
 ---
 
 # Teljes rendszer
-**A teljes időjárásállomás vezérlése** 
+**A teljes növénygondozó vezérlése** 
 
 🛠️ Eszközök: 
-- 📶 Arduino MKR WiFi
-- ☀️ Napelem + feszültségosztó ( 🔋 töltöttség méréshez )
-- 🌗 Beépített fényérzékelő ( ALS )
-- 🎤 Beépített mikrofon ( 📈 hangszint érzékeléshez )
-- 🌡️ DHT11 vagy beépített szenzor – hőmérséklet & páratartalom
-- ⚙️ Szervómotor ( 🌞 napkövető funkció – opcionális )
-- 📊 Webes adatmegjelenítés grafikonokkal WiFi-n keresztül
+- 📡 Arduino MKR1000
+- 🌱 Soil Humidity Sensor ( talajnedvesség-érzékelő )
+- 💧 Water Sensor ( esőérzékelő )
+- 💡 TEMT6000 Light Sensor ( fényérzékelő )
+- 🔦 Power LED
+- 🚰 Szivattyú + 12V relay
+- 🌀 MMA8452Q gyorsulásérzékelő ( opcionális )
+- 🌐 WiFi webes vezérlés – 🔘 ki/bekapcsoló gombok a világításhoz és szivattyúhoz
+
 
 ### **🏆 Extra feladat:**  
 **🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
