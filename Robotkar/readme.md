@@ -1,6 +1,20 @@
 # Robotkar 🤖💪
 
-A projekt egy több szervómotorral vezérelt, asztali méretű robotkar megépítését célozza. A diákok először külön-külön vezérlik a kar egyes tengelyeit potméterek segítségével, majd egyszerre történő mozgatással komplexebb mozdulatsorokat hajtanak végre. A felhasználó képes pozíciókat elmenteni, és később sorrendben visszajátszani a mozdulatokat, így a robotkar ismételhető, előre programozott feladatokat képes végrehajtani (pl. tárgy mozgatása egyik pontról a másikra). A projekt célja a szervóvezérlés, mozgás szinkronizálás és pozíció-mentés gyakorlása.
+**🔧 Projektleírás:** 
+Ebben a projektben egy több szervómotorral vezérelt, asztali méretű robotkart építünk meg Arduino segítségével. A cél, hogy a diákok játékosan, mégis mélyrehatóan ismerkedjenek meg az aktuátorvezérlés, a mozgásprogramozás, valamint az ismételhető műveletsorok megvalósításával.
+
+**🕹️ Egyéni vezérlés potméterekkel:**
+Először a robotkar minden egyes tengelyét külön vezérelheted potméterek segítségével. Ez lehetővé teszi, hogy megtanuld, hogyan mozog egy szervó, és hogyan kapcsolódnak egymáshoz a kar részei.
+
+**🤲 Szinkronizált mozgás – több szervó egy időben:**
+Miután az alapmozgások mennek, egyszerre fogod vezérelni az összes szervót. Ezáltal képes leszel komplex, természetes mozgásokat létrehozni (pl. „fogd meg – emeld fel – tedd le”).
+
+**💾 Pozíciók mentése és visszajátszása:**
+A program lehetőséget biztosít arra, hogy kulcspozíciókat elments, majd ezeket sorrendben visszajátszd. Így a robotkar képes lesz egy adott feladatot automatikusan elvégezni, például egy tárgy áthelyezését egyik helyről a másikra.
+
+**🔁 Feladat automatizálása:**
+A robotkarod már nem csak egy eszköz, hanem egy programozható gép, amely képes újra és újra elvégezni ugyanazt a feladatot – emberi beavatkozás nélkül!
+
 
 **🛠️ Fontos:** 📝 mindent a rajz alapján csináljatok, mert így biztosított a tökéletes működés. A progranban az elnevezések relatívak, nem muszáj azt használni. Ha mást használtok, akkor figyeljetek arra, hogy könnyen lehessen azonosítani az egyes vátozó neveket. 🔍
 
@@ -16,8 +30,7 @@ A projekt egy több szervómotorral vezérelt, asztali méretű robotkar megép�
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
 -   [4. Feladat](#4-feladat)
--   [Teljes rendszer](#a-teljes-rendszer-működtetése)
--   [Extra Feladat](#extra-feladat)
+-   [Extra Feladat](#extra-ötlet)
 
 ---
 
@@ -317,21 +330,3 @@ A 3. és 4. feladatban a diákok megtanulják a robotkar programozott vezérlés
 
 Ha elakadsz, nézd át ezt a leírást, vagy kérdezz bátran! Jó kísérletezést és jó tanulást! :)
 
----
-
-# Teljes rendszer
-**A teljes robotkar vezérlése** 
-
-🛠️ Eszközök:   
-- 🧠 Arduino Mega
-- ⚙️ 6 db szervómotor ( pl. SG90 vagy MG996R típusok kombinációja )
-- 🧩 Servo Shield ( PWM vezérléshez )
-- 🎛️ 4 db potméter ( manuális tengelyirányítás )
-- 🔋 5V/6V tápegység a szervómotorok tápellátásához
-
-
-### **🏆 Extra feladat:**  
-**🛠️ Extra feladat:** Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
-
-
-✅ Sok sikert! 😊
