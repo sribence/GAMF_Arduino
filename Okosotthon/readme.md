@@ -159,17 +159,37 @@ Ez a program egy jelszóval védett rendszer, amit egy joystick és egy OLED kij
 
 ![Változók](5-1.png)
 
-**setup() és loop() megírása:** Az előzőektől csak kicsit eltérő változtatásokat kell eszközölni. 
-- A setup felépítése ugyanaz, mint a **4. Feladatban** láthattuk, csak egy pinMode()-ot kell hozzáadni:
+📌 Fontos: A teljes kódot másold be az Arduino IDE-be, töltsd fel a mikrokontrollerre, és nézd meg, hogyan reagál a joystick mozgásaira. Az alábbiakban a program működésének logikáját bontjuk lépésekre.
+
+#### 1️⃣ Inicializálás és kijelző beállítása
+A setup() függvény felelős az eszközök induláskori inicializálásáért:
+
+- Soros kapcsolat elindítása a hibakereséshez (Serial.begin)
+- OLED kijelző inicializálása (display.begin)
+- A kijelző törlése, majd egy üzenet megjelenítése
+- A joystick gomb bemenetként való beállítása
+
+> 👉 Célja: felkészíteni a mikrokontrollert és a kijelzőt a működésre.
+
+##### 2️⃣ Folyamatos működés: loop()
+Ez a fő ciklus, ahol minden másodpercben frissül a rendszer:
+- Beolvassa a joystick aktuális állapotát (UpdateJoystick())
+- Ellenőrzi, hogy mozdítottuk-e a joystickot → módosítja a jelszót (ReadPass())
+- Kirajzolja az aktuálisan összeállított jelszót (PrintPass())
+
+📌 Jelszóellenőrzés: ha a joystick gombját lenyomták, akkor:
+- összeállítja a beírt jelszót (4 karakter)
+- összehasonlítja az előre megadott jelszóval
+- kiírja a „Correct” vagy „Wrong” szót a kijelzőre
+- vár 2 másodpercet, majd törli a jelszót
+
+##### 3️⃣ A joystick kezelése: UpdateJoystick()
+Ez a függvény beolvassa a joystick X és Y tengelyének analóg értékeit és a gomb állapotát:
 
 ```cpp
-    pinMode(JOYSTICK_BTN, INPUT);       // Set `JOYSTICK_BTN` pin to `INPUT`
-```
-
-- A loop() vátoztatása: 
-A     `// Detect inputs` kiegészítése:
-``` cpp
-    UpdateJoystick();
+x = analogRead(JOYSTICK_X);
+y = analogRead(JOYSTICK_Y);
+IsJoyStickPressed = digitalRead(JOYSTICK_BTN) == HIGH;
 ```
 
 🕹️ Gombnyomás figyelése: A rendszer csak akkor reagáljon, ha a joystick gombot frissen nyomták le (ne ismétlődően). Ehhez figyeld a korábbi állapotot: PrevIsJoyStickPressed.
@@ -210,6 +230,13 @@ A     `// Detect inputs` kiegészítése:
         for (int i = 0; i < 4; i++) Password[i] = 0; // Jelszó nullázása
     }
 ```
+
+
+
+
+
+
+
 
 ---
 
