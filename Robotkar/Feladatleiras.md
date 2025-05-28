@@ -37,16 +37,124 @@ A projekt egy több szervómotorral vezérelt, asztali méretű robotkar megép�
 ---
 
 # 1. Feladat:
+A szervómotorok alapvető vezérlése potméterekkel. A potméterek értékeit beolvassuk az A0-A3 analóg bemenetekről, és ezek alapján vezéreljük a szervómotorokat. A szervók csak 70-140 fok között mozoghatnak a biztonságos működés érdekében.
 
+```cpp
+#include <Servo.h>
 
-![1. Feladat](1.png)
+// Szervó motorok létrehozása
+Servo szervo1;
+Servo szervo2;
+Servo szervo3;
+Servo szervo4;
+
+void setup() {
+  // Szervók csatlakoztatása PWM lábakhoz
+  szervo1.attach(9);  // D9 PWM láb
+  szervo2.attach(10); // D10 PWM láb
+  szervo3.attach(11); // D11 PWM láb
+  szervo4.attach(12); // D12 PWM láb
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Potméterek értékeinek beolvasása (0-1023)
+  int pot1 = analogRead(A0);
+  int pot2 = analogRead(A1);
+  int pot3 = analogRead(A2);
+  int pot4 = analogRead(A3);
+  
+  // Értékek átkonvertálása 70-140 fok közé
+  int szog1 = map(pot1, 0, 1023, 70, 140);
+  int szog2 = map(pot2, 0, 1023, 70, 140);
+  int szog3 = map(pot3, 0, 1023, 70, 140);
+  int szog4 = map(pot4, 0, 1023, 70, 140);
+  
+  // Szervók mozgatása
+  szervo1.write(szog1);
+  szervo2.write(szog2);
+  szervo3.write(szog3);
+  szervo4.write(szog4);
+  
+  // Értékek kiírása soros portra
+  Serial.print("Potméter értékek: ");
+  Serial.print(pot1); Serial.print(" ");
+  Serial.print(pot2); Serial.print(" ");
+  Serial.print(pot3); Serial.print(" ");
+  Serial.println(pot4);
+  
+  delay(15); // Kis késleltetés a stabil működéshez
+}
 
 ---
 
 # 2. Feladat:
+A szervómotorok pontosabb vezérlése PWM jelszinttel. A potméterek értékeit most már közvetlenül PWM impulzusszélességre konvertáljuk (500-2500 mikroszekundum), ami pontosabb vezérlést tesz lehetővé. A motorok mozgatása fokozatos, a for ciklusok segítségével.
 
+```cpp
+#include <Servo.h>
 
-![2. Feladat](2.png)
+Servo szervo1;
+Servo szervo2;
+Servo szervo3;
+Servo szervo4;
+
+// PWM értékek tartománya (mikroszekundum)
+const int MIN_PWM = 500;   // 0 fok
+const int MAX_PWM = 2500;  // 180 fok
+
+void setup() {
+  szervo1.attach(9);
+  szervo2.attach(10);
+  szervo3.attach(11);
+  szervo4.attach(12);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Potméterek beolvasása
+  int pot1 = analogRead(A0);
+  int pot2 = analogRead(A1);
+  int pot3 = analogRead(A2);
+  int pot4 = analogRead(A3);
+  
+  // Értékek konvertálása PWM tartományra
+  int pwm1 = map(pot1, 0, 1023, MIN_PWM, MAX_PWM);
+  int pwm2 = map(pot2, 0, 1023, MIN_PWM, MAX_PWM);
+  int pwm3 = map(pot3, 0, 1023, MIN_PWM, MAX_PWM);
+  int pwm4 = map(pot4, 0, 1023, MIN_PWM, MAX_PWM);
+  
+  // Fokozatos mozgatás for ciklusokkal
+  for(int i = 0; i < 180; i++) {
+    // PWM jelek generálása
+    digitalWrite(9, HIGH);
+    delayMicroseconds(pwm1);
+    digitalWrite(9, LOW);
+    
+    digitalWrite(10, HIGH);
+    delayMicroseconds(pwm2);
+    digitalWrite(10, LOW);
+    
+    digitalWrite(11, HIGH);
+    delayMicroseconds(pwm3);
+    digitalWrite(11, LOW);
+    
+    digitalWrite(12, HIGH);
+    delayMicroseconds(pwm4);
+    digitalWrite(12, LOW);
+    
+    delay(20); // Teljes ciklus időtartama
+  }
+  
+  // PWM értékek kiírása
+  Serial.print("PWM értékek (μs): ");
+  Serial.print(pwm1); Serial.print(" ");
+  Serial.print(pwm2); Serial.print(" ");
+  Serial.print(pwm3); Serial.print(" ");
+  Serial.println(pwm4);
+}
 
 ---
 
