@@ -225,7 +225,7 @@ Itt egy egyszerűsített kódrészlet, ami csak 3 szervót használ, de ugyanazt
 ```cpp
 #include <Arduino.h>
 #include <Servo.h>
-#include <cmath>  // For ceil and abs
+#include <math.h>  // For ceil and abs
 
 class MyServo {
 public:
