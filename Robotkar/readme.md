@@ -276,49 +276,133 @@ Ez a kód futtatható az Arduino-ban, és mutatja, hogyan mozognak a 3 szervó �
 
 A robotkar képes több pozíciót is elmenteni, majd ezeket egymás után végrehajtani. Így például megtaníthatod a kart, hogy felemeljen egy tárgyat, áthelyezze, majd visszatérjen a kiinduló helyzetbe.
 
-### Lépések:
-
-1. **Állítsd be a kart a kívánt pozícióba** (pl. potméterekkel vagy soros parancsokkal: `mov 0 0`, `mov 1 45`, stb.)
-2. **Mentsd el a pozíciót:**
-   ```
-   save_cur 0
-   ```
-3. **Állítsd be a következő pozíciót** (pl. másik tárgy fölé, más szögekkel), majd mentsd el:
-   ```
-   save_cur 1
-   ```
-4. **Tetszőleges számú pozíciót elmenthetsz (pl. 0-9-ig).**
-5. **A mozdulatsor visszajátszása:**
-   ```
-   load 0
-   go
-   load 1
-   go
-   load 0
-   go
-   ```
-   Ezzel a kar végrehajtja a tanított mozdulatsort.
-
-### Automatizált visszajátszás (bővítés):
-
-Írhatsz egy egyszerű ciklust a soros monitoron keresztül, vagy akár a kódot is bővítheted, hogy egy gombnyomásra végigmenjen az összes elmentett pozíción:
-
 ```cpp
-for (int i = 0; i < 3; ++i) {
-    servos.load(i);
-    servos.move();
+#include <Servo.h>
+
+const int SZERVO_PIN[4] = {3, 5, 6, 9};
+const int POT_PIN[4] = {A0, A1, A2, A3};
+const int MAX_POZICIOK = 10;
+
+Servo szervok[4];
+int pozicioTarolo[MAX_POZICIOK][4]; // Tárolja a szervópozíciókat
+int pozicioSzamlalo = 0;            // Aktuális mentett pozíciók száma
+
+String parancs = "";
+
+void setup() {
+  Serial.begin(9600);
+  for (int i = 0; i < 4; i++) {
+    szervok[i].attach(SZERVO_PIN[i]);
+  }
+  Serial.println("Parancsok: MOVE, SAVE, LOAD");
+}
+
+void loop() {
+  // Soros parancs beolvasása
+  if (Serial.available()) {
+    parancs = Serial.readStringUntil('\n');
+    parancs.trim(); // Térköz, újsor eltávolítása
+
+    if (parancs == "MOVE") {
+      movePotmeterAlapjan();
+    }
+    else if (parancs == "SAVE") {
+      if (pozicioSzamlalo < MAX_POZICIOK) {
+        for (int i = 0; i < 4; i++) {
+          int szog = map(analogRead(POT_PIN[i]), 0, 1023, 70, 140);
+          pozicioTarolo[pozicioSzamlalo][i] = szog;
+        }
+        pozicioSzamlalo++;
+        Serial.println("Pozíció elmentve.");
+      } else {
+        Serial.println("Tár megtelt!");
+      }
+    }
+    else if (parancs == "LOAD") {
+      Serial.println("Pozíciók lejátszása:");
+      for (int p = 0; p < pozicioSzamlalo; p++) {
+        for (int i = 0; i < 4; i++) {
+          szervok[i].write(pozicioTarolo[p][i]);
+        }
+        delay(1000); // 1 másodperc várakozás két pozíció között
+      }
+    }
+    else {
+      Serial.println("Ismeretlen parancs!");
+    }
+  }
+
+  // Folyamatos MOVE támogatás, ha ez a legutóbbi parancs
+  if (parancs == "MOVE") {
+    movePotmeterAlapjan();
+  }
+}
+
+void movePotmeterAlapjan() {
+  for (int i = 0; i < 4; i++) {
+    int szog = map(analogRead(POT_PIN[i]), 0, 1023, 70, 140);
+    szervok[i].write(szog);
+  }
+  delay(15);
 }
 ```
+# 🎮 4 Szervós Robotkar vezérlés potméterrel és soros parancsokkal
 
-### Tippek, magyarázatok:
-- **A mozgás mindig szinkronizált, minden szervó egyszerre mozog.**
-- **A LED szalag pirosan világít mozgás közben, sárgán, ha végzett.**
-- **A pozíciók elmentése után a robotkar képes ismételni a tanult mozdulatsort, akárhányszor.**
-- **A parancsokat a soros monitoron keresztül adhatod ki, így könnyen kísérletezhetsz.**
+Ez a projekt lehetővé teszi egy **4 tengelyes szervóvezérelt robotkar** vezérlését potméterekkel, valamint pozíciók elmentését és visszajátszását a **soros porton keresztül adott parancsokkal**.
 
-### Extra ötlet:
-- **Írj egy "macro" parancsot, ami egy előre elmentett mozdulatsort automatikusan végigjátszik!**
-- **Próbáld ki, hogy a robotkar egy tárgyat felemel, áthelyez, majd visszatesz!**
+## 🛠️ Hardverkövetelmények
+
+- 1 db Arduino UNO / Nano / Mega
+- 4 db szervómotor (pl. SG90 vagy MG90S)
+- 4 db potméter (10k ideális)
+- Breadboard, vezetékek
+- USB kábel Arduino programozásához
+
+### 🔌 Bekötés
+
+| Szervó index | Szervó pin | Potméter pin |
+|--------------|------------|--------------|
+| 0            | D3         | A0           |
+| 1            | D5         | A1           |
+| 2            | D6         | A2           |
+| 3            | D9         | A3           |
+
+> Az egyes szervók és potméterek párban dolgoznak: a potméter határozza meg a szervó szögét.
+
+---
+
+## 📦 Funkciók
+
+- **MOVE**: A potméterek aktuális állása alapján vezérli a szervókat
+- **SAVE**: Elmenti az aktuális 4 szervó pozícióját egy tömbbe
+- **LOAD**: Sorban visszajátssza az összes mentett pozíciót
+
+---
+
+## 🧪 Használat lépései
+
+1. **Töltsd fel a kódot az Arduino-ra** az Arduino IDE segítségével.
+2. **Nyisd meg a Soros monitort** (baud rate: `9600`).
+3. Írd be a következő parancsokat:
+
+### Parancsok listája
+
+| Parancs | Leírás |
+|--------|--------|
+| `MOVE` | A potméterek élő vezérlést biztosítanak a szervóknak. |
+| `SAVE` | Elmenti az aktuális pozíciót egy tömbbe (max. 10 pozíció). |
+| `LOAD` | Lejátsza az összes elmentett pozíciót, kb. 1 mp szünettel. |
+
+---
+
+## 🧠 Oktatási cél
+
+Ez a projekt **gyakoroltatja a szervóvezérlést, potméter használatot, és a soros kommunikációt**. Segít megérteni:
+
+- Hogyan vezérlünk több szervót egyszerre
+- Hogyan olvasunk be analóg jeleket
+- Hogyan kezelünk egyszerű parancsokat soros kommunikáción keresztül
+- Hogyan tárolunk és kezelünk pozíciókat tömbökben
 
 ---
 
