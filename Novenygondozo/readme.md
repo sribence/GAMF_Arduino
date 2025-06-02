@@ -64,6 +64,7 @@ Ebben a feladatban minden érzékelőt be fogunk kötni:
 
 Ezután egy tesztkóddal 🧪 ellenőrizzük, hogy mindegyik megfelelően működik.
 
+<img src="./SmartPLantCircuit2.png" width="100%" />
 <img src="./SmartPLantCode2.png" width="100%" />
 
 Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
@@ -86,6 +87,7 @@ Ha minden jól működik, akkor azt kell látnod, hogy:
 💡 a lámpa villog,
 🔁 a relé pedig kattog, ahogy be- és kikapcsol.
 
+<img src="./SmartPLantCircuit3.png" width="100%" />
 <img src="./SmartPLantCode3.png" width="100%" />
 
 ---
