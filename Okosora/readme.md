@@ -63,13 +63,19 @@ Kek = 178
 ---
 
 # 3. Feladat:
-💾 Minimum & maximum értékek tárolása
-**🎯 Feladat:** Mutassa a hőmérséklet szenzor által mért minimum és maximum értékeket a képernyőn.
+Ebben a feladatban csatlakoztatni fogjuk a kijelzőt 🖥️ és a rotary encodert 🔄. A programban le is teszteljük, hogy jól kötöttük-e be őket ✅.
 
-**💡 Magyarázat:**
-Egyszerű változókban eltároljuk a legalacsonyabb és legmagasabb mért értéket, és ezek frissülnek, ha új csúcsértékek érkeznek.
+A kijelzőn tesztadatok fognak megjelenni 📊, a soros porton pedig egy számláló értéke, amely a tekerések hatására változik ➕➖ (az egyik irány növeli, a másik csökkenti az értéket).
 
-![3. Feladat](3.png)
+De mielőtt használni tudnánk a kijelzőt, szükség van egy külső könyvtár letöltésére és beállítására 📦. Ne aggódj, nem lesz bonyolult! 😌
+📥 Telepítési lépések:
+
+1. Töltsd le a ZIP-fájlt innen: 👉 [TFT_eSPI könyvtár letöltése](https://github.com/Bodmer/TFT_eSPI/archive/refs/heads/master.zip)
+2. Telepítsd a könyvtárat az Arduino IDE-ben: `Sketch > Include Library > Add .ZIP Library...` ➡️ Válaszd ki az imént letöltött ZIP-fájlt.
+3. Konfiguráld a könyvtárat: Másold a [`User_Setup.h`](https://raw.githubusercontent.com/sribence/GAMF_Arduino/refs/heads/main/Okosora/User_Setup.h) fájl tartalmát ide: `Dokumentumok/Arduino/libraries/TFT_eSPI/User_Setup.h` ➡️ Cseréld le a meglévő fájlt, különben a kijelző nem fog működni ⚠️.
+
+<img src="./SmartwatchCircuit3.png" width="100%" />
+<img src="./SmartwatchCode3.png" width="100%" />
 
 ---
 
