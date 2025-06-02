@@ -43,9 +43,36 @@ Ha ez megvan, akkor a megszokott módon töltsd fel az alábbi kódot 📥, majd
 
 <img src="./SmartPLantCode1.png" width="100%" />
 
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
+```
+Hello, vilag!
+Hello, vilag!
+Hello, vilag!
+```
+
 ---
 
 # 2. Feladat: 
+
+Ha már biztosan tudjuk, hogy működik az eszköz ✅, akkor elkezdhetünk szenzorokat csatlakoztatni hozzá 🔌.
+
+Ebben a feladatban minden érzékelőt be fogunk kötni:
+- 🌱 talajnedvesség-érzékelő
+- 🌧️ esőérzékelő
+- ☀️ fényérzékelő
+
+Ezután egy tesztkóddal 🧪 ellenőrizzük, hogy mindegyik megfelelően működik.
+
+<img src="./SmartPLantCode2.png" width="100%" />
+
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
+```
+Feny: 69
+Talaj nedvesseg: 0
+Eso: 0
+```
 
 ---
 
