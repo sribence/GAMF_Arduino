@@ -47,13 +47,18 @@ Alkohol: 138
 ---
 
 # 2. Feladat:
-🎨 Színminta megjelenítése
-**🎯 Feladat:** A színérzékelő adatai alapján színezd be a kijelző egy részét az érzékelt RGB színnel.
+Ebben a feladatban csatlakoztatni fogjuk a színérzékelőt 🎨 és a rajta található LED-eket 💡. Ezután csak ezeket fogjuk tesztelni 🔍, az eddig használt szenzorokat most nem használjuk – majd csak a későbbi feladatok során kerülnek elő újra ⏭️.
 
-**💡 Magyarázat:**
-A `countR`, `countG`, `countB` értékeket leképezzük 0-255 tartományra és ezzel kitöltünk egy négyzetet.
+<img src="./SmartwatchCircuit2.png" width="100%" />
+<img src="./SmartwatchCode2.png" width="100%" />
 
-![2. Feladat](2.png)
+Ha mindent jól csináltunk, akkor egy ehhez hasonló kiírást kellene kapnunk a soros monitoron 🖥️👇:
+
+```txt
+Piros = 182
+Zold = 178
+Kek = 178
+```
 
 ---
 
