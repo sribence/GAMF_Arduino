@@ -100,6 +100,9 @@ Az alábbi kód egy nagyon alap, „Hello World” típusú weboldalt fog létre
 
 <img src="./SmartPLantCode4.png" width="100%" />
 
+> [!NOTE]  
+> A weboldal IP címét a soros porton fogod megtalálni. 👌
+
 ---
 
 # 5. Feladat: 
