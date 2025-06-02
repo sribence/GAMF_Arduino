@@ -78,6 +78,16 @@ Eso: 0
 
 # 3. Feladat: 
 
+Most nézzük meg a kimeneti eszközöket ⚡: a lámpát 💡 és a relét 🔁.
+
+Kössük be őket a kapcsolási rajznak megfelelően 📈, majd töltsük fel az alábbi kódot 🧾 az Arduinóra.
+
+Ha minden jól működik, akkor azt kell látnod, hogy:
+💡 a lámpa villog,
+🔁 a relé pedig kattog, ahogy be- és kikapcsol.
+
+<img src="./SmartPLantCode3.png" width="100%" />
+
 ---
 
 # 4. Feladat: 
