@@ -70,7 +70,7 @@ Napelem
 ---
 
 # 5. Feladat:
-> [!WARN]  
+> [!WARNING]  
 > Át kell írni hogy hostoljon AP-t
 
 
