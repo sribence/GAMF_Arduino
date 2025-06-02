@@ -93,7 +93,12 @@ Ha minden jól működik, akkor azt kell látnod, hogy:
 ---
 
 # 4. Feladat: 
+Mostanra minden eszközt bekötöttünk és leteszteltünk 🔧✅.
+Mivel azonban szeretnénk az eszközöket egy weboldalon keresztül irányítani 🌐, először hozzunk létre egy egyszerű webszervert az Arduinón 💻📡.
 
+Az alábbi kód egy nagyon alap, „Hello World” típusú weboldalt fog létrehozni 🌍👋, amivel kipróbálhatjuk a webszerver működését.
+
+<img src="./SmartPLantCode4.png" width="100%" />
 
 ---
 
