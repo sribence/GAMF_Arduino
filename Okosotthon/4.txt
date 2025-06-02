@@ -1,5 +1,3 @@
-// kijelzo
-
 #include <Wire.h> 
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h> // könyvtárból ezt le kell tölteni! 
@@ -56,7 +54,3 @@ void PrintText(String msg)
 
     display.display();                      // Write the buffer to the display
 }
-
-
-
-

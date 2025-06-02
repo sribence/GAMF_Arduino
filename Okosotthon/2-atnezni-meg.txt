@@ -25,33 +25,37 @@ void setup()
 
 void loop()
 {
-    DetectFlame();
+  DetectFlame();
 
-    switch (currentState) {
-        case ARMED:
-            Armed();
-            break;
+  switch (currentState) {
+    case ARMED:
+      Armed();
+      break;
 
-        case ALARMED:
-            Alarmed();
-            break;
+    case ALARMED:
+      Alarmed();
+      break;
 
-        case UNARMED:
-            Unarmed();
-            break;
+    case UNARMED:
+      Unarmed();
+      break;
     }
 }
 
 void Unarmed() {
-    noTone(BUZZER); // Buzzer OFF
+  noTone(BUZZER); // Buzzer OFF
 }
 
 void Alarmed() {
-    tone(BUZZER, 100);  // Buzzer ON
-    delay(1000);        // Riasztás időtartama
-    noTone(BUZZER);     // Buzzer OFF
-    delay(1000);
+  tone(BUZZER, 100);  // Buzzer ON
+  delay(1000);        // Riasztás időtartama
+  noTone(BUZZER);     // Buzzer OFF
+  delay(1000);
 
+  // Automatikus visszaállás, ha nincs tűz
+  if (IsFlameDetected) {
+      currentState = ARMED;
+  }
 }
 
 void Armed() {

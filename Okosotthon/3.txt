@@ -1,11 +1,7 @@
-// led and motion sensor
-
-#include <Adafruit_GFX.h>
-
 const int MOTION_SENSOR = 8;
-const int LED_R = 9;
-const int LED_G = 11;
-const int LED_B = 10;
+const int LED_R = 12;
+const int LED_G = 10;
+const int LED_B = 11;
 const float BRIGHTNESS = 0.1;
 
 // State machine enum
@@ -16,19 +12,17 @@ enum StateMachine {
 };
 
 bool IsMovementDetected = false;
-StateMachine CurrentState = UNARMED;
-bool IsDoorSet = false;
+StateMachine CurrentState = ARMED;
+int currentColor = 0;
+unsigned long currentMillis = millis();
+unsigned long previousMillis = 0;
+const long colorChangeInterval = 500; // színváltás ideje ms
 
 // This function runs once after the Arduino is turned on
 void setup()
 {
-    // Start serial connection at 9600 baud rate
     Serial.begin(9600);
-
-    // Test display & wait a bit
     delay(2000);
-
-    // Set default values (turn off the LED and clear the display)
 
     SetLed(0, 0, 0);
 
@@ -42,10 +36,8 @@ void setup()
 // This function repeats itself after the `setup()` has finished running
 void loop()
 {
-    // Detect inputs
     DetectMovement();
 
-    // State machine
     switch (CurrentState)
     {
         case UNARMED:
@@ -64,48 +56,33 @@ void loop()
 // This function will be called in the `UNARMED` state
 void Unarmed()
 {
-    // If movement detected then turn on the light, otherwise turn it off
-    if (IsMovementDetected)
-    {
-        SetLed(255, 255, 255);
-    }
-    else 
-    {
-        SetLed(0, 0, 0);
-    }
+   SetLed(0, 0, 0);
 
 }
 
-// This function will be called in the `ARMED` state
-void Armed()
-{
-    // If the door is not set then open it
-    if (!IsDoorSet)
-    {
-        
-        IsDoorSet = true;
-    }
 
-    // Change the LED to orange
-    SetLed(255, 255, 0);
+void Armed() {
+  if (IsMovementDetected) {
+      unsigned long currentMillis = millis();  // FRISSÍTÉS IDE!
+      if (currentMillis - previousMillis >= colorChangeInterval) {
+            previousMillis = currentMillis;
+            currentColor = (currentColor + 1) % 3; // váltás piros-zöld-kék között
+      }
 
-    // If movement detected then change state to `ALARMED`
-    if (IsMovementDetected)
-    {
-        CurrentState = ALARMED;
-        IsDoorSet = false;
-    }
+      switch(currentColor) {
+            case 0: SetLed(255, 0, 0); break;   // piros
+            case 1: SetLed(0, 255, 0); break;   // zöld
+            case 2: SetLed(0, 0, 255); break;   // kék
+      }
+  } else {
+      SetLed(0, 0, 0); // nincs mozgás: LED ki
+  }
 }
+
 
 // This function will be called in the `ALARMED` state
 void Alarmed()
 {
-    // If the door is not set then close it
-    if (!IsDoorSet)
-    {
-        
-        IsDoorSet = true;
-    }
     // Turn the light to red and start the buzzer
     SetLed(255, 0, 0);
 }
@@ -129,6 +106,3 @@ void DetectMovement()
 {
     IsMovementDetected = digitalRead(MOTION_SENSOR) == 1;
 }
-
-
-

@@ -11,7 +11,6 @@
 ---
 **Tartalomjegyzék:**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [0. Feladat](#0-feladat)
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
@@ -34,14 +33,12 @@
 
 ---
 
-# 0. Feladat:
-⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](bekotes.png)
-
----
-
 # 1. Feladat:
 🔔 Buzzer vezérlés Arduino-val 🎵
+
+**Kapcsolási rajz:**
+![1. Feladat kapcsolási rajza](1-bekotes.png)
+
 **🛠️ Feladatleírás:** Ebben a projektben egy buzzer (piezo hangszóró) vezérlését fogjuk megvalósítani. A cél, hogy a buzzer folyamatosan hangot adjon ki meghatározott időközönként.
 
 **📋 A feladat lépései**
@@ -64,6 +61,10 @@
 
 # 2. Feladat:
 🔥 Tűzriasztó rendszer 🚨
+
+**Kapcsolási rajz:**
+![2. Feladat kapcsolási rajza](2-bekotes.png)
+
 **🛠️ Feladat:** Ebben a projektben egy egyszerű tűzjelző rendszert fogsz készíteni. A rendszer képes észlelni, ha tűz van a közelben (🔥), és riasztást ad ki egy piezo buzzer segítségével (🔔). A rendszer viselkedését egy állapotgép (State Machine) szabályozza.
 
 **A program három állapotot kezel:**
@@ -88,6 +89,9 @@
 
 # 3. Feladat:
 🚨 Mozgásérzékelős LED-es biztonsági rendszer💡
+
+**Kapcsolási rajz:**
+![3. Feladat kapcsolási rajza](3-bekotes.png)
 
 **🛠️ Feladat leírása:** Készíts egy alap biztonsági rendszert, amely egy mozgásérzékelőt (PIR szenzort) és egy RGB LED-et használ az állapotok vizuális jelzésére. A rendszer három állapotot különböztet meg:
 - 🟢 UNARMED – Nincs védelem, a LED világít, ha mozgást érzékel.
@@ -126,6 +130,10 @@
 
 # 4. Feladat:
 🖥️ OLED kijelző szövegmegjelenítő Arduino-val 📟
+
+**Kapcsolási rajz:**
+![4. Feladat kapcsolási rajza](4-bekotes.png)
+
 **🛠️ Feladat leírása:** Készíts egy egyszerű programot, amely képes szöveget megjeleníteni egy OLED kijelzőn! A kijelző I²C kommunikációval csatlakozik az Arduino-hoz, és az Adafruit könyvtárak segítségével vezérelhető.
 
 **💾 Kód működése**
@@ -149,6 +157,9 @@ A program:
 # Joystick-os jelszavas zár 🎮🔐
 
 Ez a program egy jelszóval védett rendszer, amit egy joystick és egy OLED kijelző segítségével lehet vezérelni.
+
+**Kapcsolási rajz:**
+![Joystick kapcsolási rajza](js_bekotes.png)
 
 **🕹️ Joystick működése**
 - ⬆️ Fel / ⬇️ Le → Az aktuális karakter váltása (pl. A → B vagy vissza).
@@ -231,17 +242,13 @@ IsJoyStickPressed = digitalRead(JOYSTICK_BTN) == HIGH;
     }
 ```
 
-
-
-
-
-
-
-
 ---
 
 # Teljes rendszer
 **A teljes okosotthon vezérlése** 🏠
+
+**Kapcsolási rajz:**
+![Teljes feladat kapcsolási rajza](bekotes.png)
 
 🎯 Feladat: 
 
