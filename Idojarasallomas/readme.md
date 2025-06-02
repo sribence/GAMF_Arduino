@@ -70,6 +70,11 @@ Napelem
 ---
 
 # 5. Feladat:
+> [!WARN]  
+> Át kell írni hogy hostoljon AP-t
+
+
+
 Mostanra minden eszközt bekötöttünk és leteszteltünk 🔧✅.
 Mivel azonban szeretnénk az eszközöket egy weboldalon keresztül irányítani 🌐, először hozzunk létre egy egyszerű webszervert az Arduinón 💻📡.
 
