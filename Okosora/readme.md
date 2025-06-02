@@ -9,7 +9,6 @@
 ---
 **Tartalomjegyzék:**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [0. Feladat](#0-feladat)
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
@@ -25,46 +24,58 @@
 - 🌡️ Hőmérséklet-érzékelő
 - 🍷 MQ-3 alkoholérzékelő
 - 🖼️ 240x240 pixel kör alakú SPI TFT kijelző
+- 🎨 Színérzékelő
 - 🔄 Rotary Encoder
 
 ---
 
-# 0. Feladat:
-⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](bekotes.png)
-
----
-
 # 1. Feladat:
-🔊 Hangjelzés szívverésre
-**🎯 Feladat:** Ha a pulzus egy bizonyos érték fölé emelkedik (pl. 800), akkor egy sípoló hang figyelmeztetést ad.
+Ebben a feladatban csatlakoztatni fogjuk az első három szenzort: a hőmérséklet 🌡️, az alkohol 🍷 és a pulzusmérő ❤️ szenzort. Ezután feltöltünk egy olyan programot az Arduinóra 🤖, amely segít leellenőrizni, hogy mindent jól kötöttünk-e be ✅.
 
-**💡 Magyarázat:**
-Az analogRead(PULSE_SENSOR) már méri a pulzust, csak bővíteni kell egy tone() parancs használatával, ha túl magas az érték.
 
-![1. Feladat](1.png)
+<img src="./SmartwatchCircuit1.png" width="100%" />
+<img src="./SmartwatchCode1.png" width="100%" />
+
+Ha mindent jól csináltunk, akkor egy ehhez hasonló kiírást kellene kapnunk a soros monitoron 🖥️👇:
+
+```txt
+Pulzus: 993
+Hő: 44
+Alkohol: 138
+```
 
 ---
 
 # 2. Feladat:
-🎨 Színminta megjelenítése
-**🎯 Feladat:** A színérzékelő adatai alapján színezd be a kijelző egy részét az érzékelt RGB színnel.
+Ebben a feladatban csatlakoztatni fogjuk a színérzékelőt 🎨 és a rajta található LED-eket 💡. Ezután csak ezeket fogjuk tesztelni 🔍, az eddig használt szenzorokat most nem használjuk – majd csak a későbbi feladatok során kerülnek elő újra ⏭️.
 
-**💡 Magyarázat:**
-A `countR`, `countG`, `countB` értékeket leképezzük 0-255 tartományra és ezzel kitöltünk egy négyzetet.
+<img src="./SmartwatchCircuit2.png" width="100%" />
+<img src="./SmartwatchCode2.png" width="100%" />
 
-![2. Feladat](2.png)
+Ha mindent jól csináltunk, akkor egy ehhez hasonló kiírást kellene kapnunk a soros monitoron 🖥️👇:
+
+```txt
+Piros = 182
+Zold = 178
+Kek = 178
+```
 
 ---
 
 # 3. Feladat:
-💾 Minimum & maximum értékek tárolása
-**🎯 Feladat:** Mutassa a hőmérséklet szenzor által mért minimum és maximum értékeket a képernyőn.
+Ebben a feladatban csatlakoztatni fogjuk a kijelzőt 🖥️ és a rotary encodert 🔄. A programban le is teszteljük, hogy jól kötöttük-e be őket ✅.
 
-**💡 Magyarázat:**
-Egyszerű változókban eltároljuk a legalacsonyabb és legmagasabb mért értéket, és ezek frissülnek, ha új csúcsértékek érkeznek.
+A kijelzőn tesztadatok fognak megjelenni 📊, a soros porton pedig egy számláló értéke, amely a tekerések hatására változik ➕➖ (az egyik irány növeli, a másik csökkenti az értéket).
 
-![3. Feladat](3.png)
+De mielőtt használni tudnánk a kijelzőt, szükség van egy külső könyvtár letöltésére és beállítására 📦. Ne aggódj, nem lesz bonyolult! 😌
+📥 Telepítési lépések:
+
+1. Töltsd le a ZIP-fájlt innen: 👉 [TFT_eSPI könyvtár letöltése](https://github.com/Bodmer/TFT_eSPI/archive/refs/heads/master.zip)
+2. Telepítsd a könyvtárat az Arduino IDE-ben: `Sketch > Include Library > Add .ZIP Library...` ➡️ Válaszd ki az imént letöltött ZIP-fájlt.
+3. Konfiguráld a könyvtárat: Másold a [`User_Setup.h`](https://raw.githubusercontent.com/sribence/GAMF_Arduino/refs/heads/main/Okosora/User_Setup.h) fájl tartalmát ide: `Dokumentumok/Arduino/libraries/TFT_eSPI/User_Setup.h` ➡️ Cseréld le a meglévő fájlt, különben a kijelző nem fog működni ⚠️.
+
+<img src="./SmartwatchCircuit3.png" width="100%" />
+<img src="./SmartwatchCode3.png" width="100%" />
 
 ---
 
