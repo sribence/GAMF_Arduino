@@ -80,6 +80,7 @@ De mielőtt használni tudnánk a kijelzőt, szükség van egy külső könyvtá
 ---
 
 # 4. Feladat:
+Most, hogy már mindent bekötöttünk 🔌, nincs más hátra, mint megírni a feladat teljes funkcióját 🛠️. Az alábbi programkód 🧾 integrálja a menürendszert 📋, az ikonokat 🖼️ és az adatok megjelenítését 📊. Ez a kód ötvözi mindazt, amit eddig megcsináltunk, egy felhasználóbarát módon 😊.
 
 <img src="./SmartwatchCode4.png" width="100%" />
 
