@@ -9,10 +9,11 @@
 ---
 **Tartalomjegyzék:**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [0. Feladat](#0-feladat)
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
+-   [4. Feladat](#4-feladat)
+-   [5. Feladat](#5-feladat)
 -   [Teljes rendszer](#teljes-rendszer)
 -   [Extra Feladat](#-extra-feladat)
 
@@ -30,51 +31,60 @@
 
 ---
 
-# 0. Feladat:
-⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](bekotes.png)
-
----
-
 # 1. Feladat: 
-🌱 Talajnedvesség és eső érzékelése, szivattyú vezérlése
+Mielőtt bármi mást csinálnánk, először működésre kell bírnunk az Arduinót ⚙️. Az MKR 1000 nem indul be olyan egyszerűen, mint egy sima UNO 🔌, de ne aggódj – ez sem sokkal bonyolultabb 😌.
 
-Feladatleírás:
-🌱💧 Olvasd be a talajnedvesség és eső érzékelő értékeit, és döntsd el, hogy szükséges-e bekapcsolni a szivattyút.
-💦🚫 A szivattyú akkor kapcsoljon be, ha a talajnedvesség alacsony (SOIL_THRESHOLD alatt van), és nincs eső (RAIN_THRESHOLD alatt van az esőérzékelő értéke).
+Mindössze egy csomagot kell letöltened az Arduino IDE-n belül 💻:
+1. A bal oldali menüben válaszd ki a `Boards Manager` opciót 🧰.
+2. Keresd meg a következőt: 🔍 `Arduino SAMD Boards (32-bits ARM Cortex-M0+)`
+3. Telepítsd azt, amelyiknél az van írva, hogy `by Arduino` ✅.
 
-Magyarázat:
-- 🤖🔌 A ShouldUsePump() függvény ezt a logikát valósítja meg:
-- 🔛 Ha manuálisan "on"-ra van állítva, akkor mindig be van kapcsolva a szivattyú.
-- ⏹ Ha manuálisan "off"-ra van állítva, akkor mindig ki van kapcsolva.
-- 🔄 Ha "auto" módban van, akkor a talajnedvesség és esőérték alapján dönt.
+Ha ez megvan, akkor a megszokott módon töltsd fel az alábbi kódot 📥, majd figyeld a soros monitort 🖥️, hogy megjelenik-e a megfelelő szöveg 🧐.
 
-![1. Feladat](1.png)
+<img src="./SmartPLantCode1.png" width="100%" />
+
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
+```
+Hello, vilag!
+Hello, vilag!
+Hello, vilag!
+```
 
 ---
 
 # 2. Feladat: 
-💡 Automatikus fényérzékelés és lámpa vezérlés
 
-Feladatleírás:
-💡📏 Olvasd be a fényérzékelő értékét, és kapcsolj lámpát akkor, ha a fényerő az előre beállított küszöbérték (LIGHT_THRESHOLD) alá esik. A lámpa szintén lehet manuális "on" ▶️ vagy "off" ⏹ állapotban, vagy automata 🔄.
+Ha már biztosan tudjuk, hogy működik az eszköz ✅, akkor elkezdhetünk szenzorokat csatlakoztatni hozzá 🔌.
 
-Magyarázat:
-🤖🔍 A ShouldUseLamp() függvény kezeli a döntést. Manuális módban mindig az adott állapotot adja vissza, automata módban pedig a fényértéket hasonlítja a küszöbértékhez. ⚖️💡
+Ebben a feladatban minden érzékelőt be fogunk kötni:
+- 🌱 talajnedvesség-érzékelő
+- 🌧️ esőérzékelő
+- ☀️ fényérzékelő
 
-![2. Feladat](2.png)
+Ezután egy tesztkóddal 🧪 ellenőrizzük, hogy mindegyik megfelelően működik.
+
+<img src="./SmartPLantCode2.png" width="100%" />
+
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
+```
+Feny: 69
+Talaj nedvesseg: 0
+Eso: 0
+```
 
 ---
 
 # 3. Feladat: 
-🌐 Egyszerű webes vezérlés pumpa és lámpa számára
 
-🌐📶 A WiFi-hez csatlakozott eszköz webkiszolgálót futtat, amelyen keresztül böngészőből állítható a pumpa 💧 és a lámpa 💡 működési módja (on ▶️, off ⏹, auto 🔄). A weboldalon három gomb található mindkét eszköz számára.
+---
 
-Magyarázat:
-🖥️📲 A WebServer() függvény várja a kliens kapcsolatot, majd az URL alapján módosítja a PumpMode és LampMode változókat. Ezáltal a loop()-ban futó logika az új állapot szerint működik tovább. 🔄⚙️
+# 4. Feladat: 
 
-![3. Feladat](3.png)
+---
+
+# 5. Feladat: 
 
 ---
 
@@ -103,9 +113,6 @@ Az érzékelt adatokat a rendszer 📶 WiFi-n keresztül továbbítja egy webold
 - 💡 Nagy fényerejű LED világítás vezérlése (BE / KI)
 - 🔁 Automatikus üzemmód, amely a szenzorértékek alapján kapcsolja a pumpát és a lámpát
 - 🌐 Webes felület vezérlőgombokkal mobilon is elérhető
-
-**🛡️ Opcionális bővítés:**
-- 📦 Mozgásérzékelés gyorsulásérzékelővel (például lopásérzékelés céljából)
 
 **📲 Webes vezérlés funkciói:**
 A rendszer tartalmaz egy beépített webkiszolgálót, amelyen keresztül a következőket lehet vezérelni:
