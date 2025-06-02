@@ -94,9 +94,20 @@ Ha minden jól működik, akkor azt kell látnod, hogy:
 
 # 4. Feladat: 
 
+
 ---
 
 # 5. Feladat: 
+Ha mindent bekötöttünk és leteszteltünk 🧪🔌, akkor itt az idő, hogy összehangoljuk az egész rendszert ⚙️.
+
+Ez magában foglalja:
+🌡️ a szenzorokat,
+💡 a lámpát és 🔁 a relét,
+🌐 valamint a weboldalt, amivel irányítani tudjuk az eszköz viselkedését 🧠📱.
+
+Most minden egyes részlet összeáll egy teljes, működő okoseszközzé 🤖✨!
+
+<img src="./SmartPLantCode5.png" width="100%" />
 
 ---
 
