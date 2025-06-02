@@ -24,12 +24,13 @@
 - 🌡️ Hőmérséklet-érzékelő
 - 🍷 MQ-3 alkoholérzékelő
 - 🖼️ 240x240 pixel kör alakú SPI TFT kijelző
+- 🎨 Színérzékelő
 - 🔄 Rotary Encoder
 
 ---
 
 # 1. Feladat:
-Ebben a feladatban csatlakoztatni fogjuk az első három szenzort: a hőmérséklet 🌡️, a gázérzékelő 🧪 és a pulzusmérő ❤️ szenzort. Ezután feltöltünk egy olyan programot az Arduinóra 🤖, amely segít leellenőrizni, hogy mindent jól kötöttünk-e be ✅.
+Ebben a feladatban csatlakoztatni fogjuk az első három szenzort: a hőmérséklet 🌡️, az alkohol 🍷 és a pulzusmérő ❤️ szenzort. Ezután feltöltünk egy olyan programot az Arduinóra 🤖, amely segít leellenőrizni, hogy mindent jól kötöttünk-e be ✅.
 
 
 <img src="./SmartwatchCircuit1.png" width="100%" />
@@ -40,7 +41,7 @@ Ha mindent jól csináltunk, akkor egy ehhez hasonló kiírást kellene kapnunk 
 ```txt
 Pulzus: 993
 Hő: 44
-Gáz: 138
+Alkohol: 138
 ```
 
 ---
