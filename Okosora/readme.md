@@ -9,7 +9,6 @@
 ---
 **Tartalomjegyzék:**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [0. Feladat](#0-feladat)
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
@@ -29,20 +28,20 @@
 
 ---
 
-# 0. Feladat:
-⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](bekotes.png)
-
----
-
 # 1. Feladat:
-🔊 Hangjelzés szívverésre
-**🎯 Feladat:** Ha a pulzus egy bizonyos érték fölé emelkedik (pl. 800), akkor egy sípoló hang figyelmeztetést ad.
+Ebben a feladatban csatlakoztatni fogjuk az első három szenzort: a hőmérséklet 🌡️, a gázérzékelő 🧪 és a pulzusmérő ❤️ szenzort. Ezután feltöltünk egy olyan programot az Arduinóra 🤖, amely segít leellenőrizni, hogy mindent jól kötöttünk-e be ✅.
 
-**💡 Magyarázat:**
-Az analogRead(PULSE_SENSOR) már méri a pulzust, csak bővíteni kell egy tone() parancs használatával, ha túl magas az érték.
 
-![1. Feladat](1.png)
+<img src="./SmartwatchCircuit1.png" width="100%" />
+<img src="./SmartwatchCode1.png" width="100%" />
+
+Ha mindent jól csináltunk, akkor egy ehhez hasonló kiírást kellene kapnunk a soros monitoron 🖥️👇:
+
+```txt
+Pulzus: 993
+Hő: 44
+Gáz: 138
+```
 
 ---
 
