@@ -14,6 +14,7 @@
 -   [3. Feladat](#3-feladat)
 -   [4. Feladat](#4-feladat)
 -   [5. Feladat](#5-feladat)
+-   [6. Feladat](#6-feladat)
 -   [Teljes rendszer](#teljes-rendszer)
 -   [Extra Feladat](#-extra-feladat)
 
@@ -27,12 +28,6 @@
 - 🌡️ DHT11 vagy beépített szenzor – hőmérséklet & páratartalom
 - ⚙️ Szervómotor 
 - 📊 Webes adatmegjelenítés grafikonokkal WiFi-n keresztül
-
----
-
-# 0. Feladat:
-⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](bekotes.png)
 
 ---
 
@@ -60,18 +55,35 @@ Hello, vilag!
 ---
 
 # 2. Feladat:
+Első 3 szenzor
 
 ---
 
 # 3. Feladat:
+Második 3 szenzor
 
 ---
 
 # 4. Feladat:
+Napelem
 
 ---
 
 # 5. Feladat:
+Mostanra minden eszközt bekötöttünk és leteszteltünk 🔧✅.
+Mivel azonban szeretnénk az eszközöket egy weboldalon keresztül irányítani 🌐, először hozzunk létre egy egyszerű webszervert az Arduinón 💻📡.
+
+Az alábbi kód egy nagyon alap, „Hello World” típusú weboldalt fog létrehozni 🌍👋, amivel kipróbálhatjuk a webszerver működését.
+
+<img src="./WetherStationCode5.png" width="100%" />
+
+> [!NOTE]  
+> A weboldal IP címét a soros porton fogod megtalálni. 👌
+
+---
+
+# 6. Feladat:
+teljes megoldás
 
 ---
 
