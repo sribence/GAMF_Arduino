@@ -1,0 +1,26 @@
+const int BUZZER = 3;
+
+bool IsBuzzerOn = false;
+
+
+// This function runs once after the Arduino is turned on
+void setup() {
+
+        // Start serial connection at 9600 baud rate
+	Serial.begin(9600);
+
+        // Set default values (turn off the LED and clear the display)
+	pinMode(BUZZER, OUTPUT);	// Set `BUZZER` pin to `OUTPUT`
+	pinMode(9, OUTPUT);
+	analogWrite(9, 10);
+}
+
+// This function repeats itself after the `setup()` has finished running
+void loop() {
+	tone(BUZZER, 100);
+	delay(500);
+
+        // Reset the buzzer controller variable (it will be re-enabled anyway)
+	IsBuzzerOn = false;
+
+}

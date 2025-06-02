@@ -1,0 +1,187 @@
+// joystick és kijelző
+
+#include <SPI.h>
+#include <Wire.h> 
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h> // könyvtárból ezt le kell tölteni! 
+
+// joystick változói
+const int JOYSTICK_X = A0;
+const int JOYSTICK_Y = A1;
+const int JOYSTICK_BTN = 4;
+const int JOYSTICK_DEADZONE_RADIUS = 150;
+
+int x, y;
+bool IsJoyStickPressed = false;
+bool PrevIsJoyStickPressed = false;
+bool IsJoyStickMoved = false;
+
+// passport változói
+const String CORRECT_PASSWORD = "ABC9";      // Password only can be 4 characters and only contains the uppercase English alphabet and numbers
+Adafruit_SSD1306 display(128, 32, &Wire, -1);
+
+int PasswordPointer = 0;
+int Password[4] = { 0, 0, 0, 0 };
+const String PasswordChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+int LimitT = 512 + JOYSTICK_DEADZONE_RADIUS;
+int LimitB = 512 - JOYSTICK_DEADZONE_RADIUS;
+
+
+
+// Ez a funkció egyszer fut le az Arduino bekapcsolása után.
+void setup()
+{
+    // Soros kapcsolat indítása 9600 baud sebességgel
+    Serial.begin(9600);
+
+    // Kijelző inicializálása, ha nem sikerült, akkor leállítjuk a kódot.
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) 
+    {
+        Serial.println(F("SSD1306 allocation failed"));
+        while (true); // Don't proceed, loop forever
+    }
+
+    // Test display & wait a bit
+    display.display();
+    delay(2000);
+
+    // Alapértelmezett értékek beállítása (a LED kikapcsolása és a kijelző törlése) 
+    display.clearDisplay();
+
+    pinMode(JOYSTICK_BTN, INPUT);       // Set `JOYSTICK_BTN` pin to `INPUT`
+
+
+}
+
+
+// Ez a függvény megismétli magát, miután a `setup()` futása befejeződött.
+void loop()
+{
+    
+    // A bemenetek érzékelése
+    UpdateJoystick();
+    ReadPass();
+
+    // Kijelző frissítése
+    PrintPass();
+
+// Ha a joystick gombot megnyomták, és korábban nem volt megnyomva.
+    if (IsJoyStickPressed && !PrevIsJoyStickPressed)
+    {
+        PrevIsJoyStickPressed = true;
+
+        // Összerakjuk a beállított jelszót stringként
+        String enteredPassword = "";
+        for (int i = 0; i < 4; i++)
+        {
+            enteredPassword += PasswordChars[Password[i]];
+        }
+
+        // Ellenőrizzük a jelszót
+        if (enteredPassword == CORRECT_PASSWORD)
+        {
+            PrintText("Correct");
+        }
+        else
+        {
+            PrintText("Wrong");
+        }
+
+        delay(2000); // Rövid szünet a visszajelzéshez
+        for (int i = 0; i < 4; i++) Password[i] = 0; // Jelszó nullázása
+    }
+
+
+    // Ha a joystick gombot elengedtük, akkor visszaállítjuk a `PrevIsJoyStickPressed` változót.
+    if (!IsJoyStickPressed)
+    {
+        PrevIsJoyStickPressed = false;
+    }
+
+}
+
+
+// Ez a függvény frissíti a koordinátákat és a gombot.
+// Használat: UpdateJoystick();
+void UpdateJoystick()
+{
+    x = analogRead(JOYSTICK_X);
+    y = analogRead(JOYSTICK_Y);
+    IsJoyStickPressed = digitalRead(JOYSTICK_BTN) == HIGH;
+}
+
+
+// Ez a funkció szöveget nyomtat az OLED kijelzőre.
+// Használat:PrintText("Hello world!");
+void PrintText(String msg)
+{
+    display.clearDisplay();                 // Clear the display
+
+    display.setTextSize(2);                 // Normal 1:1 pixel scale
+    display.setTextColor(SSD1306_WHITE);    // Draw white text
+    display.setCursor(0,0);                 // Start at top-left corner
+    display.println(msg);                   // Add the message to the buffer
+
+    display.display();                      // Write the buffer to the display
+}
+
+// Ez a funkció kiírja a jelszót az OLED kijelzőre.
+// Használat: PrintPass();
+void PrintPass()
+{
+    String passwd = "";
+
+    for (int i = 0; i < 4; i++)
+    {
+        passwd += PasswordChars[Password[i]];
+    }
+    PrintText("Password:\n" + passwd);
+}
+
+// Ez a funkció a jelszót a joystick bemenetén keresztül olvassa be.
+// Használat: ReadPass();
+// Visszaadja a joystick irányát: "up", "down", "left", "right", or "none"
+String GetJoyDirection() {
+    bool inDeadX = x < LimitT && x > LimitB;
+    bool inDeadY = y < LimitT && y > LimitB;
+
+    if (inDeadX && y > LimitT) return "up";
+    if (inDeadX && y < LimitB) return "down";
+    if (x < LimitB && inDeadY) return "left";
+    if (x > LimitT && inDeadY) return "right";
+    if (inDeadX && inDeadY) return "none";
+    return "";
+}
+
+// A kiválasztott jelszó karaktermutatójának módosítása
+void MovePassPointer(int value) {
+    PasswordPointer = (PasswordPointer + value + 4) % 4;
+}
+
+// Az aktuális karakter indexének módosítása a Password tömbben
+void ChangeCurrentPassChar(int value) {
+    Password[PasswordPointer] = (Password[PasswordPointer] + value + PasswordChars.length()) % PasswordChars.length();
+}
+
+// Fő jelszóolvasó funkció a joystick segítségével
+void ReadPass() {
+    String dir = GetJoyDirection();
+
+    if (!IsJoyStickMoved) {
+        if (dir == "up") {
+            ChangeCurrentPassChar(1);
+            IsJoyStickMoved = true;
+        } else if (dir == "down") {
+            ChangeCurrentPassChar(-1);
+            IsJoyStickMoved = true;
+        } else if (dir == "left") {
+            MovePassPointer(-1);
+            IsJoyStickMoved = true;
+        } else if (dir == "right") {
+            MovePassPointer(1);
+            IsJoyStickMoved = true;
+        }
+    } else if (dir == "none") {
+        IsJoyStickMoved = false;
+    }
+}
