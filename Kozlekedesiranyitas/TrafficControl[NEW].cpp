@@ -153,9 +153,9 @@ void loop() {
     }
 
     // Vonat érzékelés kezelése
-    if (digitalRead(VONAT_ERKEZIK) == HIGH) {
+    if (digitalRead(VONAT_ERKEZIK) == LOW) {
         SorompoVezerele(70);  // Sorompó leengedése
-    } else if (digitalRead(VONAT_ELMENT) == HIGH) {
+    } else if (digitalRead(VONAT_ELMENT) == LOW) {
         SorompoVezerele(160); // Sorompó felemelése
     }
 }

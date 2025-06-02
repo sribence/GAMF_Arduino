@@ -28,14 +28,12 @@
 
 ---
 
-# 0. Feladat: 
-⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](bekotes.png)
-
----
-
 # 1. Feladat:
 **🚥Egy pár lámpa vezérlése lépésről lépésre!**
+
+**Kapcsolási rajz:**
+![1. Feladat kapsolási rajza](1-bekotes.png) 
+
 
 **🛠️ Feladat:** készíts egy közlekedési lámpa szimulációt Arduino segítségével! Ebben a programban a piros, sárga és zöld LED-eket vezéreljük úgy, hogy imitálják egy közlekedési lámpa működését.  
 
@@ -59,6 +57,9 @@
 
 # 2. Feladat:
 **🚥🚥Két lámpapár váltogatása millis()-szel**
+
+**Kapcsolási rajz:**
+![2. Feladat kapsolási rajza](2-bekotes.png) 
 
 **🛠️ Feladat:** Ebben a programban két különböző közlekedési lámpát vezérelünk, amelyek váltakozva működnek. Az egyik lámpa pirosra vált, míg a másik zöldre – és ez a ciklus ismétlődik millis() függvény segítségével!  
 
@@ -87,6 +88,9 @@
 # 3. Feladat:
 **🚧Sorompó mozgatása gombbal**
 
+**Kapcsolási rajz:**
+![3 Feladat kapsolási rajza](teljes-bekotes.png) 
+
 **🛠️ Feladat:** Ebben a projektben egy sorompót vezérlünk két gomb segítségével! Az egyik gombbal leengedjük, a másikkal felnyitjuk a sorompót egy szervomotorral.  
 
 🎮 Gombok:  
@@ -104,11 +108,13 @@
 
 ![3. feladat](3.png)
 
-
 ---
 
 # A teljes rendszer működtetése:
 **🚆 Teljes vasúti közlekedési rendszer vezérlése! 🚧🔄**
+
+**Kapcsolási rajz:**
+![Teljes feladat kapsolási rajza](teljes-bekotes.png) 
 
 **🛠️ Feladat:** Egy vasúti átkelőhely működését modellezzük két közlekedési lámpa, egy sorompó és egy vonat érkezését/távozását figyelő gombok segítségével. A rendszer standby üzemmóddal is rendelkezik, amely jelzi a rendszerszünetet.  
 

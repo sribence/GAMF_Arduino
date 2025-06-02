@@ -1,5 +1,3 @@
-// egy lampapar
-
 const int PAIR_ONE_GREEN = 8;
 const int PAIR_ONE_YELLOW = 9;
 const int PAIR_ONE_RED = 10;
@@ -34,13 +32,9 @@ void loop()
 	// yellow light
 	digitalWrite(PAIR_ONE_YELLOW, HIGH);
 	digitalWrite(PAIR_ONE_GREEN, LOW);
-	delay(1000);
+	delay(2000);
 
 	// back to red
 	digitalWrite(PAIR_ONE_YELLOW, LOW);
 
 }
-
-
-
-
