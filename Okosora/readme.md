@@ -80,17 +80,8 @@ De mielőtt használni tudnánk a kijelzőt, szükség van egy külső könyvtá
 ---
 
 # 4. Feladat:
-🔄 Automatikus mentés EEPROM-ba (minimum és maximum hőmérséklet)
-**🎯 Feladat:** A program indításkor töltse be az EEPROM-ból az előzőleg eltárolt hőmérsékleti minimum és maximum értékeket, és új érték esetén mentse vissza.
 
-**💡 Magyarázat:**
-Az Arduino EEPROM memóriája megőrzi az adatokat a kikapcsolás után is. Így a hőmérsékletcsúcsokat nem veszítjük el újraindításkor.
-
-![4. Feladat](4.png)
-
-**📌 Megjegyzés:**
-- Az EEPROM írása korlátozott (~100,000 ciklus/cím), ezért érdemes nem minden apró változást menteni, csak ha valóban új csúcsérték születik (ami itt így is van).
-- Ha bővíteni szeretnéd, egy hosszú gombnyomásra például resetelheti az EEPROM-ot.
+<img src="./SmartwatchCode4.png" width="100%" />
 
 ---
 
