@@ -12,7 +12,6 @@
 
 **Tartalomjegyzék:**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [0. Feladat](#0-feladat)
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
@@ -33,7 +32,6 @@
 
 **Kapcsolási rajz:**
 ![1. Feladat kapsolási rajza](1-bekotes.png) 
-
 
 **🛠️ Feladat:** készíts egy közlekedési lámpa szimulációt Arduino segítségével! Ebben a programban a piros, sárga és zöld LED-eket vezéreljük úgy, hogy imitálják egy közlekedési lámpa működését.  
 
