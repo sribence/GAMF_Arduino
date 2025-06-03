@@ -55,7 +55,24 @@ Hello, vilag!
 ---
 
 # 2. Feladat:
-Első 3 szenzor
+Miután megbizonyosodtunk arról, hogy az Arduino működik ✅🔌, elkezdhetjük a szenzorok bekötését 🔧📲.
+
+Egyelőre csak 3 szenzort fogunk csatlakoztatni (például hőmérséklet, fény és talajnedvesség 🌡️💡🌱), mert ha túl sok mindent kötünk be egyszerre, nagyobb az esélye annak, hogy hibázunk vagy rosszul kötünk be valamit ⚠️.
+
+Ha sikerült a bekötés, futtasd az alábbi kódot, hogy letesztelhesd, működnek-e az eszközök 🧪✅!
+
+<img src="./WetherStationCircuit2.png" width="100%" />
+<img src="./WetherStationCode2.png" width="100%" />
+
+
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
+```
+Eso:  16
+Feny: 700
+Gaz:  113
+
+```
 
 ---
 
