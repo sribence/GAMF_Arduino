@@ -65,7 +65,23 @@ Második 3 szenzor
 ---
 
 # 4. Feladat:
-Napelem
+A szenzorok után most a napelemmel foglalkozunk ☀️🔋.
+A napelemre két fényérzékelő van rögzítve 📍📍, és a mért értékek különbségéből meghatározható, hogy melyik irányban található a nap 🌞➡️. Ennek alapján a napelemet arra az irányra tudjuk mozgatni — bár sajnos csak egy síkban, nem háromban 🔄 (vízszintesen, nem térben).
+
+A mozgatáshoz egy szervó motort használunk ⚙️.
+
+‼️ Fontos: a csatlakoztatott akkumulátort NE kösd be, mert nem biztos, hogy elegendő energiát tud biztosítani a szervó meghajtásához ⚠️🔌.
+
+<img src="./WetherStationCircuit4.png" width="100%" />
+<img src="./WetherStationCode4.png" width="100%" />
+
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
+```
+Feny 1: 156
+Feny 2: 178
+
+```
 
 ---
 
