@@ -286,89 +286,97 @@ Az Arduino ezeket az értékeket beolvassa, és **lépésekben odamozgatja** a s
 ```cpp
 #include <Servo.h>
 
-const int SERVO_COUNT = 3;
-const int SERVO_PINS[SERVO_COUNT] = {9, 10, 11};
-
-Servo servos[SERVO_COUNT];
-float current_deg[SERVO_COUNT] = {90, 90, 90};  // Kezdő pozíció
-float target_deg[SERVO_COUNT] = {90, 90, 90};   // Cél pozíció
-
-String inputBuffer = "";
+const int SZERVO_DB = 3;// Szervók száma
+const int SZERVO_LABAK[SZERVO_DB] = {9, 10, 11};// Szervók kimeneti lábai
+Servo szervok[SZERVO_DB];// Szervó objektumok tömbje
+float aktualis_szog[SZERVO_DB] = {90, 90, 90};// Aktuális szögértékek fokban
+float cel_szog[SZERVO_DB] = {90, 90, 90};// Cél szögértékek fokban
+String soros_puffer = "";// Beolvasott soros adatpuffer
 
 void setup() {
   Serial.begin(9600);
-  for (int i = 0; i < SERVO_COUNT; i++) {
-    servos[i].attach(SERVO_PINS[i]);
-    servos[i].write(current_deg[i]); // Alappozíció
+
+  // Szervók inicializálása és kezdő pozíció beállítása
+  for (int i = 0; i < SZERVO_DB; i++) {
+    szervok[i].attach(SZERVO_LABAK[i]);             // Csatlakoztatjuk a szervót a megfelelő lábra
+    szervok[i].write(aktualis_szog[i]);             // Elküldjük az alap szög értékét
   }
-  Serial.println("Írj be egy pózt ilyen formában: 90,45,120");
+
+  Serial.println("Adj meg egy pózt így: 90,45,120");
 }
 
 void loop() {
-  // Soros adat olvasása
+  // Soros portról érkező karakterek beolvasása
   while (Serial.available()) {
-    char c = Serial.read();
-    if (c == '\n') {
-      processInput(inputBuffer);
-      inputBuffer = "";
+    char beolvasott_karakter = Serial.read();
+
+    if (beolvasott_karakter == '\n') {
+      feldolgozBemenet(soros_puffer);  // Ha sortörés, feldolgozzuk a puffer tartalmát
+      soros_puffer = "";               // Puffer kiürítése
     } else {
-      inputBuffer += c;
+      soros_puffer += beolvasott_karakter; // Hozzáadjuk a karaktert a pufferhez
     }
   }
 }
 
-void processInput(String input) {
-  input.trim();
-  if (input.length() == 0) return;
+// A beolvasott bemenet feldolgozása: vesszővel tagolt számok → cél szögek
+void feldolgozBemenet(String bemenet) {
+  bemenet.trim();  // Szóközök eltávolítása
 
-  int index = 0;
-  for (int i = 0; i < SERVO_COUNT; i++) {
-    int commaIndex = input.indexOf(',');
-    String value;
-    if (commaIndex != -1 && i < SERVO_COUNT - 1) {
-      value = input.substring(0, commaIndex);
-      input = input.substring(commaIndex + 1);
+  if (bemenet.length() == 0) return;  // Üres bemenet esetén kilép
+
+  // Bemenet darabolása és értékek mentése
+  for (int i = 0; i < SZERVO_DB; i++) {
+    int vesszo_poz = bemenet.indexOf(',');  // Megkeressük a következő vessző helyét
+    String ertek;
+
+    if (vesszo_poz != -1 && i < SZERVO_DB - 1) {
+      ertek = bemenet.substring(0, vesszo_poz);  // Első érték
+      bemenet = bemenet.substring(vesszo_poz + 1);  // A többit megtartjuk a következő körre
     } else {
-      value = input;
+      ertek = bemenet;  // Utolsó érték (vagy csak egy volt)
     }
 
-    target_deg[i] = constrain(value.toFloat(), 0, 180);
+    // Átalakítjuk float típusra, és korlátozzuk 0–180 fok közé
+    cel_szog[i] = constrain(ertek.toFloat(), 0, 180);
   }
 
-  coordinatedMove();
+  mozgasKoordinaltan();  // Elindítjuk a mozgást a cél szögek felé
 }
 
-// Koordinált, fokozatos mozgatás
-void coordinatedMove(int delay_ms = 15) {
-  int steps = 50;
-  float step_deg[SERVO_COUNT];
+// Koordinált, lépésenkénti mozgás minden szervóval egyszerre
+void mozgasKoordinaltan(int kesleltetes_ms = 15) {
+  int lepesek_szama = 50;
+  float szog_lepes[SZERVO_DB];
 
-  for (int i = 0; i < SERVO_COUNT; i++) {
-    step_deg[i] = (target_deg[i] - current_deg[i]) / steps;
+  // Minden szervóhoz kiszámítjuk, mennyit kell mozdulnia egy lépésben
+  for (int i = 0; i < SZERVO_DB; i++) {
+    szog_lepes[i] = (cel_szog[i] - aktualis_szog[i]) / lepesek_szama;
   }
 
-  for (int s = 0; s < steps; s++) {
-    for (int i = 0; i < SERVO_COUNT; i++) {
-      current_deg[i] += step_deg[i];
-      servos[i].write(current_deg[i]);
+  // Lépésről lépésre közelítjük meg a cél pozíciót
+  for (int lepes = 0; lepes < lepesek_szama; lepes++) {
+    for (int i = 0; i < SZERVO_DB; i++) {
+      aktualis_szog[i] += szog_lepes[i];          // Következő szög kiszámítása
+      szervok[i].write(aktualis_szog[i]);         // Szervó vezérlése az új szöggel
     }
-    delay(delay_ms);
+    delay(kesleltetes_ms);                        // Várakozás két lépés között
   }
 
-  // Végpozíció beállítás
-  for (int i = 0; i < SERVO_COUNT; i++) {
-    current_deg[i] = target_deg[i];
-    servos[i].write(current_deg[i]);
+  // A végpozíció pontos beállítása (elkerülve az apró csúszásokat)
+  for (int i = 0; i < SZERVO_DB; i++) {
+    aktualis_szog[i] = cel_szog[i];
+    szervok[i].write(aktualis_szog[i]);
   }
 
-  Serial.print("Pozíció elérve: ");
-  for (int i = 0; i < SERVO_COUNT; i++) {
-    Serial.print(current_deg[i]);
-    if (i < SERVO_COUNT - 1) Serial.print(", ");
+  // Visszajelzés a felhasználónak
+  Serial.print("Elért szögek: ");
+  for (int i = 0; i < SZERVO_DB; i++) {
+    Serial.print(aktualis_szog[i]);
+    if (i < SZERVO_DB - 1) Serial.print(", ");
   }
   Serial.println();
 }
-
 ```
 
 Ez a kód futtatható az Arduino-ban, és mutatja, hogyan mozognak a 3 szervó összehangoltan a megadott cél szögök felé. Teszteléskor állítsd be a tényleges pin-eket!
