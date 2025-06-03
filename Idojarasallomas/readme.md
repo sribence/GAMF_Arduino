@@ -64,7 +64,6 @@ Ha sikerült a bekötés, futtasd az alábbi kódot, hogy letesztelhesd, működ
 <img src="./WetherStationCircuit2.png" width="100%" />
 <img src="./WetherStationCode2.png" width="100%" />
 
-
 Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
 
 ```
@@ -77,7 +76,23 @@ Gaz:  113
 ---
 
 # 3. Feladat:
-Második 3 szenzor
+Ha már minden megfelelően működik ✅🔌, akkor bővítsük a projektet további 3 érzékelővel 🆕📈.
+
+A már megszokott módon kösd be ezeket is 🔧📲, majd futtasd az alábbi kódot, hogy ellenőrizd a működésüket 🧪✅.
+
+<img src="./WetherStationCircuit3.png" width="100%" />
+<img src="./WetherStationCode3.png" width="100%" />
+
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
+```
+Hőmérséklet:    24.80°C
+Páratartalom:   37.00%
+Hőérzet:        24.30°C
+Füstszint:      15
+Potméter érték: 1023
+
+```
 
 ---
 
