@@ -88,7 +88,13 @@ Az alábbi kód egy nagyon alap, „Hello World” típusú weboldalt fog létre
 ---
 
 # 6. Feladat:
-teljes megoldás
+Most, hogy minden eszközt bekötöttünk és sikeresen leteszteltünk 🔧✅ – beleértve a WiFi-t 📶 és a webszervert 🌐 –, nincs más hátra, mint összekombinálni ezeket, és elkészíteni a teljes projektet 🚀.
+- 🔍 A szenzorok érzékelik a környezeti adatokat,
+- 🖥️ a weboldal megjeleníti ezeket valós időben,
+- ☀️ a napelemes rendszer pedig követi a nap mozgását,
+…és mindez összehangoltan működik egy intelligens rendszerként 🤖⚙️!
+
+<img src="./WetherStationCode6.png" width="100%" />
 
 ---
 
