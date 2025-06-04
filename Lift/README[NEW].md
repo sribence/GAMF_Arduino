@@ -71,13 +71,13 @@ Az alábbi kód vagy vezérli ezeket az eszközöket, vagy kiírja az állapotuk
 
 Most, hogy már minden csatlakoztatott eszközt leteszteltünk ✅🔌, végre elkezdhetjük létrehozni a valósághoz hű működést – egyelőre egy egyszerű példával 🛠️🚀.
 
-🔘 1. gomb: ha megnyomjuk, a lift felfelé megy ⬆️
-🔘 2. gomb: ha megnyomjuk, lefelé megy ⬇️
-🔘 3. gomb: ha megnyomjuk, a lift megáll ⏸️
+- 🔘 1. gomb: ha megnyomjuk, a lift felfelé megy ⬆️
+- 🔘 2. gomb: ha megnyomjuk, lefelé megy ⬇️
+- 🔘 3. gomb: ha megnyomjuk, a lift megáll ⏸️
 
 A kijelzőn 📺 is látható lesz, hogy éppen mi történik:
-➡️ nyilakkal jelezzük a mozgás irányát,
-➖ és egy vízszintes vonal jelenik meg, ha a lift nem mozog.
+- ➡️ nyilakkal jelezzük a mozgás irányát,
+- ➖ és egy vízszintes vonal jelenik meg, ha a lift nem mozog.
 
 Ez még nem egy teljesen valós lift működése 🏗️, de már gombokkal irányítjuk a léptetőmotort, és szépen haladunk a cél felé! 🎯💡
 
