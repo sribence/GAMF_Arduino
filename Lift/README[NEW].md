@@ -37,6 +37,8 @@
 
 # 1. feladat - A lift mozgatása és alap vezérlése
 
+<img src="./ElevatorCode1.png" width="100%" />
+
 ```cpp
 // A motor csatlakozói
 const int DIR_PIN = 10;
@@ -92,6 +94,8 @@ void loop()
 ```
 
 # 2. feladat - Egyéb eszközök csatlakozásának tesztelése
+
+<img src="./ElevatorCode2.png" width="100%" />
 
 ```cpp
 #include <Servo.h>
@@ -189,6 +193,9 @@ void loop()
 ```
 
 # 3. feladat - A lift irányítása gombokkal (fel, le, álj)
+
+<img src="./ElevatorCode3.png" width="100%" />
+
 ```cpp
 #include <Adafruit_GFX.h>
 #include <Adafruit_LEDBackpack.h>
@@ -334,6 +341,8 @@ void IranyBeallitas(String irany = "fel")
 ```
 
 # 4. feladat - A lift funkcióinak alapvető megvalósítása
+
+<img src="./ElevatorCode4.png" width="100%" />
 
 ```cpp
 #include <Adafruit_GFX.h>
@@ -643,6 +652,8 @@ void IranyBeallitas(String irany = "fel")
 ```
 
 # 5. feladat - A lift végleleges működése
+
+<img src="./ElevatorCode5.png" width="100%" />
 
 ```cpp
 #include <Arduino.h>
