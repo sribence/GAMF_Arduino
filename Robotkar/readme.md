@@ -416,7 +416,15 @@ A robotkar képes több pozíciót is elmenteni, majd ezeket egymás után végr
 ```cpp
 #include <Servo.h>
 
-const int SZERVO_PIN[4] = {3, 5, 6, 9};
+// A szervó motorok (ábra szerint vannak betűvel ellátva)
+const int ServoPinA = 4;
+const int ServoPinB = 10;
+const int ServoPinC = 9;
+const int ServoPinD = 11;
+const int ServoPinE = 5;
+const int ServoPinF = 6;
+
+const int SZERVO_PIN[4] = {ServoPinA, ServoPinC, ServoPinE, ServoPinF};
 const int POT_PIN[4] = {A0, A1, A2, A3};
 const int MAX_POZICIOK = 10;
 
