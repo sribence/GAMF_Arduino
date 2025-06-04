@@ -9,10 +9,12 @@
 ---
 **Tartalomjegyzék:**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [0. Feladat](#0-feladat)
 -   [1. Feladat](#1-feladat)
 -   [2. Feladat](#2-feladat) 
 -   [3. Feladat](#3-feladat)
+-   [4. Feladat](#4-feladat)
+-   [5. Feladat](#5-feladat)
+-   [6. Feladat](#6-feladat)
 -   [Teljes rendszer](#teljes-rendszer)
 -   [Extra Feladat](#-extra-feladat)
 
@@ -29,267 +31,113 @@
 
 ---
 
-# 0. Feladat:
-⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](bekotes.png)
-
----
-
 # 1. Feladat:
-Az első lépésben csak a hőmérséklet és páratartalom mérését valósítjuk meg a DHT11 szenzorral. A mért értékeket a soros porton jelenítjük meg.
+Mielőtt bármi mást csinálnánk, először működésre kell bírnunk az Arduinót ⚙️. Az MKR 1000 nem indul be olyan egyszerűen, mint egy sima UNO 🔌, de ne aggódj – ez sem sokkal bonyolultabb 😌.
 
-```cpp
-#include <DHT.h>
+Mindössze egy csomagot kell letöltened az Arduino IDE-n belül 💻:
 
-// PIN definíciók
-const int DHT_SENSOR = 2;    // DHT11 szenzor PIN-je
+1. A bal oldali menüben válaszd ki a Boards Manager opciót 🧰.
+2. Keresd meg a következőt: 🔍 Arduino SAMD Boards (32-bits ARM Cortex-M0+)
+3. Telepítsd azt, amelyiknél az van írva, hogy by Arduino ✅.
 
-// Globális változók
-DHT dht(DHT_SENSOR, DHT11);  // DHT szenzor inicializálása
-float homerseklet;           // Hőmérséklet érték tárolása
-float paratartalom;          // Páratartalom érték tárolása
-unsigned long idozito;       // Időzítő a mérésekhez
+Ha ez megvan, akkor a megszokott módon töltsd fel az alábbi kódot 📥, majd figyeld a soros monitort 🖥️, hogy megjelenik-e a megfelelő szöveg 🧐.
 
-void setup() {
-    Serial.begin(9600);      // Soros port inicializálása
-    dht.begin();             // DHT szenzor inicializálása
-    idozito = millis();      // Időzítő kezdőértéke
-}
+<img src="./WetherStationCode1.png" width="100%" />
 
-void loop() {
-    // Minden 2 másodpercben mérünk (a szenzor lassú)
-    if (millis() - idozito < 2000) return;
-    
-    // Értékek kiolvasása
-    float h = dht.readHumidity();        // Páratartalom mérése
-    float t = dht.readTemperature();     // Hőmérséklet mérése (°C)
-    
-    // Hibaellenőrzés
-    if (isnan(h) || isnan(t)) {
-        Serial.println("Hiba a DHT szenzor olvasásakor!");
-        return;
-    }
-    
-    // Értékek kiírása
-    Serial.print("Hőmérséklet: ");
-    Serial.print(t);
-    Serial.print("°C, Páratartalom: ");
-    Serial.print(h);
-    Serial.println("%");
-    
-    idozito = millis();  // Időzítő újraindítása
-}
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
 ```
-
-> 💡 **Fontos:** A DHT11 szenzor nem túl pontos, de olcsó és könnyen használható. A mérések között 2 másodperc szünetet kell tartani, mert a szenzor lassan válaszol.
+Hello, vilag!
+Hello, vilag!
+Hello, vilag!
+```
 
 ---
 
 # 2. Feladat:
-A második lépésben hozzáadjuk a fényérzékelőt és a napelem követő rendszert. A szervómotor a fény irányába forgatja a napelemet.
+Miután megbizonyosodtunk arról, hogy az Arduino működik ✅🔌, elkezdhetjük a szenzorok bekötését 🔧📲.
 
-```cpp
-#include <DHT.h>
-#include <Servo.h>
+Egyelőre csak 3 szenzort fogunk csatlakoztatni (például hőmérséklet, fény és talajnedvesség 🌡️💡🌱), mert ha túl sok mindent kötünk be egyszerre, nagyobb az esélye annak, hogy hibázunk vagy rosszul kötünk be valamit ⚠️.
 
-// PIN definíciók
-const int DHT_SENSOR = 2;        // DHT11 szenzor PIN-je
-const int SZERVO_PIN = 5;        // Szervó motor PIN-je
-const int FENY_SZENZOR1 = A2;    // Első fényérzékelő PIN-je
-const int FENY_SZENZOR2 = A1;    // Második fényérzékelő PIN-je
+Ha sikerült a bekötés, futtasd az alábbi kódot, hogy letesztelhesd, működnek-e az eszközök 🧪✅!
 
-// Globális változók
-DHT dht(DHT_SENSOR, DHT11);
-Servo szervo;                    // Szervó motor objektum
-int szervoSzog = 90;            // Szervó aktuális szöge
-unsigned long idozito;
-unsigned long szervoIdozito;
+<img src="./WetherStationCircuit2.png" width="100%" />
+<img src="./WetherStationCode2.png" width="100%" />
 
-// Szervó korlátok
-const int MIN_SZOG = 30;         // Minimális szög
-const int MAX_SZOG = 150;        // Maximális szög
-const int TOLERANCIA = 100;      // Fényérzékelő tolerancia
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
 
-void setup() {
-    Serial.begin(9600);
-    dht.begin();
-    szervo.attach(SZERVO_PIN);   // Szervó inicializálása
-    szervo.write(szervoSzog);    // Szervó kezdőpozíció
-    
-    idozito = millis();
-    szervoIdozito = millis();
-}
-
-void loop() {
-    // Hőmérséklet és páratartalom mérése
-    if (millis() - idozito >= 2000) {
-        float h = dht.readHumidity();
-        float t = dht.readTemperature();
-        
-        if (!isnan(h) && !isnan(t)) {
-            Serial.print("Hőmérséklet: ");
-            Serial.print(t);
-            Serial.print("°C, Páratartalom: ");
-            Serial.print(h);
-            Serial.println("%");
-        }
-        idozito = millis();
-    }
-    
-    // Napelem követés
-    if (millis() - szervoIdozito >= 150) {
-        int feny1 = analogRead(FENY_SZENZOR1);
-        int feny2 = analogRead(FENY_SZENZOR2);
-        
-        // Csak akkor mozgatjuk a szervót, ha jelentős a különbség
-        if (abs(feny1 - feny2) > TOLERANCIA) {
-            if (feny1 > feny2) {
-                szervoSzog = max(szervoSzog - 5, MIN_SZOG);
-            } else {
-                szervoSzog = min(szervoSzog + 5, MAX_SZOG);
-            }
-            szervo.write(szervoSzog);
-        }
-        szervoIdozito = millis();
-    }
-}
 ```
+Eso:  16
+Feny: 700
+Gaz:  113
 
-> ⚠️ **Megjegyzés:** A szervó motor fokozatosan mozog, hogy elkerüljük a hirtelen mozdulatokat. A fényérzékelők különbségét csak akkor használjuk, ha az meghaladja a tolerancia értéket.
+```
 
 ---
 
 # 3. Feladat:
-A harmadik lépésben hozzáadjuk a WiFi kapcsolatot és egy egyszerű webes felületet az adatok megjelenítéséhez.
+Ha már minden megfelelően működik ✅🔌, akkor bővítsük a projektet további 3 érzékelővel 🆕📈.
 
-```cpp
-#include <DHT.h>
-#include <Servo.h>
-#include <WiFiNINA.h>
+A már megszokott módon kösd be ezeket is 🔧📲, majd futtasd az alábbi kódot, hogy ellenőrizd a működésüket 🧪✅.
 
-// PIN definíciók
-const int DHT_SENSOR = 2;
-const int SZERVO_PIN = 5;
-const int FENY_SZENZOR1 = A2;
-const int FENY_SZENZOR2 = A1;
+<img src="./WetherStationCircuit3.png" width="100%" />
+<img src="./WetherStationCode3.png" width="100%" />
 
-// WiFi beállítások
-const char SSID[] = "IdojarasAllomas";
-const char JELSZO[] = "12345678";
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
 
-// Globális változók
-DHT dht(DHT_SENSOR, DHT11);
-Servo szervo;
-int szervoSzog = 90;
-unsigned long idozito;
-unsigned long szervoIdozito;
-WiFiServer szerver(80);  // Web szerver a 80-as porton
+```
+Hőmérséklet:    24.80°C
+Páratartalom:   37.00%
+Hőérzet:        24.30°C
+Füstszint:      15
+Potméter érték: 1023
 
-// HTML sablon a weboldalhoz
-const char HTML_FEJLEC[] = R"(
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Időjárásállomás</title>
-    <meta charset='UTF-8'>
-    <meta http-equiv='refresh' content='5'>
-    <style>
-        body { font-family: Arial; margin: 20px; }
-        .adat { margin: 10px; padding: 10px; border: 1px solid #ccc; }
-    </style>
-</head>
-<body>
-    <h1>Időjárásállomás adatok</h1>
-)";
-
-void setup() {
-    Serial.begin(9600);
-    dht.begin();
-    szervo.attach(SZERVO_PIN);
-    szervo.write(szervoSzog);
-    
-    // WiFi hozzáférési pont indítása
-    Serial.println("WiFi hozzáférési pont indítása...");
-    if (WiFi.beginAP(SSID, JELSZO) != WL_AP_LISTENING) {
-        Serial.println("WiFi indítási hiba!");
-        while (true);
-    }
-    
-    szerver.begin();
-    Serial.print("IP cím: ");
-    Serial.println(WiFi.localIP());
-    
-    idozito = millis();
-    szervoIdozito = millis();
-}
-
-void loop() {
-    // Hőmérséklet és páratartalom mérése
-    if (millis() - idozito >= 2000) {
-        float h = dht.readHumidity();
-        float t = dht.readTemperature();
-        
-        if (!isnan(h) && !isnan(t)) {
-            Serial.print("Hőmérséklet: ");
-            Serial.print(t);
-            Serial.print("°C, Páratartalom: ");
-            Serial.print(h);
-            Serial.println("%");
-        }
-        idozito = millis();
-    }
-    
-    // Napelem követés
-    if (millis() - szervoIdozito >= 150) {
-        int feny1 = analogRead(FENY_SZENZOR1);
-        int feny2 = analogRead(FENY_SZENZOR2);
-        
-        if (abs(feny1 - feny2) > TOLERANCIA) {
-            if (feny1 > feny2) {
-                szervoSzog = max(szervoSzog - 5, MIN_SZOG);
-            } else {
-                szervoSzog = min(szervoSzog + 5, MAX_SZOG);
-            }
-            szervo.write(szervoSzog);
-        }
-        szervoIdozito = millis();
-    }
-    
-    // Web kliens kezelése
-    WiFiClient kliens = szerver.available();
-    if (kliens) {
-        Serial.println("Új kliens csatlakozott");
-        
-        // HTTP kérés feldolgozása
-        while (kliens.connected()) {
-            if (kliens.available()) {
-                // HTML oldal küldése
-                kliens.println("HTTP/1.1 200 OK");
-                kliens.println("Content-type:text/html");
-                kliens.println();
-                
-                kliens.println(HTML_FEJLEC);
-                kliens.println("<div class='adat'>");
-                kliens.print("Hőmérséklet: ");
-                kliens.print(dht.readTemperature());
-                kliens.println("°C</div>");
-                
-                kliens.println("<div class='adat'>");
-                kliens.print("Páratartalom: ");
-                kliens.print(dht.readHumidity());
-                kliens.println("%</div>");
-                
-                kliens.println("</body></html>");
-                break;
-            }
-        }
-        kliens.stop();
-        Serial.println("Kliens kapcsolat bontva");
-    }
-}
 ```
 
-> 🔍 **Tipp:** A webes felület automatikusan frissül 5 másodpercenként. A WiFi hozzáférési pont neve és jelszava a kódban van beállítva, ezeket módosíthatod a saját igényeidnek megfelelően.
+---
+
+# 4. Feladat:
+A szenzorok után most a napelemmel foglalkozunk ☀️🔋.
+A napelemre két fényérzékelő van rögzítve 📍📍, és a mért értékek különbségéből meghatározható, hogy melyik irányban található a nap 🌞➡️. Ennek alapján a napelemet arra az irányra tudjuk mozgatni — bár sajnos csak egy síkban, nem háromban 🔄 (vízszintesen, nem térben).
+
+A mozgatáshoz egy szervó motort használunk ⚙️.
+
+‼️ Fontos: a csatlakoztatott akkumulátort NE kösd be, mert nem biztos, hogy elegendő energiát tud biztosítani a szervó meghajtásához ⚠️🔌.
+
+<img src="./WetherStationCircuit4.png" width="100%" />
+<img src="./WetherStationCode4.png" width="100%" />
+
+Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
+
+```
+Feny 1: 156
+Feny 2: 178
+
+```
+
+---
+
+# 5. Feladat:
+Mostanra minden eszközt bekötöttünk és leteszteltünk 🔧✅.
+Mivel azonban szeretnénk az eszközöket egy weboldalon keresztül irányítani 🌐, először hozzunk létre egy egyszerű webszervert az Arduinón 💻📡.
+
+Az alábbi kód egy nagyon alap, „Hello World” típusú weboldalt fog létrehozni 🌍👋, amivel kipróbálhatjuk a webszerver működését.
+
+<img src="./WetherStationCode5.png" width="100%" />
+
+> [!NOTE]  
+> A weboldal IP címét a soros porton fogod megtalálni. 👌
+
+---
+
+# 6. Feladat:
+Most, hogy minden eszközt bekötöttünk és sikeresen leteszteltünk 🔧✅ – beleértve a WiFi-t 📶 és a webszervert 🌐 –, nincs más hátra, mint összekombinálni ezeket, és elkészíteni a teljes projektet 🚀.
+- 🔍 A szenzorok érzékelik a környezeti adatokat,
+- 🖥️ a weboldal megjeleníti ezeket valós időben,
+- ☀️ a napelemes rendszer pedig követi a nap mozgását,
+…és mindez összehangoltan működik egy intelligens rendszerként 🤖⚙️!
+
+<img src="./WetherStationCode6.png" width="100%" />
 
 ---
 

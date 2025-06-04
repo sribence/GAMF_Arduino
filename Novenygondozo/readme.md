@@ -64,6 +64,7 @@ Ebben a feladatban minden érzékelőt be fogunk kötni:
 
 Ezután egy tesztkóddal 🧪 ellenőrizzük, hogy mindegyik megfelelően működik.
 
+<img src="./SmartPLantCircuit2.png" width="100%" />
 <img src="./SmartPLantCode2.png" width="100%" />
 
 Ezt kellene látnod a soros kapcsolat ablakában 🖥️, ha minden megfelelően működik 👇:
@@ -78,13 +79,43 @@ Eso: 0
 
 # 3. Feladat: 
 
+Most nézzük meg a kimeneti eszközöket ⚡: a lámpát 💡 és a relét 🔁.
+
+Kössük be őket a kapcsolási rajznak megfelelően 📈, majd töltsük fel az alábbi kódot 🧾 az Arduinóra.
+
+Ha minden jól működik, akkor azt kell látnod, hogy:
+💡 a lámpa villog,
+🔁 a relé pedig kattog, ahogy be- és kikapcsol.
+
+<img src="./SmartPLantCircuit3.png" width="100%" />
+<img src="./SmartPLantCode3.png" width="100%" />
+
 ---
 
 # 4. Feladat: 
+Mostanra minden eszközt bekötöttünk és leteszteltünk 🔧✅.
+Mivel azonban szeretnénk az eszközöket egy weboldalon keresztül irányítani 🌐, először hozzunk létre egy egyszerű webszervert az Arduinón 💻📡.
+
+Az alábbi kód egy nagyon alap, „Hello World” típusú weboldalt fog létrehozni 🌍👋, amivel kipróbálhatjuk a webszerver működését.
+
+<img src="./SmartPLantCode4.png" width="100%" />
+
+> [!NOTE]  
+> A weboldal IP címét a soros porton fogod megtalálni. 👌
 
 ---
 
 # 5. Feladat: 
+Ha mindent bekötöttünk és leteszteltünk 🧪🔌, akkor itt az idő, hogy összehangoljuk az egész rendszert ⚙️.
+
+Ez magában foglalja:
+🌡️ a szenzorokat,
+💡 a lámpát és 🔁 a relét,
+🌐 valamint a weboldalt, amivel irányítani tudjuk az eszköz viselkedését 🧠📱.
+
+Most minden egyes részlet összeáll egy teljes, működő okoseszközzé 🤖✨!
+
+<img src="./SmartPLantCode5.png" width="100%" />
 
 ---
 

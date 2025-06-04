@@ -161,108 +161,221 @@ A robotkar precíz, ismételhető mozgásához elengedhetetlen a pontos vezérl�
 - Mérd meg, hogy a különböző szervók milyen PWM tartományban működnek jól!
 - Gondold végig: hogyan lehetne több szervót egyszerre, szinkronban mozgatni?
 
+```cpp
+#include <Servo.h>
+
+Servo szervo1;
+// Servo szervo2;
+// Servo szervo3;
+// Servo szervo4;
+
+const int MIN_PWM = 500;   // Minimum impulzus (0 fok)
+const int MAX_PWM = 2500;  // Maximum impulzus (180 fok)
+
+void setup() {
+  szervo1.attach(9);        // Szervó 1 a D9-re
+  // szervo2.attach(10);    // Szervó 2 a D10-re
+  // szervo3.attach(11);    // Szervó 3 a D11-re
+  // szervo4.attach(6);     // Szervó 4 a D6-ra
+}
+
+void loop() {
+  int pot1 = analogRead(A0); // Potméter 1
+  int pwm1 = map(pot1, 0, 1023, MIN_PWM, MAX_PWM);
+  szervo1.writeMicroseconds(pwm1); // Szervó 1 vezérlése
+
+  // int pot2 = analogRead(A1); // Potméter 2
+  // int pwm2 = map(pot2, 0, 1023, MIN_PWM, MAX_PWM);
+  // szervo2.writeMicroseconds(pwm2); // Szervó 2 vezérlése
+
+  // int pot3 = analogRead(A2); // Potméter 3
+  // int pwm3 = map(pot3, 0, 1023, MIN_PWM, MAX_PWM);
+  // szervo3.writeMicroseconds(pwm3); // Szervó 3 vezérlése
+
+  // int pot4 = analogRead(A3); // Potméter 4
+  // int pwm4 = map(pot4, 0, 1023, MIN_PWM, MAX_PWM);
+  // szervo4.writeMicroseconds(pwm4); // Szervó 4 vezérlése
+
+  delay(15); // Frissítési idő
+}
+
+```
+
 ---
 
 # 3. Feladat:
 
-## Kiterjesztett Példasorozat: Összehangolt Szervomotor Mozgatás
 
-Ebben a részben egy átfogó, lépésenkénti útmutatót adunk arról, hogyan valósul meg az összehangolt szervomotor mozgatás a robotkarban. Gondolj erre, mint egy tananyagra, ami segít megérteni a technológiát kezdőktől haladókig. Használjuk a coordinatedMove függvény logikáját, hogy mutassuk be, hogyan kerül sor kontrollált, szinkronizált mozgásra több szervónál egyszerre.
+## Szervómotorok kézi vezérlése – Élő szögkiolvasás soros porton
 
-### 1. Bevezetés az Összehangolt Mozgatásba
-A összehangolt szervomotor mozgatás azt jelenti, hogy több motort egyszerre irányítunk, úgy hogy mindegyik simán és egyidejűleg érje el a célját. Ez fontos a robotkarban, mert ha a motorok nem mozognak együtt, a kar instabil lehet, például egy tárgy felemelésekor. Egyszerűen fogalmazva: képzeld el, hogy egy táncos csapatot vezetsz – mindenki ugyanabban a ritmusban mozog, hogy a műsor tökéletes legyen.
 
-Példa: Ha a robotkar egy poharat emel fel, az összes szervó (pl. a kar könyöke, válla és csuklója) együtt kell mozogjon, különben a pohár eldőlhet.
+Ebben a feladatban három potméterrel vezérlünk három szervót, valós időben, és a szervók aktuális szögeit folyamatosan kiírjuk a soros monitorra. Így a diákok kézzel be tudják állítani a kívánt pozíciókat, majd a szögeket másolhatják a saját robotvezérlésükbe.
 
-### 2. Alapfogalmak, Amiket Ismernünk Kell
-Mielőtt belemerülünk a részletekbe, nézzük meg az alapvető fogalmakat egyszerűen:
-- **Szervó**: Egy motor, ami pontos szögbe állítható (pl. 0-180 fok). A mi kódban minden szervónak van egy aktuális szöge (deg) és egy cél szöge (new_deg).
-- **Szinkronizálás**: Az, hogy a motorok együtt mozognak. A rendszer kiszámolja, mennyi időre van szükség a leghosszabb mozgáshoz, és ehhez igazítja a többit.
-- **Apró Lépések**: Helyett hogy egy motor hirtelen ugrana a célba, kis lépésekben halad, pl. 1 fokonként, hogy sima legyen a mozgás.
-- **Időzítés**: Rövid szünetek (delay) között, hogy a mozgás ne legyen túl gyors.
+### 1. Mire jó ez?
+Segít pozíciók kézi tanításában
 
-Példa: Képzeld, hogy autót vezetsz egy emelkedőn – nem lépsz rá hirtelen a gázra, hanem fokozatosan gyorsítasz, hogy kontroll alatt tudd.
+Azonnali vizuális visszajelzést ad a potméter beállításairól
 
-### 3. Lépésenkénti Elmagyarázás a Mozgatás Logikájának
-Most bontsuk le a coordinatedMove függvényt lépésről lépésre. Ez a funkció a robotkar kulcsa az összehangolt mozgáshoz. Minden lépést egyszerűen ismertetek, de nem hagyok ki semmit.
+Egyszerű és hasznos alap robotkar programozásához
 
-1. **Szögkülönbség Kiszámítása**: Először megvizsgáljuk, mennyit kell mozognia minden szervónak. A kódban ez történik: `int diff = static_cast<int>(ceil(abs(new_deg[i] - servos[i].get_deg())));`. Ez kiszámolja a különbséget a jelenlegi és a cél szög között, és kerekíti felfelé, hogy biztosan elég lépés legyen.
-   - Miért fontos? Ha az egyik szervónak 50 fokot kell mozognia, a másiknak csak 10-et, akkor a rendszer a legnagyobb különbséget veszi alapul, hogy senki se érjen be túl korán.
-   - Példa: Tegyük fel, hogy 3 szervónk van: A: 10 fok különbség, B: 20 fok, C: 30 fok. A maximum 30 fok, szóval a teljes mozgás ehhez igazodik.
-
-2. **Lépések Számának Meghatározása**: A kód megszorozza a legnagyobb különbséget 5-tel (`maxDiff *= 5;`), hogy több, finomabb lépést kapjunk. Ez lassabb, de simább mozgást eredményez.
-   - Miért? Ha túl gyorsan mozgunk, a szervók rángathatnak. Ez a szorzás extra óvatosságot ad.
-   - Példa: Ha a maxDiff 30, akkor 150 lépés lesz, ami azt jelenti, hogy a mozgás nagyon apró, 0.2 fokos lépésekben történik.
-
-3. **Apró Lépések Végrehajtása**: A kód egy ciklusban (`for (int step = maxDiff; step > 0; --step)`) hozzáad egy kis részt a jelenlegi szöghez minden szervónál: `servos[j].add_deg((new_deg[j] - servos[j].get_deg()) / step);`.
-   - Miért működik? Minden lépésben csak egy töredékét adjuk a teljes különbségnek, így a szervók fokozatosan közelednek a célhoz, és mindig együtt haladnak.
-   - Példa: Ha egy szervónak 30 fokot kell mozognia 150 lépésben, akkor az első lépésben hozzáad kb. 0.2 fokot, a következőben megint 0.2-t, és így tovább.
-
-4. **Időzítés és Várakozás**: Minden lépés után van egy delay: `delay(del);`, ami tipikusan 10 ms.
-   - Miért? Ez ad időt a szervóknak, hogy fizikailag kövessék a parancsot, így a mozgás nem lesz idegesítően gyors.
-   - Példa: Képzeld, hogy egy zeneszámot játszol le – a delay mint a ritmus, ami biztosítja, hogy a lépések összehangoltak legyenek.
-
-### 4. Példák a Gyakorlatban
-Itt jönnek a konkrét példák, hogy lásd, hogyan működik ez valós helyzetekben. Ezeket a coordinatedMove logikára alapozva építettem fel.
-
-1. **Egyszerű Példa: Egyetlen Mozgás Sorozata**
-   Tegyük fel, hogy a robotkar egy tárgyat emel fel. A cél szögök: Szervó 1: 45 fok, Szervó 2: 90 fok, Szervó 3: 0 fok.
-   - Lépések: A kód kiszámolja a különbségeket (pl. Szervó 1: 20 fok jelenleg, szóval diff=25). Majd 125 lépésben (ha maxDiff=25*5) apró lépésekkel mozog mindenki együtt.
-   - Eredmény: A kar simán felemeli a tárgyat, anélkül, hogy billegne.
-
-2. **Komplex Példa: Tárgy Áthelyezése**
-   Képzeld, hogy a robotkart utasítjuk, hogy egy poharat vigyen A pontból B-be. Parancsok: Először állítsd be az új cél szögöket, majd hívd a coordinatedMove-t.
-   - Részletek: Ha Szervó 1-nek 10 fokot, Szervó 2-nek 50 fokot kell mozognia, a kód biztosítja, hogy 250 lépésben (maxDiff=50*5) haladjanak együtt.
-   - Probléma és Megoldás: Ha az egyik szervó lassabb, a delay-ek gondoskodnak róla, hogy ne hagyja le a másikat. Példa kimenet: A kar először felemeli a poharat, majd oldalra mozdítja, anélkül, hogy leejtené.
-
-3. **Hibakezeléses Példa: Mit Teszünk, Ha Valami Rossz**
-   Ha egy szervó határait túllépi (pl. megpróbál 180 foknál többet mozogni), a kód figyelmen kívül hagyja (lásd: `if (v < d_min || v > d_max)` a MyServo-ban). Példa: Ha egy szervó csak 0-90 fokig mehet, de cél 100 fok, akkor ott megáll, és a többi szervó folytatja szinkronban.
-   - Tanulság: Mindig ellenőrizzük a határokat a valós tesztek során!
-
-### Egy Megvalósítható Példakód 3 Szervóval
-Itt egy egyszerűsített kódrészlet, ami csak 3 szervót használ, de ugyanazt az összehangolt mozgást valósítja meg, mint a teljes rendszer. Ez segít gyakorlati példaként megérteni a logikát.
+### 2. Mit ír ki a program?
+A soros monitoron folyamatosan frissülő formában láthatjuk például:
+`S1: 85 | S2: 102 | S3: 77`
 
 ```cpp
-#include <Arduino.h>
 #include <Servo.h>
-#include <math.h>  // For ceil and abs
 
-class MyServo {
-public:
-    float deg;  // Aktuális szög
-    MyServo() { deg = 0; }  // Alapértelmezett konstruktor
-    float get_deg() { return deg; }  // Szög lekérdezése
-    void add_deg(float v) { deg += v; }  // Szög hozzáadása
-};
+const int SZERVO_PIN[3] = {3, 5, 6};
+const int POT_PIN[3] = {A0, A1, A2};
 
-const int servo_count = 3;  // Csak 3 szervó
-float new_deg[servo_count] = {45.0, 90.0, 0.0};  // Cél szögök példaként
-MyServo servos[servo_count];  // Szervók tömbje
-
-void coordinatedMove(int del = 10) {
-    int maxDiff = 0;
-    for (int i = 0; i < servo_count; ++i) {
-        int diff = static_cast<int>(ceil(abs(new_deg[i] - servos[i].get_deg())));
-        if (diff > maxDiff) maxDiff = diff;
-    }
-    maxDiff *= 5;  // Több lépésért
-    for (int step = maxDiff; step > 0; --step) {
-        for (int j = 0; j < servo_count; ++j) {
-            servos[j].add_deg((new_deg[j] - servos[j].get_deg()) / step);
-        }
-        delay(del);  // Rövid szünet
-    }
-}
+Servo szervok[3];
 
 void setup() {
-    // Inicializálás: Például csatlakoztasd a szervókat
-    // servos[0].attach(9); stb. – ezt manuálisan tedd hozzá a tesztekhez
-    Serial.begin(9600);
+  Serial.begin(9600);
+  for (int i = 0; i < 3; i++) {
+    szervok[i].attach(SZERVO_PIN[i]);
+  }
+  Serial.println("Szervó szögek (S1 | S2 | S3):");
 }
 
 void loop() {
-    coordinatedMove();  // Hívd meg a mozgatást
-    delay(2000);  // Várj 2 másodpercet a következő futtatásig
+  int szogek[3];
+
+  for (int i = 0; i < 3; i++) {
+    szogek[i] = map(analogRead(POT_PIN[i]), 0, 1023, 70, 140);
+    szervok[i].write(szogek[i]);
+  }
+
+  // Soros kiírás
+  Serial.print("S1: ");
+  Serial.print(szogek[0]);
+  Serial.print(" | S2: ");
+  Serial.print(szogek[1]);
+  Serial.print(" | S3: ");
+  Serial.println(szogek[2]);
+
+  delay(500); // 0.5 másodperc frissítés
+}
+```
+
+
+## 🤖 Robotkar vezérlése – Soros porton beírt pózok alapján
+
+Ebben a részben egy átfogó, lépésenkénti útmutatót adunk arról, hogyan valósul meg az összehangolt szervomotor mozgatás a robotkarban. Gondolj erre, mint egy tananyagra, ami segít megérteni a technológiát kezdőktől haladókig. Használjuk a coordinatedMove függvény logikáját, hogy mutassuk be, hogyan kerül sor kontrollált, szinkronizált mozgásra több szervónál egyszerre.
+
+Ez a projekt lehetővé teszi, hogy egy Arduino-alapú 3 tengelyes robotkar **koordináltan bemozogjon** a soros porton keresztül beírt szervóállásokba. A mozgás **egyenletes és egyszerre történik**, így szép, folyamatos átmenetet kapunk.
+
+---
+
+### 🧠 Alapötlet
+
+Ez három szervó szögét jelenti (fokban):  
+- Szervó 1 → 90°  
+- Szervó 2 → 45°  
+- Szervó 3 → 120°
+
+Az Arduino ezeket az értékeket beolvassa, és **lépésekben odamozgatja** a szervókat.
+
+## 💻 Használat
+
+1. Nyisd meg a **Serial Monitor**-t (9600 baud).
+2. Írd be a kívánt szögeket vesszővel elválasztva, pl.:  `90,45,120`
+3. A robotkar szépen **bemozog a megadott pózba**.
+4. Adj meg új pózt, és ismét bemozog.
+
+```cpp
+#include <Servo.h>
+
+const int SZERVO_DB = 3;// Szervók száma
+const int SZERVO_LABAK[SZERVO_DB] = {9, 10, 11};// Szervók kimeneti lábai
+Servo szervok[SZERVO_DB];// Szervó objektumok tömbje
+float aktualis_szog[SZERVO_DB] = {90, 90, 90};// Aktuális szögértékek fokban
+float cel_szog[SZERVO_DB] = {90, 90, 90};// Cél szögértékek fokban
+String soros_puffer = "";// Beolvasott soros adatpuffer
+
+void setup() {
+  Serial.begin(9600);
+
+  // Szervók inicializálása és kezdő pozíció beállítása
+  for (int i = 0; i < SZERVO_DB; i++) {
+    szervok[i].attach(SZERVO_LABAK[i]);             // Csatlakoztatjuk a szervót a megfelelő lábra
+    szervok[i].write(aktualis_szog[i]);             // Elküldjük az alap szög értékét
+  }
+
+  Serial.println("Adj meg egy pózt így: 90,45,120");
+}
+
+void loop() {
+  // Soros portról érkező karakterek beolvasása
+  while (Serial.available()) {
+    char beolvasott_karakter = Serial.read();
+
+    if (beolvasott_karakter == '\n') {
+      feldolgozBemenet(soros_puffer);  // Ha sortörés, feldolgozzuk a puffer tartalmát
+      soros_puffer = "";               // Puffer kiürítése
+    } else {
+      soros_puffer += beolvasott_karakter; // Hozzáadjuk a karaktert a pufferhez
+    }
+  }
+}
+
+// A beolvasott bemenet feldolgozása: vesszővel tagolt számok → cél szögek
+void feldolgozBemenet(String bemenet) {
+  bemenet.trim();  // Szóközök eltávolítása
+
+  if (bemenet.length() == 0) return;  // Üres bemenet esetén kilép
+
+  // Bemenet darabolása és értékek mentése
+  for (int i = 0; i < SZERVO_DB; i++) {
+    int vesszo_poz = bemenet.indexOf(',');  // Megkeressük a következő vessző helyét
+    String ertek;
+
+    if (vesszo_poz != -1 && i < SZERVO_DB - 1) {
+      ertek = bemenet.substring(0, vesszo_poz);  // Első érték
+      bemenet = bemenet.substring(vesszo_poz + 1);  // A többit megtartjuk a következő körre
+    } else {
+      ertek = bemenet;  // Utolsó érték (vagy csak egy volt)
+    }
+
+    // Átalakítjuk float típusra, és korlátozzuk 0–180 fok közé
+    cel_szog[i] = constrain(ertek.toFloat(), 0, 180);
+  }
+
+  mozgasKoordinaltan();  // Elindítjuk a mozgást a cél szögek felé
+}
+
+// Koordinált, lépésenkénti mozgás minden szervóval egyszerre
+void mozgasKoordinaltan(int kesleltetes_ms = 15) {
+  int lepesek_szama = 50;
+  float szog_lepes[SZERVO_DB];
+
+  // Minden szervóhoz kiszámítjuk, mennyit kell mozdulnia egy lépésben
+  for (int i = 0; i < SZERVO_DB; i++) {
+    szog_lepes[i] = (cel_szog[i] - aktualis_szog[i]) / lepesek_szama;
+  }
+
+  // Lépésről lépésre közelítjük meg a cél pozíciót
+  for (int lepes = 0; lepes < lepesek_szama; lepes++) {
+    for (int i = 0; i < SZERVO_DB; i++) {
+      aktualis_szog[i] += szog_lepes[i];          // Következő szög kiszámítása
+      szervok[i].write(aktualis_szog[i]);         // Szervó vezérlése az új szöggel
+    }
+    delay(kesleltetes_ms);                        // Várakozás két lépés között
+  }
+
+  // A végpozíció pontos beállítása (elkerülve az apró csúszásokat)
+  for (int i = 0; i < SZERVO_DB; i++) {
+    aktualis_szog[i] = cel_szog[i];
+    szervok[i].write(aktualis_szog[i]);
+  }
+
+  // Visszajelzés a felhasználónak
+  Serial.print("Elért szögek: ");
+  for (int i = 0; i < SZERVO_DB; i++) {
+    Serial.print(aktualis_szog[i]);
+    if (i < SZERVO_DB - 1) Serial.print(", ");
+  }
+  Serial.println();
 }
 ```
 
@@ -393,16 +506,6 @@ Ez a projekt lehetővé teszi egy **4 tengelyes szervóvezérelt robotkar** vez�
 | `SAVE` | Elmenti az aktuális pozíciót egy tömbbe (max. 10 pozíció). |
 | `LOAD` | Lejátsza az összes elmentett pozíciót, kb. 1 mp szünettel. |
 
----
-
-## 🧠 Oktatási cél
-
-Ez a projekt **gyakoroltatja a szervóvezérlést, potméter használatot, és a soros kommunikációt**. Segít megérteni:
-
-- Hogyan vezérlünk több szervót egyszerre
-- Hogyan olvasunk be analóg jeleket
-- Hogyan kezelünk egyszerű parancsokat soros kommunikáción keresztül
-- Hogyan tárolunk és kezelünk pozíciókat tömbökben
 
 ---
 
