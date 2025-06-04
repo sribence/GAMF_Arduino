@@ -13,7 +13,7 @@
 
 **Tartalomjegyzék**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [Eszközök](#️bekotes)
+-   [Bekötés](#️bekötés)
 -   [1. Feladat](#1-feladat---a-lift-mozgatása-és-alap-vezérlése)
 -   [2. Feladat](#2-feladat---egyéb-eszközök-csatlakozásának-tesztelése) 
 -   [3. Feladat](#3-feladat---a-lift-irányítása-gombokkal-fel-le-álj)
