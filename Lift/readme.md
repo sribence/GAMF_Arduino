@@ -13,10 +13,12 @@
 
 **Tartalomjegyzék**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [0. Feladat](#0-feladat)
--   [1. Feladat](#-1-feladat)
--   [2. Feladat](#-2-feladat) 
--   [3. Feladat](#3-feladat)
+-   [Bekötés](#bekötés)
+-   [1. Feladat](#1-feladat---a-lift-mozgatása-és-alap-vezérlése)
+-   [2. Feladat](#2-feladat---egyéb-eszközök-csatlakozásának-tesztelése) 
+-   [3. Feladat](#3-feladat---a-lift-irányítása-gombokkal-fel-le-álj)
+-   [4. Feladat](#4-feladat---a-lift-funkcióinak-alapvető-megvalósítása)
+-   [5. Feladat](#5-feladat---a-lift-végleleges-működése)
 -   [Teljes rendszer](#teljes-rendszer)
 -   [Extra Feladat](#-extra-feladat)
 
@@ -34,644 +36,115 @@
 
 ---
 
-# 0. Feladat:
-⚙️ Kapcsolási rajz: (Először ez alapján csináljátok meg a kezdő állapotot.) 
-![kapcsolási rajz](bekotes.png)
+# Bekötés
+📷 Az alábbi ábra azt mutatja meg, hogyan vannak az egyes alkatrészek összekötve egymással. Ez segít abban, hogy jobban átlásd a rendszer felépítését és könnyebben eligazodj a bekötések között 🔌📚.
+
+⚠️ Fontos: mivel a projektet már összeszerelve kaptad meg, így nem kell semmit átkötnöd vagy módosítanod. Ez az ábra csak egy segédlet, hogy tudd:
+
+- melyik alkatrész hova csatlakozik,
+- és hogy melyik Arduino láb milyen funkciót lát el (például LED, szenzor, motor vezérlés stb.)
+
+🧾 A kódokban természetesen meg vannak adva a megfelelő pinek is, így ha bármi nem lenne egyértelmű, csak nézd meg a program elején a hozzárendeléseket!
+
+💡 Összefoglalva: ez az ábra nem kötelező, csak egy vizuális segítség, hogy magabiztosabban tudd használni a rendszert.
+
+<img src="./bekotes.png" width="100%" />
 
 ---
 
-# 🧠 1. Feladat:
-## Kijelző kezelése: emeletszám és mozgásirány megjelenítése
+# 1. feladat - A lift mozgatása és alap vezérlése
 
-### 🎯 Cél:
-Használni egy 8x8-as LED mátrixot arra, hogy:
-- **Megjelenítse az aktuális emelet számát** (0, 1, 2),
-- **Mutassa a mozgás irányát** (⬆️ FEL, ⬇️ LE, ➖ áll).
+Ebben a feladatban megismerkedünk a léptetőmotor működésével 🌀⚙️.
+A léptetőmotorok vezérléséhez nagyon gyorsan kell váltogatni a jelet az egyik vezérlőlábon ⏱️🔁 – mindössze néhány mikroszekundumos eltéréssel kell fel- és lekapcsolni a jelet.
 
-A kijelző minden másodpercben frissül, és véletlenszerűen változik az emelet és az irány – ezzel tesztelhető a mátrix működése.
+Egy ilyen fel-le váltás egy lépésnek számít 🚶‍♂️.
 
----
+Az alábbi program 10 000 lépést tesz meg előre, majd 10 000 lépést visszafelé 🔁⬆️⬇️ – így kipróbálhatjuk, hogyan működik a motor mozgása a gyakorlatban! 🧪✅
 
-### 📟 Működés leírása
-
-A program az `Adafruit_8x8matrix` könyvtár segítségével vezérli a kijelzőt, amely I2C kommunikációval csatlakozik (alapértelmezett cím: `0x70`).
-
-### 🧩 Mit mutat a kijelző?
-
-- **Szám:** a bal oldalon látható (0, 1, 2, 3).
-- **Nyíl:** a jobb oldalon jelenik meg, az irány függvényében.
-  - FEL: `↑`
-  - LE: `↓`
-  - Áll: `-` (üres nyíl)
+<img src="./ElevatorCode1.png" width="100%" />
 
 ---
 
-### 🧠 Hogyan működik?
+# 2. feladat - Egyéb eszközök csatlakozásának tesztelése
 
-#### 1. Véletlenszerű értékek beállítása:
-```cpp
-emelet = random(0, 3);       // 0-tól 2-ig
-irany = Irany(random(0, 3)); // FEL, LE, NINCS
-```
+Mivel egy lift működéséhez nem csak egy motor szükséges 🛗⚙️, most a többi kapcsolódó eszközt is leteszteljük 🧪🔌.
 
-2. Kijelzés rajzolása:
+A program a következőket kezeli:
 
-```cpp
-matrix.displaybuffer[i + 1] = rotr((reverse(nyil[irany][i]) >> 5) | (reverse(szam[emelet][i]) >> 1));
-```
+- 🔘 3 nyomógomb
+- 🛑 1 ütközésérzékelő
+- 🔊 1 buzzer (hangjelző)
+- 🔁 1 szervómotor
+- 💡 1 darab 8×8-as LED mátrix
 
-Ez egy kicsit bonyolult, de ez történik:
-- A szám (számjegy) és a nyíl (irány) két külön bitmátrix.
-- Ezeket bitműveletekkel összefűzi egy 8x8 kijelzésre.
-- A reverse() megfordítja a bájt bitek sorrendjét.
-- A rotr() eltolja jobbra, hogy a szám és a nyíl ne fedje egymást.
+Ezek segítségével már egy valósághű lift szimulációt tudunk készíteni 🎯🔄.
+Az alábbi kód vagy vezérli ezeket az eszközöket, vagy kiírja az állapotukat a soros portra 🖥️📟 – attól függően, hogy milyen típusúak.
 
-3. Kijelző frissítése:
-```cpp
-matrix.writeDisplay(); // ez ténylegesen kiírja a LED mátrixra a képet
-```
-
-🔍 Minta – Emelet: 1, Irány: FEL
-A kijelzőn ez fog megjelenni:
-
-`css [ 1 ]   ↑` (Az 1-es szám bal oldalon, nyíl felfelé jobb oldalon.)
-
-🛠️ Könyvtárhasználat
-A kijelző működéséhez a következő könyvtárakra van szükség:
-
-```cpp
-#include <Adafruit_LEDBackpack.h>
-#include <Adafruit_GFX.h>
-```
-Telepíthetők az Arduino IDE „Könyvtárkezelőjéből” `(Tools > Manage Libraries).`
-
-## ✅ Teljes kód egyben
-```cpp
-// kijelző
-
-#include <Adafruit_LEDBackpack.h>
-#include <Adafruit_GFX.h>
-
-Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
-
-long poz = 0;
-long cel_poz = 0;
-byte emelet = 0;
-byte cel_emelet = 0;
-enum Irany {
-    LE,
-    FEL,
-    NINCS,
-};
-Irany irany;
-enum Allapot {
-    STOP,
-    VARAKOZAS,
-    START,
-    AJTONYITAS,
-    AJTO_NYITVA,
-    AJTOZARAS,
-    INDULAS,
-    MOZGASBAN,
-    ERKEZES,
-};
-volatile Allapot allapot;
-
-byte reverse(byte b) {
-   b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
-   b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
-   b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
-   return b;
-}
-
-byte rotr(byte val) {
-    return (val >> 1) | (val << 7);
-}
-
-const uint16_t szam[4][5] = {
-    {
-        0b00000111,
-        0b00000100,
-        0b00000111,
-        0b00000100,
-        0b00000100,
-    },
-    {
-        0b00000010,
-        0b00000110,
-        0b00000010,
-        0b00000010,
-        0b00000010,
-    },
-    {
-        0b00000110,
-        0b00000001,
-        0b00000010,
-        0b00000100,
-        0b00000111,
-    },
-    {
-        0b00000000,
-        0b00000000,
-        0b00000111,
-        0b00000000,
-        0b00000000,
-    },
-};
-
-const uint16_t nyil[3][5] = {
-    {
-        0b00000010,
-        0b00000010,
-        0b00000010,
-        0b00000111,
-        0b00000010,
-    },
-    {
-        0b00000010,
-        0b00000111,
-        0b00000010,
-        0b00000010,
-        0b00000010,
-    },
-    {
-        0b00000000,
-        0b00000000,
-        0b00000000,
-        0b00000000,
-        0b00000000,
-    },
-};
-
-void matrix_kiir() {
-    for (byte i = 0; i < 5; ++i) {
-        matrix.displaybuffer[i + 1] = rotr((reverse(nyil[irany][i]) >> 5) | (reverse(szam[emelet][i]) >> 1));
-    }
-    matrix.writeDisplay();
-}
-
-void serial_kiir() {
-    Serial.print("a: ");
-    Serial.print(allapot);
-    Serial.print(", e: ");
-    Serial.print(emelet);
-    Serial.print(", ce: ");
-    Serial.print(cel_emelet);
-    Serial.print(", p: ");
-    Serial.print(poz);
-    Serial.print(", cp: ");
-    Serial.print(cel_poz);
-    Serial.println();
-}
-
-void setup() {
-    Serial.begin(9600);
-    matrix.begin(0x70);
-
-}
-
-void loop() {
-  emelet = random(0, 3);
-  irany = Irany(random(0, 3));
-  matrix_kiir();
-  delay(1000);
-}
-```
+<img src="./ElevatorCode2.png" width="100%" />
 
 ---
 
-# 🧠 2. Feladat:
+# 3. feladat - A lift irányítása gombokkal (fel, le, álj)
 
-## Ajtó működésének vezérlése gombbal
+Most, hogy már minden csatlakoztatott eszközt leteszteltünk ✅🔌, végre elkezdhetjük létrehozni a valósághoz hű működést – egyelőre egy egyszerű példával 🛠️🚀.
 
-### 🎯 Cél:
-Kezelni egy szervómotorral működő liftajtót úgy, hogy:
-- Gombnyomás után az ajtó automatikusan **kinyíljon**,
-- egy másik gombnyomás után pedig **becsukódjon**,
-- miközben a rendszer figyel az állapotokra is.
+- 🔘 1. gomb: ha megnyomjuk, a lift felfelé megy ⬆️
+- 🔘 2. gomb: ha megnyomjuk, lefelé megy ⬇️
+- 🔘 3. gomb: ha megnyomjuk, a lift megáll ⏸️
 
-### 🛠️ Működés leírása:
-A program egy egyszerű **állapotgépet** használ (`STOP`, `AJTONYITAS`, `AJTO_NYITVA`, `AJTOZARAS`, stb.), ami azt jelenti, hogy a lift mindig egy adott állapotban van, és innen lép tovább a következőbe.
+A kijelzőn 📺 is látható lesz, hogy éppen mi történik:
+- ➡️ nyilakkal jelezzük a mozgás irányát,
+- ➖ és egy vízszintes vonal jelenik meg, ha a lift nem mozog.
 
-#### Például:
-```cpp
-case AJTONYITAS:
-    ajtot_mozgat(170); // kinyitjuk az ajtót
-    allapotot_frissit(AJTO_NYITVA); // átmegyünk a következő állapotba
-    break;
-```
-A ajtot_mozgat(poz) függvény finoman mozgatja a szervómotort az adott pozícióra.
+Ez még nem egy teljesen valós lift működése 🏗️, de már gombokkal irányítjuk a léptetőmotort, és szépen haladunk a cél felé! 🎯💡
 
-A gombokat INPUT_PULLUP módban használjuk, tehát logikai 0 lesz, amikor megnyomod.
-
-Gombkezelés példa:
-
-```cpp
-for (byte i = 0; i < 3; ++i) {
-    if (!digitalRead(gomb[i])) { // ha megnyomták valamelyik gombot
-        allapotot_frissit(AJTOZARAS);
-    }
-}
-Ez a logika figyeli, hogy mikor akarod becsukni az ajtót.
-```
-
-
-```cpp
-#include <Arduino.h>
-#include <Wire.h>
-#include <Servo.h>
-
-#define SERVO_PIN 11
-
-#define DIR_PIN 10
-#define STEP_PIN 9
-#define EN_PIN 8
-
-const byte gomb[3] = {5, 6, 7};
-
-Servo ajto;
-byte ajto_poz = 0;
-int motor_var = 300; // motor késleltetés beállítva alapból működéshez
-
-enum Irany {
-    LE,
-    FEL,
-    NINCS,
-};
-
-enum Allapot {
-    STOP,
-    VARAKOZAS,
-    START,
-    AJTONYITAS,
-    AJTO_NYITVA,
-    AJTOZARAS,
-    INDULAS,
-    MOZGASBAN,
-    ERKEZES,
-};
-volatile Allapot allapot;
-
-Irany irany = NINCS; // globálisan deklarálva
-
-void leptet() {
-    digitalWrite(STEP_PIN, HIGH);
-    delayMicroseconds(motor_var);
-    digitalWrite(STEP_PIN, LOW);
-    delayMicroseconds(motor_var);
-}
-
-void ajtot_mozgat(int poz) {
-    ajto.attach(SERVO_PIN);
-    while (ajto_poz != poz) {
-        ajto_poz < poz ? ++ajto_poz : --ajto_poz;
-        ajto.write(ajto_poz);
-        delay(10);
-    }
-    delay(500);
-    ajto.detach();
-}
-
-void allapotot_frissit(Allapot uj) {
-    if (allapot == STOP) {
-        return;
-    }
-    allapot = uj;
-}
-
-void iranyt_frissit(Irany uj) {
-    irany = uj;
-    switch (irany) {
-        case FEL:
-            digitalWrite(DIR_PIN, LOW);
-            digitalWrite(EN_PIN, LOW);
-            break;
-        case LE:
-            digitalWrite(DIR_PIN, HIGH);
-            digitalWrite(EN_PIN, LOW);
-            break;
-        default:
-            digitalWrite(EN_PIN, HIGH);
-            break;
-    }
-}
-
-void setup() {
-    Serial.begin(9600);
-    allapot = AJTOZARAS;
-
-    pinMode(DIR_PIN, OUTPUT);
-    pinMode(STEP_PIN, OUTPUT);
-    pinMode(EN_PIN, OUTPUT);
-    digitalWrite(EN_PIN, HIGH);
-
-    // Gombok inicializálása
-    for (byte i = 0; i < 3; i++) {
-        pinMode(gomb[i], INPUT_PULLUP);
-    }
-
-    allapot = STOP;
-}
-
-void loop() {
-    switch (allapot) {
-
-        case VARAKOZAS:
-        {
-            unsigned long start = millis();
-            while (!digitalRead(gomb[0])) {
-                if (millis() - start > 2000) {
-                    allapotot_frissit(AJTONYITAS);
-                    return;
-                }
-            }
-            break;
-        }
-
-        case AJTONYITAS:
-            delay(2000);
-            ajtot_mozgat(170);
-            delay(2000);
-            allapotot_frissit(AJTO_NYITVA);
-            break;
-
-        case AJTO_NYITVA:
-            for (byte i = 0; i < 3; ++i) {
-                if (!digitalRead(gomb[i])) {
-                    // Itt demóként léptetünk 100 lépést felfelé
-                    iranyt_frissit(FEL);
-                    for (int j = 0; j < 100; j++) {
-                        leptet();
-                    }
-                    iranyt_frissit(NINCS);
-                    allapotot_frissit(AJTOZARAS);
-                    break;
-                }
-            }
-            break;
-
-        case AJTOZARAS:
-            delay(2000);
-            ajtot_mozgat(10);
-            allapotot_frissit(VARAKOZAS);
-            delay(2000);
-            break;
-    }
-}
-
-```
+<img src="./ElevatorCode3.png" width="100%" />
 
 ---
 
-# 3. Feladat:
+# 4. feladat - A lift funkcióinak alapvető megvalósítása
 
-🎯 Cél:
-Mozgatni a liftkocsit léptetőmotor segítségével különböző emeletek között:
-- Automatikusan indítva,
-- megfelelő sebességgel,
-- majd megállítani a célpozíción.
+Az előző példát továbbfejlesztve most egy valósághű liftvezérlés megvalósításán dolgozunk 🏢⬆️⬇️.
 
-🛠️ Működés részletesen:
-A mozgás több szakaszra van bontva, amit az állapotkezelés vezérel:
+🎯 A cél:
+A gombok már nem csak mozgási irányt jelentenek, hanem valós emeleteket képviselnek, ahová a liftet hívhatjuk vagy küldhetjük. Ehhez pontosan kell ismernünk a lift pozícióját.
 
-Fő állapotok:
-- START: elindítja a kabint felfelé
-- INDULAS: gyorsulási szakasz (lassan → gyorsan)
-- MOZGASBAN: egyenletes mozgás
-- ERKEZES: lassulási szakasz (gyorsan → lassan)
+🏠 HOME pozíció meghatározás:
+A lift induláskor egy ütközésérzékelő segítségével meghatározza a kiinduló helyzetét, amit földszintnek (G) tekintünk. Ez a "nulladik" pont, innen számítjuk a további mozgásokat.
 
-Példarészlet – Motor sebesség változtatása:
-```cpp
+📐 Mivel léptetőmotorral dolgozunk, pontosan tudjuk, hogy egy-egy lépéssel mennyit mozdul a lift – így bármikor kiszámíthatjuk, hogy épp melyik emeleten vagyunk.
 
-for (long i = 0; i < atmenet; ++i) {
-    motor_var = var_gyors + (1 - ((float)i / atmenet)) * (var_lassu - var_gyors);
-    leptet(); // egy lépést mozgat
-    poziciot_frissit(); // frissíti a pozíciót
-}
-```
+📺 Kijelzőn megjelenik:
 
-A `motor_var` határozza meg, milyen gyorsan léptetjük a motort (delayMicroseconds).
+- 🔼🔽 mozgás iránya (nyilakkal)
+- 🅶 / 1️⃣ / 2️⃣ az aktuális emelet
+- 🔊 Buzzer is jelez, amikor szintet váltunk vagy célhoz érünk
 
-`leptet()` = egyetlen motorlépés HIGH–LOW váltással.
+Ez már sokkal közelebb áll egy valódi lift működéséhez – pontos vezérlés, állapotkijelzés, hívógomb funkciók és hangjelzések. 🎉
 
-`poziciot_frissit()` = a kabin aktuális pozícióját frissíti (növeli vagy csökkenti).
+<img src="./ElevatorCode4.png" width="100%" />
 
-🧭 Irány beállítása:
-```cpp
-irany = FEL;
-digitalWrite(DIR_PIN, LOW);  // FEL irány
-digitalWrite(EN_PIN, LOW);   // Motor engedélyezve
-```
-📐 Emeletszám kiszámítása:
-A célpozíció (cel_poz) az emeletszám szorozva az emelet_tavolsag értékkel:
+---
 
-```cpp
-cel_emelet = 2;
-cel_poz = cel_emelet * emelet_tavolsag;
-```
-Ez segít a rendszernek tudni, hol álljon meg a kabin.
+# 5. feladat - A lift végleleges működése
 
+Az előző feladatban már szinte egy teljes értékű liftvezérlő rendszert hoztunk létre 🚀🏢, de most még tovább finomítjuk a működést, hogy még realisztikusabb és professzionálisabb legyen.
 
-```cpp
-// szerkezet működés
+🎛️ Fejlesztések, amiket bevezetünk:
 
-#include <Arduino.h>
-#include <Wire.h>
-#include <Servo.h>
+- 🚪 Ajtónyitás/zárás mozgás előtt és után
+- ⚡ Gyorsulás és lassulás: a mozgás nem indul és áll meg azonnal, hanem fokozatosan gyorsítunk/lassítunk a valósághű élményért
+- 🔄 Állapotgép (state machine) használata: minden működési szakasz (várakozás, indulás, mozgás, lassítás, ajtónyitás stb.) egy-egy külön állapotként van kezelve, így az egész működés átláthatóbb és bővíthetőbb lesz
 
-#define CS_PIN 2
-#define DIR_PIN 10
-#define STEP_PIN 9
-#define EN_PIN 8
+⚙️ Az állapotgép lehetővé teszi, hogy:
 
-const int var_gyors = 200;
-const int var_lassu = 400;
-int motor_var = 300;
+- Egyszerűen kezeljük az eseményeket és átmeneteket
+- Stabil, előre kiszámítható működést kapjunk
+- Később könnyedén hozzáadhassunk új funkciókat (pl. időzítők, szenzorhibák kezelése, LCD kijelző)
 
-long poz = 0;
-long cel_poz = 0;
-long frissit = 0;
-const long emelet_tavolsag = 30000;
-const long atmenet = 3000;
+Ez a megközelítés már tényleg ipari szintű vezérlések alapját képezi – nem csak oktatási célra hasznos, hanem valós projekteknél is alkalmazható.
 
-byte emelet = 0;
-byte cel_emelet = 0;
-
-enum Irany {
-    LE,
-    FEL,
-};
-Irany irany;
-
-enum Allapot {
-    STOP,
-    VARAKOZAS,
-    START,
-    AJTONYITAS,
-    AJTO_NYITVA,
-    AJTOZARAS,
-    INDULAS,
-    MOZGASBAN,
-    ERKEZES,
-};
-volatile Allapot allapot;
-
-void leptet() {
-    digitalWrite(STEP_PIN, HIGH);
-    delayMicroseconds(motor_var);
-    digitalWrite(STEP_PIN, LOW);
-    delayMicroseconds(motor_var);
-}
-
-void allapotot_frissit(Allapot uj) {
-    if (allapot == STOP) {
-        return;
-    }
-    allapot = uj;
-}
-
-void stop() {
-    if (allapot == START) {
-        return;
-    }
-    allapot = STOP;
-}
-
-void poziciot_frissit() {
-    switch (irany) {
-        case FEL:
-            ++poz;
-            break;
-        case LE:
-            --poz;
-            break;
-    }
-}
-
-void emeletet_frissit_indulaskor() {
-    frissit = poz;
-    switch (irany) {
-        case FEL:
-            frissit += emelet_tavolsag / 2;
-            break;
-        case LE:
-            frissit -= emelet_tavolsag / 2;
-            break;
-    }
-}
-
-void emeletet_frissit() {
-    if (poz != frissit) {
-        return;
-    }
-    switch (irany) {
-        case FEL:
-            ++emelet;
-            frissit += emelet_tavolsag;
-            break;
-        case LE:
-            --emelet;
-            frissit -= emelet_tavolsag;
-            break;
-    }
-}
-
-void setup() {
-    Serial.begin(9600);
-    Serial.println();
-    Serial.println("Setup started");
-
-    pinMode(DIR_PIN, OUTPUT);
-    pinMode(STEP_PIN, OUTPUT);
-    pinMode(EN_PIN, OUTPUT);
-    digitalWrite(EN_PIN, HIGH); // motor letiltva induláskor
-
-    attachInterrupt(digitalPinToInterrupt(CS_PIN), stop, FALLING);
-
-    allapot = STOP;
-
-    Serial.println("Setup completed");
-}
-
-void loop() {
-    switch (allapot) {
-        case STOP:
-            emelet = 3;
-            Serial.println("Stop");
-            delay(1000);
-            allapot = VARAKOZAS;
-            break;
-
-        case VARAKOZAS:
-            // Ide kerülhetne majd gombkezelés, de most csak szimuláljuk az indulást
-            Serial.println("Varakozas...");
-            delay(1000);
-            allapotot_frissit(START);
-            break;
-
-        case START:
-            emelet = 3;
-            irany = FEL;
-            digitalWrite(DIR_PIN, LOW);  // FEL irány = LOW
-            digitalWrite(EN_PIN, LOW);   // Engedélyezzük a motort
-
-            delay(4000);
-            motor_var = 300;
-
-            poz = 0;
-            emelet = 0;
-            cel_emelet = 2;
-            cel_poz = cel_emelet * emelet_tavolsag;
-
-            emeletet_frissit_indulaskor();
-
-            allapotot_frissit(INDULAS);
-            break;
-
-        case INDULAS:
-            for (long i = 0; i < atmenet; ++i) {
-                motor_var = var_gyors + (1 - ((float)i / atmenet)) * (var_lassu - var_gyors);
-                leptet();
-                poziciot_frissit();
-                if (allapot == STOP) {
-                    return;
-                }
-            }
-            allapotot_frissit(MOZGASBAN);
-            break;
-
-        case MOZGASBAN:
-            motor_var = var_gyors;
-            while (abs(cel_poz - poz) > atmenet) {
-                leptet();
-                poziciot_frissit();
-                emeletet_frissit();
-                if (allapot == STOP) {
-                    return;
-                }
-            }
-            allapotot_frissit(ERKEZES);
-            break;
-
-        case ERKEZES:
-            for (long i = 0; i < atmenet; ++i) {
-                motor_var = var_gyors + ((float)i / atmenet) * (var_lassu - var_gyors);
-                leptet();
-                poziciot_frissit();
-                if (allapot == STOP) {
-                    return;
-                }
-            }
-            digitalWrite(EN_PIN, HIGH); // letiltjuk a motort érkezés után
-            Serial.println("Erkezes.");
-            allapot = STOP;
-            break;
-    }
-}
-
-
-```
-![carbon](https://github.com/user-attachments/assets/8d913ef6-a73a-4ab3-8f36-8c6b66ad8296)
+<img src="./ElevatorCode5.png" width="100%" />
 
 ---
 
@@ -707,4 +180,3 @@ void loop() {
 **🏆 Extra kihívás:** 👀 Jelenítsd meg a visszaszámlálást a LED kijelzőn – a hátralévő másodperceket mutassa! 
 
 ✅ Sok sikert! 😊
-
