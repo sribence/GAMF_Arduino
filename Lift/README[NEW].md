@@ -13,11 +13,11 @@
 
 **Tartalomjegyzék**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
--   [1. Feladat](#-1-feladat)
--   [2. Feladat](#-2-feladat) 
--   [3. Feladat](#3-feladat)
--   [4. Feladat](#3-feladat)
--   [5. Feladat](#3-feladat)
+-   [1. Feladat](#-1-feladat---a-lift-mozgatása-és-alap-vezérlése)
+-   [2. Feladat](#-2-feladat---egyéb-eszközök-csatlakozásának-tesztelése) 
+-   [3. Feladat](#-3-feladat---a-lift-irányítása-gombokkal-fel-le-álj)
+-   [4. Feladat](#-4-feladat---a-lift-funkcióinak-alapvető-megvalósítása)
+-   [5. Feladat](#-5-feladat---a-lift-végleleges-működése)
 -   [Teljes rendszer](#teljes-rendszer)
 -   [Extra Feladat](#-extra-feladat)
 
