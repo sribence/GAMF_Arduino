@@ -56,7 +56,8 @@ void loop()
 
 # 2. feladat - Egyéb eszközök csatlakozásának tesztelése
 
-```cpp#include <Servo.h>
+```cpp
+#include <Servo.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_LEDBackpack.h>
 
