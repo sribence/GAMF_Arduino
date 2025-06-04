@@ -295,3 +295,312 @@ void IranyBeallitas(String irany = "fel")
     matrix.writeDisplay(); // Frissítjük a kijelzőt
 }
 ```
+
+# 4. feladat - lift funkcióinak alapvető megvalósítása
+
+```cpp
+#include <Adafruit_GFX.h>
+#include <Adafruit_LEDBackpack.h>
+
+// A motor csatlakozói
+const int DIR_PIN = 10;
+const int STEP_PIN = 9;
+const int EN_PIN = 8;
+
+// Gombok
+const int BTN1 = 7;
+const int BTN2 = 6;
+const int BTN3 = 5;
+
+// Buzzer és ütközés érzékelés
+const int BUZZER_PIN = 12;
+const int COLLISON_PIN = 2;
+
+// Kijelző
+Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
+
+// Minél nagyobb annál lassabb, de ne vedd túl lassúra mert akkor nem fog menni
+const int Sebesseg = 200;
+
+// A lift pozíciója
+long Magassag;
+
+// Az emeletek magassága
+const long Emeletek[3] = { 0, 30000, 60000 };
+
+// Függvény és eljárás deklarációk
+void IranyBeallitas(String);
+void MozgasEmelethez(int);
+
+void setup() 
+{
+    // Soros port indítása
+    Serial.begin(9600);
+
+    // Csatlakozások beállítása kimenetire
+    pinMode(DIR_PIN, OUTPUT);
+    pinMode(STEP_PIN, OUTPUT);
+    pinMode(EN_PIN, OUTPUT);
+    pinMode(COLLISON_PIN, INPUT);
+
+    // Kikapcsoljuk a motor működését
+    digitalWrite(EN_PIN, HIGH);
+
+    matrix.begin(0x70);
+    matrix.clear();
+    matrix.setRotation(3);
+    matrix.setBrightness(4);
+
+    Serial.println("\n\nHello vilag");
+    delay(1000); // Várjunk 1 másodpercet
+
+    // Home-olás (visszamegyünk a kezdő pozícióba és a mozgást ahhoz viszonyítjuk utánna)
+    IranyBeallitas("le");
+    while (digitalRead(COLLISON_PIN) == HIGH)
+    {
+        Leptetes();
+    }
+    IranyBeallitas("kikapcs");
+
+    IranyBeallitas("fel");
+    for (int i = 0; i < 2000; i++)
+    {
+        Leptetes();
+    }
+    IranyBeallitas("kikapcs");
+    Magassag = 0;
+
+    matrix.clear();
+
+    uint8_t smiley[8] = {
+        B00000000,
+        B00111100,
+        B01000010,
+        B01000000,
+        B01001110,
+        B01000010,
+        B00111100,
+        B00000000
+    };
+
+    // Beállítjuk a pixeleket
+    for (uint8_t y = 0; y < 8; y++) {
+        for (uint8_t x = 0; x < 8; x++) {
+            if (smiley[y] & (1 << (7 - x))) {
+                matrix.drawPixel(x, y, LED_ON);
+            }
+        }
+    }
+
+    matrix.writeDisplay();
+}
+
+void loop() 
+{
+    if (digitalRead(BTN1) == LOW) MozgasEmelethez(0);
+    else if (digitalRead(BTN2) == LOW) MozgasEmelethez(1);
+    else if (digitalRead(BTN3) == LOW) MozgasEmelethez(2);
+}
+
+// Egy lépés a léptető motorral
+void Leptetes()
+{
+    digitalWrite(STEP_PIN, HIGH);
+    delayMicroseconds(Sebesseg);
+    digitalWrite(STEP_PIN, LOW);
+    delayMicroseconds(Sebesseg);
+}
+
+// Eldüntjük hogyan mozogjon az eszköz a célemelethez és a jelenlegi pozicíóhoz képest
+// 0 -> földszint
+// 1 -> 1. emelet
+// 2 -> 2. emelet
+void MozgasEmelethez(int emelet = 0)
+{
+    // Ha nem jó emelet lett megadva, ne csináljon semmit
+    if (emelet < 0 || emelet > 2) return;
+
+    // Motor mozgásának száma
+    long Lepesszam = 0;
+    if (Magassag == 0)
+    {
+        Lepesszam = abs(Magassag - Emeletek[emelet]);
+    }
+    else
+    {
+        Lepesszam = abs(Emeletek[emelet] - Magassag);
+    }
+
+
+    // Ha a liftnek nem kell mozogni, ne csináljon semmit
+    if (Lepesszam == 0) return;
+
+    // Irány meghatározása
+    Serial.println(String(Magassag) + " - " + String(Emeletek[emelet]));
+    if (Magassag < Emeletek[emelet]) IranyBeallitas("fel");
+    else IranyBeallitas("le");
+
+    // Lépések megtétele
+    for (long i = 0; i < Lepesszam; i++) Leptetes();
+
+    // Az új magasság frissítése
+    Magassag = Emeletek[emelet];
+
+    IranyBeallitas("kikapcs");
+
+    // Emelet számának kiírása
+    matrix.clear();
+    if (Magassag == Emeletek[0])
+    {
+        uint8_t smiley[8] = {
+            B00000000,
+            B00111100,
+            B01000010,
+            B01000000,
+            B01001110,
+            B01000010,
+            B00111100,
+            B00000000
+        };
+
+        // Beállítjuk a pixeleket
+        for (uint8_t y = 0; y < 8; y++) {
+            for (uint8_t x = 0; x < 8; x++) {
+                if (smiley[y] & (1 << (7 - x))) {
+                    matrix.drawPixel(x, y, LED_ON);
+                }
+            }
+        }
+    }
+    else if (Magassag == Emeletek[1])
+    {
+        uint8_t smiley[8] = {
+            B00000000,
+            B00001000,
+            B00011000,
+            B00001000,
+            B00001000,
+            B00001000,
+            B00011100,
+            B00000000
+        };
+
+        // Beállítjuk a pixeleket
+        for (uint8_t y = 0; y < 8; y++) {
+            for (uint8_t x = 0; x < 8; x++) {
+                if (smiley[y] & (1 << (7 - x))) {
+                    matrix.drawPixel(x, y, LED_ON);
+                }
+            }
+        }
+    }
+    else if (Magassag == Emeletek[2])
+    {
+        uint8_t smiley[8] = {
+            B00000000,
+            B00011000,
+            B00100100,
+            B00001000,
+            B00010000,
+            B00100000,
+            B00111100,
+            B00000000
+        };
+
+        // Beállítjuk a pixeleket
+        for (uint8_t y = 0; y < 8; y++) {
+            for (uint8_t x = 0; x < 8; x++) {
+                if (smiley[y] & (1 << (7 - x))) {
+                    matrix.drawPixel(x, y, LED_ON);
+                }
+            }
+        }
+    }
+
+    matrix.writeDisplay(); // Frissítjük a kijelzőt
+}
+
+void IranyBeallitas(String irany = "fel")
+{
+    tone(BUZZER_PIN, 200, 200);
+    matrix.clear();
+
+    if (irany == "fel")
+    {
+        uint8_t smiley[8] = {
+            B00000000,
+            B00010000,
+            B00111000,
+            B01111100,
+            B00010000,
+            B00010000,
+            B00010000,
+            B00000000
+        };
+
+        // Beállítjuk a pixeleket
+        for (uint8_t y = 0; y < 8; y++) {
+            for (uint8_t x = 0; x < 8; x++) {
+                if (smiley[y] & (1 << (7 - x))) {
+                    matrix.drawPixel(x, y, LED_ON);
+                }
+            }
+        }
+
+        
+        digitalWrite(DIR_PIN, LOW);
+        digitalWrite(EN_PIN, LOW);
+    }
+    else if (irany == "le")
+    {
+        uint8_t smiley[8] = {
+            B00000000,
+            B00010000,
+            B00010000,
+            B00010000,
+            B01111100,
+            B00111000,
+            B00010000,
+            B00000000
+        };
+
+        // Beállítjuk a pixeleket
+        for (uint8_t y = 0; y < 8; y++) {
+            for (uint8_t x = 0; x < 8; x++) {
+                if (smiley[y] & (1 << (7 - x))) {
+                    matrix.drawPixel(x, y, LED_ON);
+                }
+            }
+        }
+
+        digitalWrite(DIR_PIN, HIGH);
+        digitalWrite(EN_PIN, LOW);
+    }
+    else
+    {
+        uint8_t smiley[8] = {
+            B00000000,
+            B00000000,
+            B00000000,
+            B01111110,
+            B01111110,
+            B00000000,
+            B00000000,
+            B00000000
+        };
+
+        // Beállítjuk a pixeleket
+        for (uint8_t y = 0; y < 8; y++) {
+            for (uint8_t x = 0; x < 8; x++) {
+                if (smiley[y] & (1 << (7 - x))) {
+                    matrix.drawPixel(x, y, LED_ON);
+                }
+            }
+        }
+    
+        digitalWrite(EN_PIN, HIGH);
+    }
+
+    matrix.writeDisplay(); // Frissítjük a kijelzőt
+}
+```
