@@ -13,6 +13,7 @@
 
 **Tartalomjegyzék**
 -   [Eszközök](#️-eszközök-amikre-szükséged-lesz)
+-   [Eszközök](#️bekotes)
 -   [1. Feladat](#1-feladat---a-lift-mozgatása-és-alap-vezérlése)
 -   [2. Feladat](#2-feladat---egyéb-eszközök-csatlakozásának-tesztelése) 
 -   [3. Feladat](#3-feladat---a-lift-irányítása-gombokkal-fel-le-álj)
@@ -32,6 +33,22 @@
 - 8x8 LED mátrix 🔲💡
 - Végálláskapcsolók 🚫📍
 - Buzzer és LED 🔊💡
+
+---
+
+# Bekötés
+📷 Az alábbi ábra azt mutatja meg, hogyan vannak az egyes alkatrészek összekötve egymással. Ez segít abban, hogy jobban átlásd a rendszer felépítését és könnyebben eligazodj a bekötések között 🔌📚.
+
+⚠️ Fontos: mivel a projektet már összeszerelve kaptad meg, így nem kell semmit átkötnöd vagy módosítanod. Ez az ábra csak egy segédlet, hogy tudd:
+
+- melyik alkatrész hova csatlakozik,
+- és hogy melyik Arduino láb milyen funkciót lát el (például LED, szenzor, motor vezérlés stb.)
+
+🧾 A kódokban természetesen meg vannak adva a megfelelő pinek is, így ha bármi nem lenne egyértelmű, csak nézd meg a program elején a hozzárendeléseket!
+
+💡 Összefoglalva: ez az ábra nem kötelező, csak egy vizuális segítség, hogy magabiztosabban tudd használni a rendszert.
+
+<img src="./bekotes.png" width="100%" />
 
 ---
 
