@@ -150,3 +150,73 @@ void loop()
     delay(500);
 }
 ```
+
+# 3. feladat - A lift irányítása gombokkal (fel, le, álj)
+```cpp
+// A motor csatlakozói
+const int DIR_PIN = 10;
+const int STEP_PIN = 9;
+const int EN_PIN = 8;
+
+// Gombok
+const int BTN1 = 7;
+const int BTN2 = 6;
+const int BTN3 = 5;
+
+// Buzzer
+const int BUZZER_PIN = 12;
+
+// Minél nagyobb annál lassabb, de ne vedd túl lassúra mert akkor nem fog menni
+const int Sebesseg = 200;
+
+void IranyBeallitas(String);
+
+void setup() 
+{
+    // Soros port indítása
+    Serial.begin(9600);
+
+    // Csatlakozások beállítása kimenetire
+    pinMode(DIR_PIN, OUTPUT);
+    pinMode(STEP_PIN, OUTPUT);
+    pinMode(EN_PIN, OUTPUT);
+
+    // Kikapcsoljuk a motor működését
+    digitalWrite(EN_PIN, HIGH);
+
+    Serial.println("\n\nHello vilag");
+    delay(1000); // Várjunk 1 másodpercet
+}
+
+void loop() 
+{
+    if (digitalRead(BTN1) == LOW) IranyBeallitas("fel");
+    else if (digitalRead(BTN2) == LOW) IranyBeallitas("le");
+    else if (digitalRead(BTN3) == LOW) IranyBeallitas("kikapcs");
+
+    digitalWrite(STEP_PIN, HIGH);
+    delayMicroseconds(Sebesseg);
+    digitalWrite(STEP_PIN, LOW);
+    delayMicroseconds(Sebesseg);    
+}
+
+void IranyBeallitas(String irany = "fel")
+{
+    tone(BUZZER_PIN, 200, 200);
+
+    if (irany == "fel")
+    {
+        digitalWrite(DIR_PIN, LOW);
+        digitalWrite(EN_PIN, LOW);
+    }
+    else if (irany == "le")
+    {
+        digitalWrite(DIR_PIN, HIGH);
+        digitalWrite(EN_PIN, LOW);
+    }
+    else
+    {
+        digitalWrite(EN_PIN, HIGH);
+    }
+}
+```
