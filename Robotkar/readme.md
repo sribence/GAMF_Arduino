@@ -164,41 +164,49 @@ A robotkar precíz, ismételhető mozgásához elengedhetetlen a pontos vezérl�
 ```cpp
 #include <Servo.h>
 
-Servo szervo1;
-// Servo szervo2;
-// Servo szervo3;
-// Servo szervo4;
+// A szervó motorok (ábra szerint vannak betűvel ellátva)
+const int ServoPinA = 4;
+const int ServoPinB = 10;
+const int ServoPinC = 9;
+const int ServoPinD = 11;
+const int ServoPinE = 5;
+const int ServoPinF = 6;
+
+Servo szervoA;
+// Servo szervoB;
+// Servo szervoC;
+// Servo szervoD;
 
 const int MIN_PWM = 500;   // Minimum impulzus (0 fok)
 const int MAX_PWM = 2500;  // Maximum impulzus (180 fok)
 
 void setup() {
-  szervo1.attach(9);        // Szervó 1 a D9-re
-  // szervo2.attach(10);    // Szervó 2 a D10-re
-  // szervo3.attach(11);    // Szervó 3 a D11-re
-  // szervo4.attach(6);     // Szervó 4 a D6-ra
+  szervoA.attach(ServoPinA);        // Szervó 1 a D9-re
+  // szervoB.attach(ServoPinB);    // Szervó 2 a D10-re
+  // szervoC.attach(ServoPinC);    // Szervó 3 a D11-re
+  // szervoD.attach(ServoPinD);     // Szervó 4 a D6-ra
 }
 
-void loop() {
+void loop() 
+{
   int pot1 = analogRead(A0); // Potméter 1
   int pwm1 = map(pot1, 0, 1023, MIN_PWM, MAX_PWM);
-  szervo1.writeMicroseconds(pwm1); // Szervó 1 vezérlése
+  szervoA.writeMicroseconds(pwm1); // Szervó A vezérlése
 
   // int pot2 = analogRead(A1); // Potméter 2
   // int pwm2 = map(pot2, 0, 1023, MIN_PWM, MAX_PWM);
-  // szervo2.writeMicroseconds(pwm2); // Szervó 2 vezérlése
+  // szervoB.writeMicroseconds(pwm2); // Szervó B vezérlése
 
   // int pot3 = analogRead(A2); // Potméter 3
   // int pwm3 = map(pot3, 0, 1023, MIN_PWM, MAX_PWM);
-  // szervo3.writeMicroseconds(pwm3); // Szervó 3 vezérlése
+  // szervoC.writeMicroseconds(pwm3); // Szervó C vezérlése
 
   // int pot4 = analogRead(A3); // Potméter 4
   // int pwm4 = map(pot4, 0, 1023, MIN_PWM, MAX_PWM);
-  // szervo4.writeMicroseconds(pwm4); // Szervó 4 vezérlése
+  // szervoD.writeMicroseconds(pwm4); // Szervó D vezérlése
 
   delay(15); // Frissítési idő
 }
-
 ```
 
 ---
