@@ -509,6 +509,215 @@ Ez a projekt lehetővé teszi egy **4 tengelyes szervóvezérelt robotkar** vez�
 
 ---
 
+
+# 5. feladat
+
+## Előre beprogramozott pozíciók között váltás "simítva"
+
+Ebben a feladatban az a cél hogy előre megadott állásokba kell vezérelni a robotot de úgy, hogy mindegyik egy időpontban érkezzen a kívánt pozícióba.
+
+Mindemellett még implementáljuk az alapértelmezett működést amivel össze tudjuk majd hasonlítani a mi megoldásunkat.
+
+```cpp
+#include <Servo.h>
+
+// Mivel a kód kettő fajta mozgatást velósít meg 
+// így ezzel a váltózóval eldöntheted melyiket használod majd
+// true  -> simított mozgás
+// false -> alap mozgás
+const bool SimaMozgas = true;
+
+// A szervó motorok (ábra szerint vannak betűvel ellátva)
+const int ServoPinA = 4;
+const int ServoPinB = 10;
+const int ServoPinC = 9;
+const int ServoPinD = 11;
+const int ServoPinE = 5;
+const int ServoPinF = 6;
+
+// Az F motor limitje
+const int LimitF = 110; 
+
+// Potméterek
+const int Poti1 = A0;
+const int Poti2 = A1;
+const int Poti3 = A2;
+const int Poti4 = A3;
+
+// Szervó példányok
+Servo ServoA;
+Servo ServoB;
+Servo ServoC;
+Servo ServoD;
+Servo ServoE;
+Servo ServoF;
+
+// Mentett pozíciók
+// Egy sor jelenti az adott pozíciót (több motor állása)
+// és az oszlopokban pedig az adott szervók beállított szöge
+// FONTOS: egy sorban csak 6 érték lehet (mert ennyi motor van)
+//         de annyi sor amennyit szeretnénk (csak a memória szab határt)
+const int Poziciok[][6] = {
+    {10, 30, 20, 40, 50, 0},
+    {15, 20, 60, 20, 70, 100},
+    {30, 30, 70, 30, 20, 0},
+    {60, 20, 60, 10, 30, 100}
+};
+
+// A pozcízókat tároló tömb hosszának eltárolása
+int length = 0;
+
+// Eltároljuk az alap állapotot is, amit kiindulásnak és végpontnak használunk
+const int AlapPoziciok[6] = {100, 78, 63, 15, 110, 0};
+int AktualisPoziciok[6] = {0};
+
+void setup()
+{
+    // Soros port elindítása
+    Serial.begin(9600);
+
+    // A szervó példányok csatolása a csatlakozásokhoz
+    ServoA.attach(ServoPinA);
+    ServoB.attach(ServoPinB);
+    ServoC.attach(ServoPinC);
+    ServoD.attach(ServoPinD);
+    ServoE.attach(ServoPinE);
+    ServoF.attach(ServoPinF);
+
+    // A pozíciókat tároló tömb hosszának kiszámítása dinamikusan
+    length = sizeof(Poziciok) / (sizeof(int) * 6);
+
+    // Beállás alap állapotba
+    Mozgatas(AlapPoziciok);
+
+    // Megvárjuk a mozgást
+    delay(1000);
+}
+
+void loop()
+{
+    // Végigmegyünk az elmentett pozíciókon és kiírjuk a motorokra
+    // valamint egy értesítő üzenetet is a soros portra
+    for (int i = 0; i < length; i++)
+    {
+        Serial.println(String(i + 1) + ". allapotba mozgas . . .");
+
+        if (SimaMozgas)
+        {
+            SimaMozgatas(Poziciok[i]);
+        }
+        else
+        {
+            Mozgatas(Poziciok[i]);
+        }
+
+        delay(500);
+    }
+
+    // Szeparáló üzenet
+    Serial.println("--------------------------");
+
+    // Beállás alap állapotba
+    if (SimaMozgas)
+    {
+        SimaMozgatas(AlapPoziciok);
+    }
+    else
+    {
+        Mozgatas(AlapPoziciok);
+    }
+
+    // Megvárjuk, hogy a motorok befejezzék a mozgást mielött új parancsot adnánk
+    delay(1000);
+}
+
+void Mozgatas(int poz[6])
+{
+    // Az F motor limitjének vizsgálata
+    if (poz[5] > LimitF) poz[5] = LimitF;
+
+    // Csak szimplán kiírjuk az adatokat a motorokra és azok
+    // maguktól beállnak a helyükre
+    ServoA.write(poz[0]);
+    ServoB.write(poz[1]);
+    ServoC.write(poz[2]);
+    ServoD.write(poz[3]);
+    ServoE.write(poz[4]);
+    ServoF.write(poz[5]);
+
+    // Eltároljuk az új pozíciót jelenlegiként
+    for (int i = 0; i < 6; i++)
+        AktualisPoziciok[i] = poz[i];
+
+    // Megvárjuk, hogy a motorok befejezzék a mozgást mielött új parancsot adnánk
+    delay(1000);
+}
+
+void SimaMozgatas(int poz[6])
+{
+    // Az F motor limitjének vizsgálata
+    if (poz[5] > LimitF) poz[5] = LimitF;
+
+    // Lokálisan eltároljuk az aktuális pozíciót, a globálisat a végén fissítjük
+    // A lebegőpontos ábrázolás könnyíti majd a dolgunkat (float)
+    float LocalisAktualisPoziciok[6] = {};
+    for (int i = 0; i < 6; i++)
+        LocalisAktualisPoziciok[i] = AktualisPoziciok[i];
+
+    // Kiszámoljuk, hogy egy mozdulattal mennyit kell mozdulnia minden egyes motornak
+    // mindezt a legnagyobb mozdulathoz viszonyítva (a legnagyobb esetben 1 mozdulat 1 fokot jelent [1:1])
+    float MozdulatRata[6] = {};
+    int MaxElmozdulas = abs(poz[MaxErtekIndex(poz)] - LocalisAktualisPoziciok[MaxErtekIndex(poz)]);
+    for (int i = 0; i < 6; i++)
+    {
+        int Elmozdulas = abs(poz[i] - LocalisAktualisPoziciok[i]);
+        MozdulatRata[i] = 1.0 * Elmozdulas / MaxElmozdulas;
+    }
+
+    // Elmozdulás sok apró lépésben
+    for (int i = 0; i < MaxElmozdulas; i++)
+    {
+        // Hozzáadjuk az 1 lépés alatt megtett fokokat a pozícióhoz
+        for (int j = 0; j < 6; j++)
+        {
+            int szorzo = 1;
+            if (LocalisAktualisPoziciok[j] - poz[j] >= 0) szorzo  = -1; 
+            LocalisAktualisPoziciok[j] += MozdulatRata[j] * szorzo;
+
+        }
+
+        // Kiírjuk a pozíciót a motorokra
+        ServoA.write((int)LocalisAktualisPoziciok[0]);
+        ServoB.write((int)LocalisAktualisPoziciok[1]);
+        ServoC.write((int)LocalisAktualisPoziciok[2]);
+        ServoD.write((int)LocalisAktualisPoziciok[3]);
+        ServoE.write((int)LocalisAktualisPoziciok[4]);
+        ServoF.write((int)LocalisAktualisPoziciok[5]);
+
+        // Megvárjuk, hogy a motorok befejezzék a mozgást mielött új parancsot adnánk
+        // sok kicsi mozgás -> kisebb várakozás idő mozgásonként
+        delay(50);
+    }
+
+    // Eltároljuk az új pozíciót jelenlegiként
+    for (int i = 0; i < 6; i++)
+        AktualisPoziciok[i] = poz[i];
+}
+
+// Egyszerű maximum függvény (visszaadja a legnagyobb érték indexét)
+int MaxErtekIndex(const int poz[6])
+{
+    int max = 0;
+
+    for (int i = 0; i < sizeof(poz) / sizeof(int); i++)
+        if (poz[max] < poz[i]) 
+            max = i;
+
+    return max;
+}
+```
+
+---
 # Összefoglalás
 
 A valós robotkar.cpp kód sokkal többet tud, mint az alap potméteres vezérlés:
