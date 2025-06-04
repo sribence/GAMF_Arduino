@@ -233,7 +233,15 @@ A soros monitoron folyamatosan frissülő formában láthatjuk például:
 ```cpp
 #include <Servo.h>
 
-const int SZERVO_PIN[3] = {3, 5, 6};
+// A szervó motorok (ábra szerint vannak betűvel ellátva)
+const int ServoPinA = 4;
+const int ServoPinB = 10;
+const int ServoPinC = 9;
+const int ServoPinD = 11;
+const int ServoPinE = 5;
+const int ServoPinF = 6;
+
+const int SZERVO_PIN[3] = {ServoPinD, ServoPinE, ServoPinF};
 const int POT_PIN[3] = {A0, A1, A2};
 
 Servo szervok[3];
@@ -250,7 +258,7 @@ void loop() {
   int szogek[3];
 
   for (int i = 0; i < 3; i++) {
-    szogek[i] = map(analogRead(POT_PIN[i]), 0, 1023, 70, 140);
+    szogek[i] = map(analogRead(POT_PIN[i]), 0, 1023, 0, 100);
     szervok[i].write(szogek[i]);
   }
 
@@ -262,7 +270,7 @@ void loop() {
   Serial.print(" | S3: ");
   Serial.println(szogek[2]);
 
-  delay(500); // 0.5 másodperc frissítés
+  delay(50); // 0.05 másodperc frissítés
 }
 ```
 
