@@ -302,8 +302,16 @@ Az Arduino ezeket az értékeket beolvassa, és **lépésekben odamozgatja** a s
 ```cpp
 #include <Servo.h>
 
+// A szervó motorok (ábra szerint vannak betűvel ellátva)
+const int ServoPinA = 4;
+const int ServoPinB = 10;
+const int ServoPinC = 9;
+const int ServoPinD = 11;
+const int ServoPinE = 5;
+const int ServoPinF = 6;
+
 const int SZERVO_DB = 3;// Szervók száma
-const int SZERVO_LABAK[SZERVO_DB] = {9, 10, 11};// Szervók kimeneti lábai
+const int SZERVO_LABAK[SZERVO_DB] = {ServoPinC, ServoPinB, ServoPinD};// Szervók kimeneti lábai
 Servo szervok[SZERVO_DB];// Szervó objektumok tömbje
 float aktualis_szog[SZERVO_DB] = {90, 90, 90};// Aktuális szögértékek fokban
 float cel_szog[SZERVO_DB] = {90, 90, 90};// Cél szögértékek fokban
@@ -333,31 +341,6 @@ void loop() {
       soros_puffer += beolvasott_karakter; // Hozzáadjuk a karaktert a pufferhez
     }
   }
-}
-
-// A beolvasott bemenet feldolgozása: vesszővel tagolt számok → cél szögek
-void feldolgozBemenet(String bemenet) {
-  bemenet.trim();  // Szóközök eltávolítása
-
-  if (bemenet.length() == 0) return;  // Üres bemenet esetén kilép
-
-  // Bemenet darabolása és értékek mentése
-  for (int i = 0; i < SZERVO_DB; i++) {
-    int vesszo_poz = bemenet.indexOf(',');  // Megkeressük a következő vessző helyét
-    String ertek;
-
-    if (vesszo_poz != -1 && i < SZERVO_DB - 1) {
-      ertek = bemenet.substring(0, vesszo_poz);  // Első érték
-      bemenet = bemenet.substring(vesszo_poz + 1);  // A többit megtartjuk a következő körre
-    } else {
-      ertek = bemenet;  // Utolsó érték (vagy csak egy volt)
-    }
-
-    // Átalakítjuk float típusra, és korlátozzuk 0–180 fok közé
-    cel_szog[i] = constrain(ertek.toFloat(), 0, 180);
-  }
-
-  mozgasKoordinaltan();  // Elindítjuk a mozgást a cél szögek felé
 }
 
 // Koordinált, lépésenkénti mozgás minden szervóval egyszerre
@@ -392,6 +375,31 @@ void mozgasKoordinaltan(int kesleltetes_ms = 15) {
     if (i < SZERVO_DB - 1) Serial.print(", ");
   }
   Serial.println();
+}
+
+// A beolvasott bemenet feldolgozása: vesszővel tagolt számok → cél szögek
+void feldolgozBemenet(String bemenet) {
+  bemenet.trim();  // Szóközök eltávolítása
+
+  if (bemenet.length() == 0) return;  // Üres bemenet esetén kilép
+
+  // Bemenet darabolása és értékek mentése
+  for (int i = 0; i < SZERVO_DB; i++) {
+    int vesszo_poz = bemenet.indexOf(',');  // Megkeressük a következő vessző helyét
+    String ertek;
+
+    if (vesszo_poz != -1 && i < SZERVO_DB - 1) {
+      ertek = bemenet.substring(0, vesszo_poz);  // Első érték
+      bemenet = bemenet.substring(vesszo_poz + 1);  // A többit megtartjuk a következő körre
+    } else {
+      ertek = bemenet;  // Utolsó érték (vagy csak egy volt)
+    }
+
+    // Átalakítjuk float típusra, és korlátozzuk 0–180 fok közé
+    cel_szog[i] = constrain(ertek.toFloat(), 0, 180);
+  }
+
+  mozgasKoordinaltan();  // Elindítjuk a mozgást a cél szögek felé
 }
 ```
 
