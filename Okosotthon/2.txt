@@ -60,9 +60,11 @@ void Alarmed() {
 
 void Armed() {
     if (IsFlameDetected) {
-        currentState = ALARMED;
+        currentState = ALARMED; 
     }
 }
+// Ha nem működik próbáld ki így: if(!IsFlameDetected) { currentState = ALARMED; }
+
 
 void DetectFlame()
 {
