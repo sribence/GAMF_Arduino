@@ -65,7 +65,7 @@ Feladat leírása:
 
 Ez a feladat segít megérteni a digitális bemenetek (gombok) és a digitális kimenetek (LED) működését, valamint a feltételes vezérlést.
 
-## 3. feladat - szervó motor bekotése és vezértlése
+## 3. feladat - szervó motor bekötése és vezérlése
 
 🧠 A legnehezebb feladat – Szervóvezérlés gombokkal és LED-del
 
