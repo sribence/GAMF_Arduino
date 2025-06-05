@@ -36,4 +36,19 @@ Az alábbi linken találjátok az eszközökhöz tartozó dokumentációt. Ebben
 
 ## 1. feladat - egyszerű LED vezérlése
 
+Ebben a feladatban kösd be a LED-et, majd írj olyan programot, ami a következő mintát hajtja végre:
 
+1. A LED gyorsan kétszer felvillan – vagyis:
+  - Kapcsold fel a LED-et,
+  - rövid idő múlva kapcsold le,
+  - kis szünet,
+  - ismét kapcsold fel és le gyorsan.
+
+    Ezután várj egy hosszabb szünetet.
+
+    Ez a mintázat ismétlődjön folyamatosan.
+
+A cél tehát: gyors villogás → szünet → gyors villogás → szünet... és így tovább.
+## 2. feladat - gombok használata
+
+## 3. feladat - szervó motor bekotése és vezértlése
