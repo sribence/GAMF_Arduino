@@ -17,9 +17,9 @@
 **Tartalomjegyzék:**
 - [Alkatrészek](#-alkatrészek)
 - [Teszt](#-teszt)
-- [Ultrahangos érzékelő](#-ultrahangos-érzékelő-működése)
-- [Osoyoo sensor](#-osoyoo-sensor-működése)
-- [Teljese kisautó](#-a-teljes-rendszer-egyben)
+- [Ultrahangos érzékelő](#ultrahangos-érzékelő-működése)
+- [Osoyoo sensor](#osoyoo-sensor-működése)
+- [Teljese kisautó](#a-teljes-rendszer-egyben)
 - [Plusz feladat](#-extra-feladat)
 
 ---
