@@ -17,10 +17,10 @@
 **Tartalomjegyzék:**
 - [Alkatrészek](#-alkatrészek)
 - [Teszt](#-teszt)
-- [Ultrahangos érzékelő](#)
-- [Osoyoo senzor](#)
-- [Teljese kisautó](#)
-- [Plusz feladat](#)
+- [Ultrahangos érzékelő](#-ultrahangos-érzékelő-működése)
+- [Osoyoo senzor](#-osoyoo-senzor-működése)
+- [Teljese kisautó](#-a-teljes-rendszer-egyben)
+- [Plusz feladat](#-extra-feladat)
 
 ---
 # 🔧 Alkatrészek:
@@ -99,6 +99,9 @@ void loop()
 # Osoyoo senzor működése:
 
 ---
+# A teljes rendszer egyben:
 
+---
+# Extra feladat:
 
 
