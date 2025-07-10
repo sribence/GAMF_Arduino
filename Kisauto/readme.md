@@ -18,7 +18,7 @@
 - [Alkatrészek](#-alkatrészek)
 - [Teszt](#-teszt)
 - [Ultrahangos érzékelő](#-ultrahangos-érzékelő-működése)
-- [Osoyoo senzor](#-osoyoo-senzor-működése)
+- [Osoyoo sensor](#-osoyoo-sensor-működése)
 - [Teljese kisautó](#-a-teljes-rendszer-egyben)
 - [Plusz feladat](#-extra-feladat)
 
@@ -27,7 +27,7 @@
 
 - 🚗 Félig összerakott kisautó – a váz és néhány alkatrész már a helyén van
 - 📡 Ultrahangos távolságérzékelő egy 🤖 szervómotorra rögzítve – akadályok észlelésére
-- 🔍 Oyoso vonalkövető szenzor – már be van kötve az 🔌 Arduino vezérlőbe
+- 🔍 Oyoso vonalkövető sensor – már be van kötve az 🔌 Arduino vezérlőbe
 
 ---
 # 🧪 Teszt:
@@ -96,7 +96,7 @@ void loop()
 ````
 
 ---
-# Osoyoo senzor működése:
+# Osoyoo sensor működése:
 
 ---
 # A teljes rendszer egyben:
