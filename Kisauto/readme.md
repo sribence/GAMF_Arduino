@@ -16,9 +16,9 @@
 ---
 **Tartalomjegyzék:**
 - [Alkatrészek](#-alkatrészek)
-- [Teszt](#)
+- [Teszt](#-teszt)
 - [Ultrahangos érzékelő](#)
-- [Oyoso senzor](#)
+- [Osoyoo senzor](#)
 - [Teljese kisautó](#)
 - [Plusz feladat](#)
 
@@ -49,7 +49,14 @@ A fájlokat fent le tudjátok tölteni. 📁⬇️
 - 🔋 Kapcsoljátok be az akkumulátort a kisautón
 - 🔘 A bekapcsoló gomb azon az oldalon található, ahol két kábel kilóg
 
+---
+# Ultrahangos érzékelő működése:
 
+
+---
+# Osoyoo senzor működése:
+
+---
 
 
 
