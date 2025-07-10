@@ -134,3 +134,5 @@ Az autó képes legyen érzékelni a vonalat, fordulni, ha letér róla, és vis
 - A forráskód működőképes és érthető.
 - Legalább egy bemutató tesztkör sikeres lefuttatása.
 
+> Ehhez már nem adunk példakódot. Az elkészült kódot kell kiegészíteni.
+> Egy kis segítség hozzá: https://docs.keyestudio.com/projects/KS5005/en/latest/docs/Arduino/Arduino.html#projects
