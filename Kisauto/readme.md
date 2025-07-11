@@ -106,7 +106,7 @@ void loop()
 Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
 
 Vonalkövető kisautó építése és programozása IR kommunikációval
-**📌 Feladatleírás:** A projekt célja egy önállóan működő, vonalkövető kisautó megtervezése, megépítése és programozása, amely képes követni egy fekete színű vonalat a világos felületen, és kommunikálni más eszközökkel vagy autókkal infravörös (IR) jeleken keresztül.
+**📌 Feladatleírás:** A projekt célja egy önállóan működő, vonalkövető kisautó megtervezése, megépítése és programozása, amely képes követni egy fekete színű vonalat a világos felületen, és kommunikálni más eszközökkel vagy autókkal infravörös (IR) jeleken keresztül. A szükséges alkatrészeket kérjétek el tőlünk! 🤓
 
 **🎯 A projekt célja:** Egy egyszerű, de megbízható robotautó megépítése, amely követi a földre ragasztott fekete csíkot. 
 Az autó képes legyen érzékelni a vonalat, fordulni, ha letér róla, és visszatalálni. Beépíteni egy IR adó-vevőt (transmitter & receiver), amelyen keresztül az autó adatot képes küldeni vagy fogadni – például akadály észlelése, másik robot jelenléte, vagy start/stop jelzések.
