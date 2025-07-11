@@ -130,34 +130,37 @@ Példakód:
 ````cpp
 #define DELAY_TIME 80 
 
-#define sr1 A4 // bal szenzor
-#define sr2 A3 // bal 2 szenzor
-#define sr3 A2 // középső szenzor
-#define sr4 A1 // jobb 2 szenzor
-#define sr5 A0 // jobb szenzor
+#define sensor1 A4 // bal szenzor
+#define sensor2 A3 // bal 2 szenzor
+#define sensor3 A2 // középső szenzor
+#define sensor4 A1 // jobb 2 szenzor
+#define sensor5 A0 // jobb szenzor
 
+void init_GPID()
+{
+  pinMode(sensor1, INPUT);  // bemeneti módba áll az 1. szenzor
+  pinMode(sensor2, INPUT);  // bemeneti módba áll a 2. szenzor
+  pinMode(sensor3, INPUT);  // bemeneti módba áll a 3. szenzor
+  pinMode(sensor4, INPUT);  // bemeneti módba áll a 4. szenzor
+  pinMode(sensor5, INPUT);  // bemeneti módba áll az 5. szenzor
+}
 void setup() {
-  pinMode(sr1, INPUT);  // bemeneti módba áll az sr1
-  pinMode(sr2, INPUT);  // bemeneti módba áll az sr2
-  pinMode(sr3, INPUT);  // bemeneti módba áll az sr3
-  pinMode(sr4, INPUT);  // bemeneti módba áll az sr4
-  pinMode(sr5, INPUT);  // bemeneti módba áll az sr5
-
+  Serial.begin(init_GPID);
   Serial.begin(9600);
 }
 
 void loop() {
-  kovetes();   // nyomon követés függvénye
+  tracking();   // nyomon követés függvénye
 }
 
-void kovetes()
+void tracking()
 {
   String senstr="";
-  int s0 = !digitalRead(sr1);
-  int s1 = !digitalRead(sr2);
-  int s2 = !digitalRead(sr3);
-  int s3 = !digitalRead(sr4);
-  int s4 = !digitalRead(sr5);
+  int s0 = !digitalRead(sensor1);
+  int s1 = !digitalRead(sensor2);
+  int s2 = !digitalRead(sensor3);
+  int s3 = !digitalRead(sensor4);
+  int s4 = !digitalRead(sensor5);
   int sensorvalue=32;
 
   sensorvalue +=s0*16+s1*8+s2*4+s3*2+s4;
