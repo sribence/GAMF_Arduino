@@ -43,6 +43,9 @@
 🧰 Tesztkód
 Készítettünk egy tesztkódot, amivel a kisautó különböző kerekeinek működését lehet kipróbálni. 🛞⚙️
 A fájlokat fent le tudjátok tölteni. 📁⬇️
+- CarController.cpp
+- CarController.h
+- ExampleProgram.ino
 
 > 📌 A három fájlnak egy mappában kell lennie, erre figyeljetek!
 ▶️ Ha a .ino fájlt elindítjátok, és minden megfelelően be van kötve:
@@ -60,7 +63,6 @@ A szenzor ultrahangos jeleket bocsát ki 🔊, amelyeket az emberek nem hallanak
 Az ultrahangos érzékelő modul 2 cm–450 cm közötti érintés nélküli mérési távolságot biztosít 📏➖📏, a mérési pontossága pedig akár 3 mm is lehet 🎯, ami kiválóan megfelel a hétköznapi igényeknek ✅. A modul tartalmaz egy ultrahangos adót és vevőt, valamint a hozzájuk tartozó vezérlőáramkört ⚙️🔌.
 
 Példakód:
-
 ````cpp
 //**********************************************************************************
 
@@ -97,6 +99,8 @@ void loop()
 
 ---
 # Osoyoo sensor működése:
+
+
 
 ---
 # A teljes rendszer egyben:
@@ -135,4 +139,9 @@ Az autó képes legyen érzékelni a vonalat, fordulni, ha letér róla, és vis
 - Legalább egy bemutató tesztkör sikeres lefuttatása.
 
 > Ehhez már nem adunk példakódot. Az elkészült kódot kell kiegészíteni.
+>
+> 
 > Egy kis segítség hozzá: https://docs.keyestudio.com/projects/KS5005/en/latest/docs/Arduino/Arduino.html#projects
+>
+> 
+> Ha pedig jobban érdekel a kisautó működése: https://osoyoo.com/2019/11/08/omni-direction-mecanum-wheel-robotic-kit-v1/
