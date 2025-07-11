@@ -96,7 +96,57 @@ void loop()
 }
 //**********************************************************************************
 ````
+---
+Továbbgondolva: 📄 Szervómotor mozgatása oda-vissza tengely mentén  
 
+**🎯 Feladat célja:** Készíts egy Arduino programot, amely egy szervómotort folyamatosan mozgat egy adott szögtartományban (pl. 0°–180°), és amikor eléri a határértékeket, automatikusan visszafordul.
+
+**⚙️ Feladat működése:** Egy szervómotort csatlakoztatsz az Arduino D4 kimenetére. A szervó feje fokozatosan mozog a minSzog és maxSzog (pl. 0 és 180 fok) között. Amikor eléri a határt (0 vagy 180 fok), a program irányt vált, így a mozgás oda-vissza pásztázássá válik. A mozgás folytonos és finom, mivel kis lépésekkel halad (delay(20) lassítással).
+
+Példakód:
+````cpp
+#include <Servo.h>
+
+unsigned long lastServoMove = 0;
+unsigned long lastUltrasPing = 0;
+unsigned long lastTracking = 0;
+
+// időintervallumok (ezeket testre szabhatod)
+const unsigned long servoInterval = 70;    // szervó mozgás gyakorisága
+const unsigned long ultrasInterval = 300;  // ultrahang frissítés gyakorisága
+const unsigned long trackingInterval = 50; // sorkövetés gyakorisága
+
+Servo szervo;
+
+int poz = 0;           // aktuális szög
+int irany = 1;         // 1 = növekvő, -1 = csökkenő
+int minSzog = 0;
+int maxSzog = 180;
+
+void setup() {
+  szervo.attach(4); // szervó jelvezetéke a D4-re ( eredetileg s-re van kötve, de át van vezetve D4-re )
+}
+
+void loop() {
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - lastServoMove >= servoInterval) {
+    lastServoMove = currentMillis;
+    i_servo();  // szervó mozgatás időzítve
+  }
+}
+
+void i_servo()
+{
+  servo.write(poz);        // szervó aktuális pozíció
+  poz += irany;            // irányváltás
+
+  if (poz >= maxszog || poz <= minszog) {
+    irany = -irany;
+  }
+}
+````
+> ⚠️ Érdemes együtt a két kódot összeépíteni és úgy is kipróbálni! 🤓
 ---
 # Osoyoo sensor működése:
 **🎯 Feladat célja:** Valósíts meg egy egyszerű szenzorlogikát egy vonalkövető robothoz, amely 5 digitális infravörös érzékelő segítségével képes értelmezni a vonal pozícióját, és szövegesen visszajelez az aktuális mozgásirányról a soros monitoron keresztül.
@@ -239,6 +289,48 @@ void tracking()
 ````
 ---
 # A teljes rendszer egyben:
+**🎯 Projekt célja:** A feladat egy Arduino-alapú, négy Mecanum kerékkel szerelt mobil robot megépítése és programozása, amely képes:
+- egy 5-pontos infravörös szenzorsor segítségével fekete vonalat követni különböző irányváltásokkal,
+- egy szervóra szerelt ultrahangos távolságmérő segítségével akadályokat érzékelni és pásztázni a környezetet,
+- valós időben reagálni az útvonal változásaira és akadályokra.
+
+**⚙️ Fő funkciók:**
+1. Sorkövetés (Line Following):
+- Az A0–A4 bemenetekre kötött szenzorok érzékelik a fekete vonalat fehér háttéren.
+- A szenzorok jelei alapján a robot különböző irányokba tér ki:
+- Slight Left / Right: kismértékű korrekció
+- Sharp Turn: hirtelen irányváltás
+- Forward: egyenes haladás
+- Reverse: ha nincs érzékelhető vonal
+
+2. Szervós pásztázás:
+- Egy szervóra rögzített ultrahangos szenzor 180°-ban folyamatosan pásztáz.
+- A szervó mozgása i_servo() függvényben történik, szabályozott sebességgel.
+
+3. Ultrahangos távolságmérés:
+- A trigpin() függvény aktiválja az ultrahangos mérést.
+- A mért távolság sorosan (Serial Monitor) jelenik meg, és alkalmas jövőbeli akadályelkerülés fejlesztéséhez.
+
+4. Sebességszabályozás:
+- A robot mozgását LOW_SPEED, MID_SPEED és HIGH_SPEED konstansok határozzák meg (értékük: 20–30).
+- Az egyes kerékirányok és sebességek külön vezérelhetők.
+
+**⏱️ Időzített működés:**
+A fő loop() függvény időalapú vezérléssel hívja meg:
+- a szervó mozgatást (servoInterval)
+- az ultrahang mérést (ultrasInterval)
+- a sorkövetést (trackingInterval)
+Ez biztosítja, hogy az eszköz folyamatosan, de szabályozott sebességgel működjön.
+
+**🧠 Logikai működés összefoglalva:**
+| Szenzorok állapota (binárisan) | Értelmezés | Végrehajtott művelet |
+| ------------------------------ | ---------- | -------------------- |
+| 01110, 00100, stb. | Középen van a vonal | Előre halad (forward) |
+| 00001, 00010, stb. | Jobbra tér el a vonal | Jobbra fordul vagy shiftel |
+| 10000, 01000, stb. | Balra tér el a vonal | Balra fordul vagy shiftel |
+| 00000 | Nincs vonal érzékelve | Hátramenet (reverse) |
+| 11111 | Összes szenzor aktív | Éles forduló jobbra |
+
 
 ---
 # 🏆 Extra feladat:
