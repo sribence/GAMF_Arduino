@@ -99,9 +99,141 @@ void loop()
 
 ---
 # Osoyoo sensor működése:
+**🎯 Feladat célja:** Valósíts meg egy egyszerű szenzorlogikát egy vonalkövető robothoz, amely 5 digitális infravörös érzékelő segítségével képes értelmezni a vonal pozícióját, és szövegesen visszajelez az aktuális mozgásirányról a soros monitoron keresztül.
 
+**⚙️ Rövid leírás:** A robot 5 érzékelőt használ (balról jobbra: sr1–sr5), amelyek bináris értékeket szolgáltatnak (1 ha vonalat érzékel, 0 ha nem). A kód kiolvassa az érzékelők állapotát, majd a kapott bináris mintázat alapján meghatározza a javasolt irányt:
+- Balra vagy jobbra fordulás
+- Kissé balra/jobbra tartás
+- Egyenes haladás
+- Visszafordulás (U-turn)
 
+**📌 Feladat részletei:** 
+Érzékelők inicializálása:
+- Állítsd be az 5 érzékelőt bemeneti módban a setup() függvényben.
+- Indítsd el a soros kommunikációt Serial.begin(9600) paranccsal.
 
+Érzékelőadatok beolvasása:
+- Olvasd ki a digitális értékeket az 5 szenzorból.
+- Alakítsd az értékeket egy 5 bites bináris mintává.
+- Fordítsd meg az értéket logikailag (!digitalRead()), ha a szenzor LOW jellel jelez vonalat.
+
+Mozgásirány meghatározása:
+- A bináris érték alapján döntsd el, hogy a robotnak milyen irányba kellene mozognia.
+- Írd ki az irányt a soros monitorra a Serial.println() segítségével.
+
+Időzítés:
+- Használj delay()-t a kiértékelések között a stabil működéshez.
+
+**🧪 Tesztelési javaslatok:** Próbáld ki különböző bináris mintákra (pl. 00100, 11100, 00001, 11111), és figyeld meg, hogy a kiírt mozgásirány megfelel-e a várt viselkedésnek.
+
+Példakód:
+````cpp
+#define DELAY_TIME 80 
+
+#define sr1 A4 // bal szenzor
+#define sr2 A3 // bal 2 szenzor
+#define sr3 A2 // középső szenzor
+#define sr4 A1 // jobb 2 szenzor
+#define sr5 A0 // jobb szenzor
+
+void setup() {
+  pinMode(sr1, INPUT);  // bemeneti módba áll az sr1
+  pinMode(sr2, INPUT);  // bemeneti módba áll az sr2
+  pinMode(sr3, INPUT);  // bemeneti módba áll az sr3
+  pinMode(sr4, INPUT);  // bemeneti módba áll az sr4
+  pinMode(sr5, INPUT);  // bemeneti módba áll az sr5
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  kovetes();   // nyomon követés függvénye
+}
+
+void kovetes()
+{
+  String senstr="";
+  int s0 = !digitalRead(sr1);
+  int s1 = !digitalRead(sr2);
+  int s2 = !digitalRead(sr3);
+  int s3 = !digitalRead(sr4);
+  int s4 = !digitalRead(sr5);
+  int sensorvalue=32;
+
+  sensorvalue +=s0*16+s1*8+s2*4+s3*2+s4;
+
+  senstr= String(sensorvalue,BIN);
+  senstr=senstr.substring(1,6);
+
+  Serial.print(senstr);
+  Serial.print("\t");
+ 
+ // A 0 és 1 itt biteket jelentenek. Ha 0 akkor nem érzékel semmit (ekkor világít a led ), ha 1 akkor érzékel
+ // || - vagy reláció. Valamelyik feltételnek teljesülni kell
+
+  // Balra fordulás
+  if ( senstr=="10000" || senstr=="01000" || senstr=="11000")
+  {
+     Serial.println("Shift Left");
+     delay(DELAY_TIME);    
+  }
+   
+  // Balra tartás
+  if ( senstr=="11100" || senstr=="10100" )
+  {
+     Serial.println("Slight Shift to Left");
+     delay(DELAY_TIME);
+  }
+
+  // Enyhe balra tartás
+  if ( senstr=="01100" ||  senstr=="11110"  || senstr=="10010"  || senstr=="10110"  || senstr=="11010")
+  {
+     Serial.println("Slight Left");
+     delay(DELAY_TIME);
+  }
+
+  // Előre 
+  if (senstr=="01110" || senstr=="01010" || senstr=="00100"  || senstr=="10001"  || senstr=="10101"  || senstr=="10011" || senstr=="11101" || senstr=="10111" || senstr=="11011"  || senstr=="11001")
+  {
+     Serial.println("Forward");
+     delay(DELAY_TIME);
+  }
+
+  // Enyhe jobbra tartás
+  if ( senstr=="00110" || senstr=="01111" || senstr=="01001" || senstr=="01011" || senstr=="01101")
+  {
+     Serial.println("Slit Right");
+     delay(DELAY_TIME);
+  }
+
+  // Jobbra tartás
+  if (senstr=="00111" || senstr=="00101" )
+  {    
+     Serial.println("Slight Shift to Right");
+     delay(DELAY_TIME);
+  }
+
+  // Jobbra kanyarodás
+  if (senstr=="00001" || senstr=="00010" || senstr=="00011")
+  {
+     Serial.println("Shift Right");
+     delay(DELAY_TIME);
+  }
+
+  // Folyamatosan halad előre
+  if (  senstr=="00000")
+  {
+     delay(DELAY_TIME/2*3); 
+  }
+
+  // Visszafordul
+  if (  senstr=="11111")
+  {
+     Serial.println("Sharp Right U Turn");
+     delay(DELAY_TIME);  
+  }
+}
+````
 ---
 # A teljes rendszer egyben:
 
@@ -138,10 +270,6 @@ Az autó képes legyen érzékelni a vonalat, fordulni, ha letér róla, és vis
 - A forráskód működőképes és érthető.
 - Legalább egy bemutató tesztkör sikeres lefuttatása.
 
-> Ehhez már nem adunk példakódot. Az elkészült kódot kell kiegészíteni.
->
-> 
-> Egy kis segítség hozzá: https://docs.keyestudio.com/projects/KS5005/en/latest/docs/Arduino/Arduino.html#projects
->
-> 
+> Ehhez már nem adunk példakódot. Az elkészült kódot kell kiegészíteni.   
+> Egy kis segítség hozzá: https://docs.keyestudio.com/projects/KS5005/en/latest/docs/Arduino/Arduino.html#projects  
 > Ha pedig jobban érdekel a kisautó működése: https://osoyoo.com/2019/11/08/omni-direction-mecanum-wheel-robotic-kit-v1/
