@@ -68,6 +68,7 @@ Példakód:
 
 const int TrigPin = 31; // Trig megadása, melyik lábra van kötve
 const int EchoPin = 30; // Echo megadása, melyik lábra van kötve
+
 int duration = 0; // Állítsd be a 'duration' (időtartam) kezdeti értékét 0-ra
 int distance = 0;// Állítsd be a 'distance' (távolság) kezdeti értékét 0-ra
 
@@ -108,20 +109,15 @@ Példakód:
 #include <Servo.h>
 
 unsigned long lastServoMove = 0;
-unsigned long lastUltrasPing = 0;
-unsigned long lastTracking = 0;
+unsigned long lastPing = 0;
 
-// időintervallumok (ezeket testre szabhatod)
-const unsigned long servoInterval = 70;    // szervó mozgás gyakorisága
-const unsigned long ultrasInterval = 300;  // ultrahang frissítés gyakorisága
-const unsigned long trackingInterval = 50; // sorkövetés gyakorisága
+const unsigned long servoInterval = 15;  // szervó frissítés ideje ms-ben
+const unsigned long pingInterval = 300;  // ultrahangos szenzor frissítése ms-ben
 
 Servo szervo;
 
-int poz = 0;           // aktuális szög
-int irany = 1;         // 1 = növekvő, -1 = csökkenő
-int minSzog = 0;
-int maxSzog = 180;
+int servoPos = 0;     // szervó pozíció
+int servoDir = 1;     // mozgás iránya: 1 növekvő, -1 csökkenő
 
 void setup() {
   szervo.attach(4); // szervó jelvezetéke a D4-re ( eredetileg s-re van kötve, de át van vezetve D4-re )
@@ -130,19 +126,32 @@ void setup() {
 void loop() {
   unsigned long currentMillis = millis();
 
+  // Szervó mozgatása időzítve
   if (currentMillis - lastServoMove >= servoInterval) {
     lastServoMove = currentMillis;
-    i_servo();  // szervó mozgatás időzítve
+    servo.write(servoPos);
+    servoPos += servoDir;
+    if (servoPos >= 180 || servoPos <= 0) {
+      servoDir = -servoDir;  // irányváltás oda-vissza
+    }
   }
-}
 
-void i_servo()
-{
-  servo.write(poz);        // szervó aktuális pozíció
-  poz += irany;            // irányváltás
+  // Ultrahangos szenzor mérés időzítve
+  if (currentMillis - lastPing >= pingInterval) {
+    lastPing = currentMillis;
 
-  if (poz >= maxszog || poz <= minszog) {
-    irany = -irany;
+    digitalWrite(TrigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(TrigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(TrigPin, LOW);
+
+    duration = pulseIn(EchoPin, HIGH);
+    distance = (duration / 2) / 28.5;
+
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
   }
 }
 ````
