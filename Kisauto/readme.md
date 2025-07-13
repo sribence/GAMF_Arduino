@@ -340,7 +340,7 @@ Ez biztosítja, hogy az eszköz folyamatosan, de szabályozott sebességgel műk
 | 00000 | Nincs vonal érzékelve | Hátramenet (reverse) |
 | 11111 | Összes szenzor aktív | Éles forduló jobbra |
 
-
+> Ha kell egy kis segítség hozzá a kisauto.ino fájlban találod.
 ---
 # 🏆 Extra feladat:
 Ha elkészült az alap projekt, és van kedved feltúrbózni, itt egy gondolkodós kihívás! 🤔
