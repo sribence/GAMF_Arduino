@@ -107,52 +107,65 @@ Továbbgondolva: 📄 Szervómotor mozgatása oda-vissza tengely mentén
 Példakód:
 ````cpp
 #include <Servo.h>
+#include <NewPing.h>
+
+const int TrigPin = 31;
+const int EchoPin = 30; 
+const int MaxDistance = 200; // in cm
 
 unsigned long lastServoMove = 0;
 unsigned long lastPing = 0;
 
-const unsigned long servoInterval = 15;  // szervó frissítés ideje ms-ben
+const unsigned long servoInterval = 200;  // szervó frissítés ideje ms-ben
 const unsigned long pingInterval = 300;  // ultrahangos szenzor frissítése ms-ben
 
 Servo szervo;
 
-int servoPos = 0;     // szervó pozíció
-int servoDir = 1;     // mozgás iránya: 1 növekvő, -1 csökkenő
+int servoPos = 0;      // szervó pozíció
+int servoDir = 10;     // mozgás iránya: 1 növekvő, -1 csökkenő
 
-void setup() {
-  szervo.attach(4); // szervó jelvezetéke a D4-re ( eredetileg s-re van kötve, de át van vezetve D4-re )
+NewPing sonar(TrigPin, EchoPin, MaxDistance);
+
+void setup() 
+{
+    Serial.begin(9600);
+    szervo.attach(4); // szervó jelvezetéke a D4-re ( eredetileg s-re van kötve, de át van vezetve D4-re )
+    pinMode(TrigPin, OUTPUT);
+    pinMode(EchoPin, INPUT);
 }
 
-void loop() {
-  unsigned long currentMillis = millis();
+void loop() 
+{
+    unsigned long currentMillis = millis();
 
-  // Szervó mozgatása időzítve
-  if (currentMillis - lastServoMove >= servoInterval) {
-    lastServoMove = currentMillis;
-    servo.write(servoPos);
-    servoPos += servoDir;
-    if (servoPos >= 180 || servoPos <= 0) {
-      servoDir = -servoDir;  // irányváltás oda-vissza
+    // Szervó mozgatása időzítve
+    if (currentMillis - lastServoMove >= servoInterval) 
+    {
+        lastServoMove = currentMillis;
+        szervo.write(servoPos);
+        servoPos += servoDir;
+        if (servoPos >= 180 || servoPos <= 0) {
+            servoDir *= -1;  // irányváltás oda-vissza
+        }
     }
-  }
 
-  // Ultrahangos szenzor mérés időzítve
-  if (currentMillis - lastPing >= pingInterval) {
-    lastPing = currentMillis;
+    // Ultrahangos szenzor mérés időzítve
+    if (currentMillis - lastPing >= pingInterval) 
+    {
+        lastPing = currentMillis;
 
-    digitalWrite(TrigPin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(TrigPin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(TrigPin, LOW);
-
-    duration = pulseIn(EchoPin, HIGH);
-    distance = (duration / 2) / 28.5;
-
-    Serial.print("Distance: ");
-    Serial.print(distance);
-    Serial.println(" cm");
-  }
+        unsigned int distance = sonar.ping_cm();
+        if (distance == 0) 
+        {
+            Serial.println("No echo (timeout)");
+        } 
+        else 
+        {
+            Serial.print("Distance: ");
+            Serial.print(distance);
+            Serial.println(" cm");
+        }
+    }
 }
 ````
 > ⚠️ Érdemes együtt a két kódot összeépíteni és úgy is kipróbálni! 🤓
