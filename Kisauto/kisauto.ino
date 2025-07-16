@@ -50,11 +50,17 @@
 #define sensor5 A0 // Jobb szélső
 
 #include <Servo.h> // Szervó vezérléséhez szükséges könyvtár
+#include <NewPing.h>
 
 Servo servo; // Szervó példány létrehozása
 
 const int TrigPin = 31; // Ultrahangos szenzor trigger láb
 const int EchoPin = 30; // Ultrahangos szenzor echo láb
+const int pingInterval = 200;
+int lastPing;
+bool VanAkadaly = false;
+
+NewPing sonar(TrigPin, EchoPin, 40);
 
 int duration = 0; // A visszaverődő jel időtartama
 int distance = 0; // Távolság centiméterben
@@ -292,26 +298,15 @@ void init_servo()
 void setup()
 {
     Serial.begin(9600); // soros port megnyitása a debughoz, 9600 baud sebességgel
-    // init_servo();       // szervó inicializálása (pl. távolságméréshez forgatható érzékelő)
+    init_servo();       // szervó inicializálása (pl. távolságméréshez forgatható érzékelő)
     // init_ultras();      // ultrahangos szenzor (távolságmérés) inicializálása
     init_GPIO();        // motorvezérlő és szenzor lábak beállítása
-
-    forward(100,100);
-    delay(3000);
-    reverse(100);
-    delay(3000);
-    sharpLeftTurn(60, 100);
-    delay(3000);
-    sharpRightTurn(100, 60);
-    delay(3000);
-    stop_bot();
-    delay(3000);
 }
 
 void loop()
 {
     // i_servo();    // szervó működtetése (jelenleg csak delay, de bővíthető)
-    // trigpin();    // ultrahangos érzékelő lekérdezése (távolságmérés)
+    trigpin();
     tracking(); // vonalkövetés (fő logika)
 }
 
@@ -320,28 +315,33 @@ void i_servo()
     delay(150); // jelenleg csak egy rövid késleltetés (lehet ide mozgatást, pásztázást tenni)
 }
 
-void trigpin()
+bool trigpin()
 {
-    // trigger impulzus küldése
-    digitalWrite(TrigPin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(TrigPin, LOW);
+    if (millis() - lastPing >= pingInterval) 
+    {
+        lastPing = millis();
 
-    // visszaverődött jel ideje
-    duration = pulseIn(EchoPin, HIGH);
-
-    // távolság kiszámítása cm-ben (hangsebesség alapján)
-    distance = (duration / 2) / 28.5;
-
-    // kiírás a soros monitorra
-    Serial.print("Distance: ");
-    Serial.print(distance);
-    Serial.print(" cm\t");
-    Serial.print("\t");
+        unsigned int distance = sonar.ping_cm();
+        if (distance == 0) 
+        {
+            VanAkadaly = false;
+        } 
+        else 
+        {
+            VanAkadaly = true;
+        }
+        return;
+    }
 }
 
 void tracking()
 {
+    if (VanAkadaly)
+    {
+        stop_bot();
+        return;
+    }
+
     String senstr = "";
 
     // A szenzorok értékei (0: fekete vonal alatt, 1: fehér háttér)
